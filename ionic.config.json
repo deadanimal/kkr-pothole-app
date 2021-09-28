@@ -1,0 +1,7 @@
+{
+  "name": "kkr-pothole",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
