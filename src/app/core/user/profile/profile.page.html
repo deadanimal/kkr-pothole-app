@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Profil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div id="container">
+    <div class="card">
+      <div class="header">
+        <div class="avatar">
+          <img src="../../assets/img/default_icon.jpeg" alt="">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="user-meta ion-text-center">
+          <h3 class="playername">Ahmad bin Ibrahim</h3>
+          <h5 style="text-transform:uppercase;">ORANG AWAM</h5>
+          <h5 class="email">complaintuser@email.com</h5>
+          <br>
+          <h4>Bio Pengguna</h4>
+        </div>
+
+        <ion-button expand="block" size="medium" color="secondary" routerLink="/profile-edit">Kemaskini Profil</ion-button>
+
+      </div>
+    </div>
+  </div>
+</ion-content>

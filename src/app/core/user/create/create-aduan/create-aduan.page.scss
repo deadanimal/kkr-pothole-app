@@ -1,0 +1,15 @@
+ion-item {
+  border-radius: 1rem;
+  margin-bottom: .7rem;
+}
+
+#map2 {
+  min-height: 40%;
+}
+
+.card-body {
+  background-color: #7c7c7c;
+  padding: 30px;
+  height: calc(100vh - (150px + 56px));
+  overflow: hidden;
+}

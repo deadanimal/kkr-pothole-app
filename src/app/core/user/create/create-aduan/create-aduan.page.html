@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{isEditMode ? 'Kemaskini':'Daftar'}} Aduan</ion-title>
+    <ion-buttons slot="start" *ngIf="!isEditMode">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end" *ngIf="isEditMode">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-content>
+    <div #map2 id="map2"></div>
+    <div class="card-body">
+      <form [formGroup]="aduanForm">
+        <ion-grid>
+          <ion-row color="primary" justify-content-center>
+            <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+              <div padding>
+                <ion-item>
+                  <ion-label>Gambar Aduan</ion-label>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
+                        <ion-img [src]="photo.webviewPath"></ion-img>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                  <ion-button round (click)="addPhotoToGallery()" slot="end">
+                    <ion-icon name="camera"></ion-icon>
+                  </ion-button>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Tajuk Aduan</ion-label>
+                  <ion-input formControlName="tajuk" type="text" placeholder="Nyatakan Tajuk Aduan">
+                  </ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Keterangan</ion-label>
+                  <ion-input formControlName="keterangan" type="text" placeholder="Nyatakan Keterangan Aduan">
+                  </ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Kategori Jalan</ion-label>
+                  <ion-input formControlName="kategori_jalan" type="text" placeholder="Nyatakan Kategori Jalan">
+                  </ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Negeri</ion-label>
+                  <ion-input formControlName="negeri" type="text" placeholder="Nyatakan Negeri Kawasan Aduan">
+                  </ion-input>
+                </ion-item>
+              </div>
+              <div padding>
+                <ion-button size="medium" [disabled]="aduanForm.invalid" (click)="submitAduan()" expand="block">
+                  {{isEditMode ? 'Kemaskini':'Daftar'}}</ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </div>
+
+  </ion-content>
+</ion-content>

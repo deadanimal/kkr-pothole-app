@@ -1,0 +1,41 @@
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <form [formGroup]="loginForm">
+      <ion-grid>
+        <ion-row color="primary" justify-content-center>
+          <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+            <div class="ion-text-center">
+              <br><br>
+              <img src="./assets/img/jatanegara.png" alt="Jata Negara" width="50%">
+              <br>
+              <h1>Selamat Datang</h1>
+            </div>
+            <div padding>
+              <ion-item [ngClass]="{ focused: focusUsername === true }">
+                <ion-input type="text" placeholder="No Telefon Anda" formControlName="username" [(ngModel)]="user.name"
+                  required></ion-input>
+              </ion-item>
+              <ion-item [ngClass]="{ focused: focusPassword === true }">
+                <ion-icon name="eye" slot="end"></ion-icon>
+                <ion-input type="password" placeholder="Kata Laluan" formControlName="password" [(ngModel)]="user.pwd"
+                  required></ion-input>
+              </ion-item>
+            </div>
+            <br>
+            <div class="ion-padding">
+              <ion-button size="medium" (click)="signIn()" expand="block">Log Masuk</ion-button>
+              <div class="ion-text-center">Lupa kata laluan? Tekan <a routerLink='/forgot'>
+                  SINI</a>
+              </div>
+              <div class="ion-text-center">
+                <br><br>
+                Tiada akaun? Daftar sekarang
+                <ion-button size="medium" expand="block" color="secondary" routerLink="/register">Daftar</ion-button>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+</ion-content>

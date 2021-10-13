@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Kemaskini Profil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Kemaskini Profil</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <div class="card">
+      <div class="header">
+        <div class="avatar">
+          <img src="../../assets/img/default_icon.jpeg" alt="">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="user-meta ion-text-center">
+          <ion-item>
+            <ion-input name="complaint_detail" type="text" value="Azlan Zawawi" disabled>
+            </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input name="complaint_detail" type="text" value="Orang Awam" disabled>
+            </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input name="complaint_detail" type="text" value="017456789" placeholder="No Telefon">
+            </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input name="complaint_detail" type="text" value="Tutup pothole" placeholder="Keterangan Pengguna">
+            </ion-input>
+          </ion-item>
+
+        </div>
+
+        <ion-button expand="block" size="medium" color="secondary">Simpan</ion-button>
+
+      </div>
+    </div>
+  </div>
+</ion-content>
