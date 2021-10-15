@@ -4,7 +4,7 @@ import { AduanService } from './../../../../shared/services/aduan.service';
 import { Component, OnInit } from '@angular/core';
 import data from '../../../../../assets/data/aduanlist.json';
 import { LoadingController, ModalController } from '@ionic/angular';
-import { ModalAduanDetailPage } from 'src/app/modal/modal-aduan-detail/modal-aduan-detail.page';
+import { AduanDetailPage } from 'src/app/modal/aduan-detail/aduan-detail.page';
 import { Aduan } from '../../../../shared/model/aduan.model';
 import { map, tap } from 'rxjs/operators';
 
@@ -15,8 +15,6 @@ import { map, tap } from 'rxjs/operators';
 })
 export class AduanListPage implements OnInit {
   aduans$: Observable<Aduan[]>;
-
-  tableStyle = 'dark';
   private aduans = data;
 
   constructor(
@@ -42,7 +40,7 @@ export class AduanListPage implements OnInit {
 
   async openDetailModal(aduan: Aduan) {
     const modal = await this.modalCtrl.create({
-      component: ModalAduanDetailPage,
+      component: AduanDetailPage,
       componentProps: { aduan },
     });
 

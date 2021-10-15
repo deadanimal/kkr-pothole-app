@@ -16,12 +16,9 @@ import { AlertController, NavController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   user = {
-    name: 'user',
-    pwd: 'user',
+    name: 'admin',
+    pwd: 'admin',
   };
-  // Form
-  // focusUsername;
-  // focusPassword;
   loginForm: FormGroup;
   loginFormMessages = {
     username: [
@@ -48,12 +45,12 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       username: new FormControl(
-        '',
-        Validators.compose([Validators.required, Validators.email])
+        this.user.name,
+        Validators.compose([Validators.required])
       ),
       password: new FormControl(
-        '',
-        Validators.compose([Validators.required, Validators.minLength(8)])
+        this.user.pwd,
+        Validators.compose([Validators.required])
       ),
     });
   }
@@ -71,25 +68,4 @@ export class LoginPage implements OnInit {
       }
     });
   }
-
-  // loginUser() {
-  //   this.auth
-  //     .login(this.user.name, this.user.pwd)
-  //     .then(async (success) => {
-  //       if (success) {
-  //         this.auth.currentUser.role = 2;
-  //         this.navCtrl.navigateRoot('/dashboard');
-  //       }
-  //     })
-  //     .catch(async (err) => {
-  //       const alert = await this.alertCtrl.create({
-  //         header: 'Alert',
-  //         subHeader: 'Subtitle',
-  //         message: 'This is an alert message.',
-  //         buttons: ['OK'],
-  //       });
-
-  //       alert.present();
-  //     });
-  // }
 }

@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CreateRoadPageRoutingModule } from './create-road-routing.module';
+import { JalanDetailPageRoutingModule } from './jalan-detail-routing.module';
 
-import { CreateRoadPage } from './create-road.page';
+import { JalanDetailPage } from './jalan-detail.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CreateRoadPageRoutingModule
+    JalanDetailPageRoutingModule
   ],
-  declarations: [CreateRoadPage]
+  declarations: [JalanDetailPage]
 })
-export class CreateRoadPageModule {}
+export class JalanDetailPageModule {}

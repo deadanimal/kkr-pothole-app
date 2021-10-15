@@ -38,25 +38,27 @@
                   </ion-button>
                 </ion-item>
                 <ion-item>
-                  <ion-label position="floating">Tajuk Aduan</ion-label>
-                  <ion-input formControlName="tajuk" type="text" placeholder="Nyatakan Tajuk Aduan">
+                  <ion-label position="stacked">Tajuk Aduan</ion-label>
+                  <ion-input formControlName="title" type="text" placeholder="Nyatakan Tajuk Aduan">
                   </ion-input>
                 </ion-item>
                 <ion-item>
-                  <ion-label position="floating">Keterangan</ion-label>
-                  <ion-input formControlName="keterangan" type="text" placeholder="Nyatakan Keterangan Aduan">
+                  <ion-label position="stacked">Keterangan</ion-label>
+                  <ion-input formControlName="detail" type="text" placeholder="Nyatakan Keterangan Aduan">
                   </ion-input>
                 </ion-item>
                 <ion-item>
-                  <ion-label position="floating">Kategori Jalan</ion-label>
+                  <ion-label position="stacked">Kategori Jalan</ion-label>
                   <ion-input formControlName="kategori_jalan" type="text" placeholder="Nyatakan Kategori Jalan">
                   </ion-input>
                 </ion-item>
                 <ion-item>
-                  <ion-label position="floating">Negeri</ion-label>
+                  <ion-label position="stacked">Negeri</ion-label>
                   <ion-input formControlName="negeri" type="text" placeholder="Nyatakan Negeri Kawasan Aduan">
                   </ion-input>
                 </ion-item>
+                <ion-input type="hidden" formControlName="latitud"></ion-input>
+                <ion-input type="hidden" formControlName="langitud"></ion-input>
               </div>
               <div padding>
                 <ion-button size="medium" [disabled]="aduanForm.invalid" (click)="submitAduan()" expand="block">

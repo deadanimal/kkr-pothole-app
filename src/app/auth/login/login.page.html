@@ -1,41 +1,46 @@
 <ion-content [fullscreen]="true">
-  <div id="container">
+
+  <div id="container" class="background">
+    <div class="bg-primary"></div>
     <form [formGroup]="loginForm">
       <ion-grid>
         <ion-row color="primary" justify-content-center>
           <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
             <div class="ion-text-center">
-              <br><br>
-              <img src="./assets/img/jatanegara.png" alt="Jata Negara" width="50%">
+              <img src="./assets/img/jatanegara.png" alt="Jata Negara" width="100%">
               <br>
-              <h1>Selamat Datang</h1>
             </div>
-            <div padding>
-              <ion-item [ngClass]="{ focused: focusUsername === true }">
-                <ion-input type="text" placeholder="No Telefon Anda" formControlName="username" [(ngModel)]="user.name"
-                  required></ion-input>
-              </ion-item>
-              <ion-item [ngClass]="{ focused: focusPassword === true }">
-                <ion-icon name="eye" slot="end"></ion-icon>
-                <ion-input type="password" placeholder="Kata Laluan" formControlName="password" [(ngModel)]="user.pwd"
-                  required></ion-input>
-              </ion-item>
-            </div>
-            <br>
-            <div class="ion-padding">
-              <ion-button size="medium" (click)="signIn()" expand="block">Log Masuk</ion-button>
-              <div class="ion-text-center">Lupa kata laluan? Tekan <a routerLink='/forgot'>
-                  SINI</a>
-              </div>
-              <div class="ion-text-center">
-                <br><br>
-                Tiada akaun? Daftar sekarang
-                <ion-button size="medium" expand="block" color="secondary" routerLink="/register">Daftar</ion-button>
-              </div>
-            </div>
+            <ion-card>
+              <ion-card-content>
+                <ion-card-title color="primary" class="login-title">Daftar Masuk</ion-card-title>
+                <div padding>
+                  <ion-label>E-mel</ion-label>
+                  <ion-item>
+                    <ion-icon name="bookmark-outline" slot="end"></ion-icon>
+                    <ion-input type="text" placeholder="Emel Anda" formControlName="username" required></ion-input>
+                  </ion-item>
+                  <ion-label>Kata Laluan</ion-label>
+                  <ion-item>
+                    <ion-icon name="lock-open-outline" slot="end"></ion-icon>
+                    <ion-input type="password" placeholder="Kata Laluan" formControlName="password" required></ion-input>
+                  </ion-item>
+                  <br>
+                  <ion-button size="medium" (click)="signIn()" expand="block" [disabled]="loginForm.invalid">Log Masuk</ion-button>
+                  <br>
+                  <div class="ion-text-center">
+                    <ion-router-link color="primary" href="/forgot">Lupa Kata Laluan?</ion-router-link>
+                  </div>
+                </div>
+              </ion-card-content>
+            </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>
     </form>
+    <div style="display: flex; align-items: flex-end; margin-top:2rem; justify-content: center;">
+      Tiada akaun?
+      <ion-router-link color="primary" href="/register">&nbsp;Daftar Sekarang
+      </ion-router-link>
+    </div>
   </div>
 </ion-content>

@@ -47,7 +47,7 @@ export const ROUTESADMIN: RouteInfo[] = [
   },
   {
     title: 'Senarai Jalan',
-    url: '/road-list',
+    url: '/jalan-list',
     icon: 'trail-sign',
   },
 ];
@@ -75,7 +75,7 @@ export const ROUTESSUPERADMIN: RouteInfo[] = [
   },
   {
     title: 'Senarai Jalan',
-    url: '/road-list',
+    url: '/jalan-list',
     icon: 'trail-sign',
   },
 ];
@@ -98,7 +98,7 @@ export const ROUTESUSER: RouteInfo[] = [
   },
   {
     title: 'Senarai Jalan',
-    url: '/road-list',
+    url: '/jalan-list',
     icon: 'trail-sign',
   },
 ];

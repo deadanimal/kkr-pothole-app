@@ -1,12 +1,13 @@
+import { JalanDetailPage } from '../jalan-detail/jalan-detail.page';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { CreateRoadPage } from './create-road.page';
+import {  } from './jalan-detail.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: CreateRoadPage
+    component: JalanDetailPage
   }
 ];
 
@@ -14,4 +15,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CreateRoadPageRoutingModule {}
+export class JalanDetailPageRoutingModule {}

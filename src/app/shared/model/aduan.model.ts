@@ -1,11 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface Aduan {
   id: number;
-  tajuk: string;
-  keterangan: string;
-  gambar_id: string;
-  lokasi: string;
+  title: string;
+  detail: string;
   kategori_jalan: string;
+  daerah: string;
   negeri: string;
-  pengadu_id: string;
+  poskod: string;
+  status: string;
+  latitud: number;
+  langitud: number;
+  gambar_id: number;
+  pengadu_id: number;
+  response_code: number;
+  status_code: number;
+  sispaa_id: number;
+  nota: string;
 }

@@ -47,21 +47,23 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await setTimeout(() => {
-      this.authService.getUser().subscribe((user) => {
-        console.log('LOL', user);
-        const userRole = user.role;
-        if (userRole === 'ADMIN') {
-          this.menu = ROUTESSUPERADMIN;
-        } else if (userRole === 'USER') {
-          this.menu = ROUTESADMIN;
-        }
-      });
-      this.menuItems = this.menu.filter((menuItem) => menuItem);
-      this.router.events.subscribe((event) => {
-        this.isCollapsed = true;
-      });
-    }, 2000);
+    if (this.authService) {
+      await setTimeout(() => {
+        this.authService.getUser().subscribe((user) => {
+          console.log('LOL', user);
+          const userRole = user.role;
+          if (userRole === 'ADMIN') {
+            this.menu = ROUTESSUPERADMIN;
+          } else if (userRole === 'USER') {
+            this.menu = ROUTESADMIN;
+          }
+        });
+        this.menuItems = this.menu.filter((menuItem) => menuItem);
+        this.router.events.subscribe((event) => {
+          this.isCollapsed = true;
+        });
+      }, 3000);
+    }
   }
 
   async ionViewWillEnter() {}

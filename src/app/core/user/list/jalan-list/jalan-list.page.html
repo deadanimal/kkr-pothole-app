@@ -1,9 +1,40 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>jalan-list</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Senarai Jalan</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button href="/create-jalan">
+        <ion-icon slot="start" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
+
+  <div id="container">
+    <ion-list>
+      <ion-card *ngFor="let jalan of jalans$|async" (click)="openDetailModal(jalan)" color="light">
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col size="3">
+              <ion-thumbnail>
+                <img src="https://c8.alamy.com/comp/B3MXEK/broken-road-B3MXEK.jpg" alt="img" />
+              </ion-thumbnail>
+            </ion-col>
+            <ion-col size="9">
+              <ion-card-content>
+                <h3>{{jalan.detail}}</h3>
+                <ion-badge color="tertiary">{{jalan.status}}</ion-badge>
+              </ion-card-content>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </ion-list>
+  </div>
 
 </ion-content>

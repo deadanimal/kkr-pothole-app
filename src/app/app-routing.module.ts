@@ -53,24 +53,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'road-list',
-    loadChildren: () =>
-      import('./core/user/list/road-list/road-list.module').then(
-        (m) => m.RoadListPageModule
-      ),
-  },
-  {
     path: 'create-user',
     loadChildren: () =>
       import('./core/user/create/create-user/create-user.module').then(
         (m) => m.CreateUserPageModule
-      ),
-  },
-  {
-    path: 'create-road',
-    loadChildren: () =>
-      import('./core/user/create/create-road/create-road.module').then(
-        (m) => m.CreateRoadPageModule
       ),
   },
   {
@@ -97,13 +83,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./core/user/profile-edit/profile-edit.module').then(
         (m) => m.ProfileEditPageModule
-      ),
-  },
-  {
-    path: 'modal-aduan-detail',
-    loadChildren: () =>
-      import('./modal/modal-aduan-detail/modal-aduan-detail.module').then(
-        (m) => m.ModalAduanDetailPageModule
       ),
   },
   {
@@ -157,6 +136,14 @@ const routes: Routes = [
       import('./core/user/create/create-jalan/create-jalan.module').then(
         (m) => m.CreateJalanPageModule
       ),
+  },
+  {
+    path: 'aduan-detail',
+    loadChildren: () => import('./modal/aduan-detail/aduan-detail.module').then( m => m.AduanDetailPageModule)
+  },
+  {
+    path: 'jalan-detail',
+    loadChildren: () => import('./modal/jalan-detail/jalan-detail.module').then( m => m.JalanDetailPageModule)
   },
 ];
 

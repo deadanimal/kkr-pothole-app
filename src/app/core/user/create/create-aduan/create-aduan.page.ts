@@ -8,11 +8,6 @@ import {
 } from '@angular/forms';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PhotoService } from '../../../../shared/services/photo/photo.service';
-import * as L from 'leaflet';
-
-const iconRetinaUrl = './assets/marker-icon-2x.png';
-const iconUrl = './assets/marker-icon.png';
-const shadowUrl = './assets/marker-shadow.png';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import {
@@ -43,19 +38,6 @@ export class CreateAduanPage implements OnInit {
 
   latitude: number;
   longitude: number;
-  // map;
-  markerIcon = {
-    icon: L.icon({
-      iconSize: [25, 41],
-      iconAnchor: [12.5, 41],
-      popupAnchor: [1, -34],
-      tooltipAnchor: [16, -28],
-      shadowSize: [41, 41],
-      // specify the path here
-      iconUrl,
-      shadowUrl,
-    }),
-  };
   myMarker: any;
   center: any;
 
@@ -72,6 +54,7 @@ export class CreateAduanPage implements OnInit {
   ngOnInit() {
     // await this.photoService.loadSaved();
     this.initAddAduanForm();
+    console.log('aduan data', this.aduanForm.value);
     if (this.aduan) {
       this.isEditMode = true;
       this.setFormValues();
@@ -79,32 +62,45 @@ export class CreateAduanPage implements OnInit {
   }
 
   initAddAduanForm() {
-    this.aduanForm = new FormGroup({
-      tajuk: new FormControl(null, [Validators.required]),
-      keterangan: new FormControl(null, [Validators.required]),
+    this.aduanForm = this.formBuilder.group({
+      title: new FormControl(null, [Validators.required]),
+      detail: new FormControl(null, [Validators.required]),
       gambar_id: new FormControl(null),
       kategori_jalan: new FormControl(null, [Validators.required]),
       negeri: new FormControl(null, [Validators.required]),
       pengadu_id: new FormControl(null),
+      latitud: new FormControl(this.latitude),
+      langitud: new FormControl(this.latitude),
     });
   }
 
   setFormValues() {
     this.aduanForm.setValue({
-      tajuk: this.aduan.tajuk,
-      keterangan: this.aduan.keterangan,
+      title: this.aduan.title,
+      detail: this.aduan.detail,
       gambar_id: this.aduan.gambar_id,
       kategori_jalan: this.aduan.kategori_jalan,
       negeri: this.aduan.negeri,
       pengadu_id: this.aduan.pengadu_id,
+      latitud: this.aduan.latitud,
+      langitud: this.aduan.langitud,
+    });
+  }
+
+  setLatLng() {
+    this.aduanForm.patchValue({
+      latitud: this.latitude,
+      langitud: this.longitude,
     });
   }
 
   async submitAduan() {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
-    // loading.present();
+    loading.present();
 
     let response: Observable<Aduan>;
+
+    this.setLatLng();
     if (this.isEditMode) {
       response = this.aduanService.updateAduan(
         this.aduan.id,
@@ -184,7 +180,6 @@ export class CreateAduanPage implements OnInit {
             position: google.maps.ControlPosition.LEFT_TOP,
           },
         };
-
         this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
 
         this.map2 = new google.maps.Map(
@@ -197,10 +192,7 @@ export class CreateAduanPage implements OnInit {
           this.latitude = this.map2.center.lat();
           this.longitude = this.map2.center.lng();
 
-          this.getAddressFromCoords(
-            this.map2.center.lat(),
-            this.map2.center.lng()
-          );
+          this.getAddressFromCoords(this.latitude, this.longitude);
           this.myMarker.setPosition(this.map2.getCenter());
         });
       })
@@ -221,7 +213,7 @@ export class CreateAduanPage implements OnInit {
       .then((result: NativeGeocoderResult[]) => {
         this.address = '';
         const responseAddress = [];
-        for (const [key, value] of Object.entries(result[0])) {
+        for (const [, value] of Object.entries(result[0])) {
           if (value.length > 0) {
             responseAddress.push(value);
           }
@@ -231,8 +223,9 @@ export class CreateAduanPage implements OnInit {
           this.address += value + ', ';
         }
         this.address = this.address.slice(0, -2);
+        console.log('Address:', this.address);
       })
-      .catch((error: any) => {
+      .catch(() => {
         this.address = 'Address Not Available!';
       });
   }
