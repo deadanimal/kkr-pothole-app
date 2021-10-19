@@ -10,7 +10,7 @@ ion-card {
 }
 
 .background {
-  background-image: url(../../../assets/img/bg-login.png);
+  background: url(../../../assets/img/bg-login.png) no-repeat center/cover fixed;
   z-index: -1;
   height: 100%;
   width: 100%;
@@ -39,7 +39,6 @@ ion-button {
 
 .bg-primary {
   background: linear-gradient(var(--ion-color-primary), #a8b6c5fc);
-  ;
   height: 45%;
   left: 0;
   position: absolute;
@@ -52,4 +51,20 @@ ion-button {
 
 ion-item.item-inner {
   --border-style: none !important;
+}
+
+.input-group {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.errors {
+  font-size: small;
+  color: #fff;
+  background: var(--ion-color-danger);
+  padding-left: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

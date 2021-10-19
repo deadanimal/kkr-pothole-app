@@ -11,5 +11,8 @@ if (environment.production) {
 // Call the element loader after the platform has been bootstrapped
 defineCustomElements(window);
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  .catch((err) => console.log(err));
+
+defineCustomElements(window);

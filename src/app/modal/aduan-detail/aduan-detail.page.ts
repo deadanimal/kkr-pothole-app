@@ -29,6 +29,7 @@ export class AduanDetailPage implements OnInit {
   longitude: number;
   myMarker: any;
   center: any;
+  infoWindow: any;
 
   constructor(
     private geolocation: Geolocation,
@@ -70,27 +71,31 @@ export class AduanDetailPage implements OnInit {
         this.closeModal('delete');
       });
   }
-
-  // 3.0738, 101.5183
-  addMarker() {
+  async addMarker() {
     this.myMarker = new google.maps.Marker({
       map: this.map3,
       // animation: google.maps.Animation.DROP,
       position: this.map3.getCenter(),
-      draggable: true,
+      draggable: false,
     });
 
-    const content = '<h4>Information!</h4>';
-
-    this.addInfoWindow(this.myMarker, content);
+    const content = '<p>' + this.address + '</p>';
+    console.log(this.address, this.map3.center.lat());
+    await this.addInfoWindow(this.myMarker, content);
   }
+
   addInfoWindow(marker, content) {
-    const infoWindow = new google.maps.InfoWindow({
+    this.infoWindow = new google.maps.InfoWindow({
       content,
     });
-
-    google.maps.event.addListener(marker, 'click', () => {
-      infoWindow.open(this.map3, marker);
+    google.maps.event.addListener(marker, 'click', async () => {
+      this.infoWindow.open({
+        anchor: marker,
+        map: this.map3,
+        shouldFocus: false,
+      });
+      await this.infoWindow.setContent('<p>' + this.address + '</p>');
+      console.log(this.address);
     });
   }
 
@@ -98,8 +103,8 @@ export class AduanDetailPage implements OnInit {
     this.geolocation
       .getCurrentPosition()
       .then((resp) => {
-        // this.latitude = resp.coords.latitude;
-        // this.longitude = resp.coords.longitude;
+        this.latitude = resp.coords.latitude;
+        this.longitude = resp.coords.longitude;
 
         const latLng = new google.maps.LatLng(
           this.aduan.latitud,
@@ -107,38 +112,21 @@ export class AduanDetailPage implements OnInit {
         );
         const mapOptions = {
           center: latLng,
-          zoom: 17,
+          zoom: 16,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           mapTypeControl: false,
-          mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-            position: google.maps.ControlPosition.LEFT_TOP,
-          },
           zoomControl: false,
-          zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_TOP,
-          },
           scaleControl: false,
           streetViewControl: false,
-          streetViewControlOptions: {
-            position: google.maps.ControlPosition.LEFT_TOP,
-          },
+          fullscreenControl: false,
         };
-        this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
+        this.getAddressFromCoords(this.aduan.latitud, this.aduan.langitud);
 
         this.map3 = new google.maps.Map(
           this.mapElement.nativeElement,
           mapOptions
         );
         this.addMarker();
-
-        this.map3.addListener('drag', () => {
-          this.latitude = this.map3.center.lat();
-          this.longitude = this.map3.center.lng();
-
-          this.getAddressFromCoords(this.latitude, this.longitude);
-          this.myMarker.setPosition(this.map3.getCenter());
-        });
       })
       .catch((error) => {
         console.log('Error getting location', error);
@@ -147,30 +135,18 @@ export class AduanDetailPage implements OnInit {
 
   getAddressFromCoords(lattitude, longitude) {
     console.log('getAddressFromCoords :' + lattitude + ',' + longitude);
-    const options: NativeGeocoderOptions = {
-      useLocale: true,
-      maxResults: 5,
-    };
-
-    this.nativeGeocoder
-      .reverseGeocode(lattitude, longitude, options)
-      .then((result: NativeGeocoderResult[]) => {
-        this.address = '';
-        const responseAddress = [];
-        for (const [, value] of Object.entries(result[0])) {
-          if (value.length > 0) {
-            responseAddress.push(value);
-          }
-        }
-        responseAddress.reverse();
-        for (const value of responseAddress) {
-          this.address += value + ', ';
-        }
-        this.address = this.address.slice(0, -2);
-        console.log('Address:', this.address);
-      })
-      .catch(() => {
-        this.address = 'Address Not Available!';
-      });
+    const latlng = new google.maps.LatLng(lattitude, longitude);
+    // This is making the Geocode request
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ latLng: latlng }, (results, status) => {
+      if (status !== google.maps.GeocoderStatus.OK) {
+        alert(status);
+      }
+      // This is checking to see if the Geoeode Status is OK before proceeding
+      if (status === google.maps.GeocoderStatus.OK) {
+        this.address = results[0].formatted_address;
+        console.log(this.address);
+      }
+    });
   }
 }

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Platform, NavController } from '@ionic/angular';
-import { AuthService, User } from './shared/services/auth/auth.service';
+import { AuthService } from './shared/services/auth/auth.service';
 import { Storage } from '@ionic/storage-angular';
 
 @Component({
@@ -47,23 +47,23 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    if (this.authService) {
-      await setTimeout(() => {
-        this.authService.getUser().subscribe((user) => {
-          console.log('LOL', user);
-          const userRole = user.role;
-          if (userRole === 'ADMIN') {
-            this.menu = ROUTESSUPERADMIN;
-          } else if (userRole === 'USER') {
-            this.menu = ROUTESADMIN;
-          }
-        });
-        this.menuItems = this.menu.filter((menuItem) => menuItem);
-        this.router.events.subscribe((event) => {
-          this.isCollapsed = true;
-        });
-      }, 3000);
-    }
+    // if (this.authService) {
+    //   await setTimeout(() => {
+    //     this.authService.getUser().subscribe((user) => {
+    //       console.log('LOL', user);
+    //       const userRole = user.role;
+    //       if (userRole === 'ADMIN') {
+    //         this.menu = ROUTESSUPERADMIN;
+    //       } else if (userRole === 'USER') {
+    //         this.menu = ROUTESADMIN;
+    //       }
+    //     });
+    //     this.menuItems = this.menu.filter((menuItem) => menuItem);
+    //     this.router.events.subscribe((event) => {
+    //       this.isCollapsed = true;
+    //     });
+    //   }, 3000);
+    // }
   }
 
   async ionViewWillEnter() {}

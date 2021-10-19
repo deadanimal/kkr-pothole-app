@@ -40,11 +40,11 @@ export const ROUTESADMIN: RouteInfo[] = [
     url: '/aduan-list',
     icon: 'chatbubble-ellipses',
   },
-  {
-    title: 'Senarai Pengguna',
-    url: '/user-list',
-    icon: 'people',
-  },
+  // {
+  //   title: 'Senarai Pengguna',
+  //   url: '/user-list',
+  //   icon: 'people',
+  // },
   {
     title: 'Senarai Jalan',
     url: '/jalan-list',
@@ -68,11 +68,11 @@ export const ROUTESSUPERADMIN: RouteInfo[] = [
     url: '/aduan-list',
     icon: 'chatbubble-ellipses',
   },
-  {
-    title: 'Senarai Pengguna',
-    url: '/user-list',
-    icon: 'people',
-  },
+  // {
+  //   title: 'Senarai Pengguna',
+  //   url: '/user-list',
+  //   icon: 'people',
+  // },
   {
     title: 'Senarai Jalan',
     url: '/jalan-list',

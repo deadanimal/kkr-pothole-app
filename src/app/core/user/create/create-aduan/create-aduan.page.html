@@ -1,21 +1,25 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>{{isEditMode ? 'Kemaskini':'Daftar'}} Aduan</ion-title>
-    <ion-buttons slot="start" *ngIf="!isEditMode">
-      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    <ion-buttons slot="start">
+      <ion-button href="/dashboard">
+        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
+      </ion-button>
     </ion-buttons>
-
+    <!-- <ion-title>{{isEditMode ? 'Kemaskini':'Daftar'}} Aduan</ion-title> -->
+    <ion-buttons slot="end" *ngIf="!isEditMode">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-buttons slot="end" *ngIf="isEditMode">
       <ion-button (click)="closeModal()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
   <ion-content>
     <div #map2 id="map2"></div>
     <div class="card-body">
@@ -24,7 +28,7 @@
           <ion-row color="primary" justify-content-center>
             <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
               <div padding>
-                <ion-item>
+                <!-- <ion-item>
                   <ion-label>Gambar Aduan</ion-label>
                   <ion-grid>
                     <ion-row>
@@ -36,33 +40,20 @@
                   <ion-button round (click)="addPhotoToGallery()" slot="end">
                     <ion-icon name="camera"></ion-icon>
                   </ion-button>
-                </ion-item>
+                </ion-item> -->
                 <ion-item>
-                  <ion-label position="stacked">Tajuk Aduan</ion-label>
-                  <ion-input formControlName="title" type="text" placeholder="Nyatakan Tajuk Aduan">
+                  <ion-input formControlName="title" type="text" placeholder="Tajuk Aduan">
                   </ion-input>
                 </ion-item>
                 <ion-item>
-                  <ion-label position="stacked">Keterangan</ion-label>
-                  <ion-input formControlName="detail" type="text" placeholder="Nyatakan Keterangan Aduan">
-                  </ion-input>
+                  <ion-textarea formControlName="detail" type="text" placeholder="Keterangan Aduan">
+                  </ion-textarea>
                 </ion-item>
-                <ion-item>
-                  <ion-label position="stacked">Kategori Jalan</ion-label>
-                  <ion-input formControlName="kategori_jalan" type="text" placeholder="Nyatakan Kategori Jalan">
-                  </ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="stacked">Negeri</ion-label>
-                  <ion-input formControlName="negeri" type="text" placeholder="Nyatakan Negeri Kawasan Aduan">
-                  </ion-input>
-                </ion-item>
-                <ion-input type="hidden" formControlName="latitud"></ion-input>
-                <ion-input type="hidden" formControlName="langitud"></ion-input>
               </div>
+              <br>
               <div padding>
                 <ion-button size="medium" [disabled]="aduanForm.invalid" (click)="submitAduan()" expand="block">
-                  {{isEditMode ? 'Kemaskini':'Daftar'}}</ion-button>
+                 Seterusnya</ion-button>
               </div>
             </ion-col>
           </ion-row>

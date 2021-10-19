@@ -15,7 +15,7 @@
 
 <ion-content [fullscreen]="true">
 
-  <div id="container">
+  <div id="container" class="background">
     <ion-list>
       <ion-card *ngFor="let jalan of jalans$|async" (click)="openDetailModal(jalan)" color="light">
         <ion-grid fixed>
@@ -26,10 +26,10 @@
               </ion-thumbnail>
             </ion-col>
             <ion-col size="9">
-              <ion-card-content>
-                <h3>{{jalan.detail}}</h3>
+              <ion-label>
+                <p>{{jalan.detail}}</p>
                 <ion-badge color="tertiary">{{jalan.status}}</ion-badge>
-              </ion-card-content>
+              </ion-label>
             </ion-col>
           </ion-row>
         </ion-grid>

@@ -36,7 +36,7 @@ const routes: Routes = [
       import('./core/user/dashboard/dashboard.module').then(
         (m) => m.DashboardPageModule
       ),
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: 'aduan-list',
@@ -71,13 +71,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./core/user/chart/chart.module').then((m) => m.ChartPageModule),
   },
-  {
-    path: 'upload-picture',
-    loadChildren: () =>
-      import('./core/global/upload-picture/upload-picture.module').then(
-        (m) => m.UploadPicturePageModule
-      ),
-  },
+  // {
+  //   path: 'upload-picture',
+  //   loadChildren: () =>
+  //     import('./core/global/upload-picture/upload-picture.module').then(
+  //       (m) => m.UploadPicturePageModule
+  //     ),
+  // },
   {
     path: 'profile-edit',
     loadChildren: () =>
@@ -91,11 +91,6 @@ const routes: Routes = [
       import('./core/user/amchart/amchart.module').then(
         (m) => m.AmchartPageModule
       ),
-  },
-  {
-    path: 'admin',
-    loadChildren: () =>
-      import('./core/admin/admin.module').then((m) => m.AdminPageModule),
   },
   {
     path: 'register-superadmin',
@@ -139,11 +134,36 @@ const routes: Routes = [
   },
   {
     path: 'aduan-detail',
-    loadChildren: () => import('./modal/aduan-detail/aduan-detail.module').then( m => m.AduanDetailPageModule)
+    loadChildren: () =>
+      import('./modal/aduan-detail/aduan-detail.module').then(
+        (m) => m.AduanDetailPageModule
+      ),
   },
   {
     path: 'jalan-detail',
-    loadChildren: () => import('./modal/jalan-detail/jalan-detail.module').then( m => m.JalanDetailPageModule)
+    loadChildren: () =>
+      import('./modal/jalan-detail/jalan-detail.module').then(
+        (m) => m.JalanDetailPageModule
+      ),
+  },
+  {
+    path: 'notification',
+    loadChildren: () =>
+      import('./core/global/notification/notification.module').then(
+        (m) => m.NotificationPageModule
+      ),
+  },
+  {
+    path: 'success',
+    loadChildren: () =>
+      import('./core/global/alert/success/success.module').then(
+        (m) => m.SuccessPageModule
+      ),
+  },
+  {
+    path: 'info',
+    loadChildren: () =>
+      import('./core/global/info/info.module').then((m) => m.InfoPageModule),
   },
 ];
 

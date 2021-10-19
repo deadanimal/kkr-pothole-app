@@ -3,13 +3,30 @@ ion-item {
   margin-bottom: .7rem;
 }
 
+ion-toolbar {
+  --background: transparent no-repeat fixed center;
+  --color: var(--ion-color-primary);
+  position: absolute;
+  top: 5px;
+}
+
 #map2 {
-  min-height: 40%;
+  height: 75%;
+  width: 100%;
 }
 
 .card-body {
-  background-color: whitesmoke;
-  padding: 30px;
-  height: calc(100vh - (150px + 56px));
+  background: linear-gradient(var(--ion-color-primary), #b6c0cafc);
+  padding: 20px;
+  width: 100%;
   overflow: hidden;
+  bottom: 0;
+  position: absolute;
+  border-top-left-radius: 2.5rem;
+  border-top-right-radius: 2.5rem;
+
+}
+
+ion-button {
+  --border-radius: 19px;
 }

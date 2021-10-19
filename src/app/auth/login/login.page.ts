@@ -1,13 +1,9 @@
-import { AuthService } from './../../shared/services/auth/auth.service';
+
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { AlertController, NavController } from '@ionic/angular';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,57 +11,51 @@ import { AlertController, NavController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  user = {
-    name: 'admin',
-    pwd: 'admin',
-  };
-  loginForm: FormGroup;
-  loginFormMessages = {
-    username: [
-      { type: 'required', message: 'Masukkan ID pengguna' },
-      { type: 'email', message: 'Masukkan emel yang sah' },
-    ],
-    password: [
-      { type: 'required', message: 'Password is required' },
-      {
-        type: 'minLength',
-        message: 'Password must have at least 8 characters',
-      },
-    ],
-  };
+  credentials: FormGroup;
 
   constructor(
-    private auth: AuthService,
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private alertCtrl: AlertController,
     private router: Router,
-    private navCtrl: NavController,
-    private alertCtrl: AlertController
+    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      username: new FormControl(
-        this.user.name,
-        Validators.compose([Validators.required])
-      ),
-      password: new FormControl(
-        this.user.pwd,
-        Validators.compose([Validators.required])
-      ),
+    this.credentials = this.fb.group({
+      email: ['eve.holt@reqres.in', [Validators.required, Validators.email]],
+      password: ['cityslicka', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  signIn() {
-    const userName = this.loginForm.value.username;
-    this.auth.signIn(userName).subscribe((user) => {
-      const userRole = user.role;
+  async login() {
+    const loading = await this.loadingCtrl.create({message: 'Loading...'});
+    await loading.present();
 
-      console.log(userName, userRole);
-      if (userRole === 'ADMIN') {
+    this.authService.login(this.credentials.value).subscribe(
+      async (res) => {
+        await loading.dismiss();
         this.router.navigateByUrl('/dashboard', { replaceUrl: true });
-      } else if (userRole === 'USER') {
-        this.router.navigateByUrl('/dashboard', { replaceUrl: true });
+      },
+      async (res) => {
+        await loading.dismiss();
+        const alert = await this.alertCtrl.create({
+          header: 'Login failed',
+          message: res.error,
+          buttons: ['OK'],
+        });
+
+        await alert.present();
       }
-    });
+    );
+  }
+
+  // Easy access for form fields
+  get email() {
+    return this.credentials.get('email');
+  }
+
+  get password() {
+    return this.credentials.get('password');
   }
 }

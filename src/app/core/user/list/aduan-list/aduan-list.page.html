@@ -1,29 +1,36 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-button href="/dashboard">
+        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>Senarai Aduan</ion-title>
+
+    <ion-title mode="ios">Status Aduan</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-  <div id="container">
+  <div id="container" class="background">
     <ion-list>
-      <ion-card *ngFor="let aduan of aduans$|async" (click)="openDetailModal(aduan)" color="light">
-        <ion-grid fixed>
+      <ion-card *ngFor="let aduan of aduans$|async" (click)="openDetailModal(aduan)">
+        <ion-grid>
           <ion-row>
-            <ion-col size="3">
-              <ion-thumbnail>
-                <img src="https://c8.alamy.com/comp/B3MXEK/broken-road-B3MXEK.jpg" alt="img" />
-              </ion-thumbnail>
-            </ion-col>
             <ion-col size="9">
               <ion-card-content>
                 <ion-card-title>{{aduan.title}}</ion-card-title>
-                <p>{{aduan.detail}}</p>
+                <span class="text-limit">{{aduan.detail}}</span>
               </ion-card-content>
+            </ion-col>
+            <ion-col size="3">
+              <ion-badge color="success" mode="ios">Selesai</ion-badge>
             </ion-col>
           </ion-row>
         </ion-grid>

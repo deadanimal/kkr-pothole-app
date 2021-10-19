@@ -1,0 +1,16 @@
+.background {
+  background-image: url(../../../../../assets/img/bg-login.png);
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+ion-card {
+  border-radius: 10px;
+
+}
+
+ion-list {
+  background-color: transparent;
+}

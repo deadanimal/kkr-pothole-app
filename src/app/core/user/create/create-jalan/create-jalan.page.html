@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
     </ion-buttons>
     <ion-title>{{isEditMode ? 'Kemaskini':'Daftar'}} Jalan</ion-title>
   </ion-toolbar>
@@ -15,29 +15,30 @@
         <ion-row color="primary" justify-content-center>
           <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
             <div padding>
+
+              <ion-item>
+                <ion-label position="floating">Nama Jalan</ion-label>
+                <ion-input formControlName="name" type="text" placeholder="Nama Jalan"></ion-input>
+              </ion-item>
               <ion-item>
                 <ion-label position="floating">Keterangan Jalan</ion-label>
                 <ion-input formControlName="detail" type="text" placeholder="Nyatakan Keadaan Jalan"></ion-input>
               </ion-item>
               <ion-item>
-                <ion-label position="floating">Alamat</ion-label>
-                <ion-input formControlName="alamat" type="text" placeholder="Alamat Jalan"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Daerah</ion-label>
-                <ion-input formControlName="daerah" type="text" placeholder="Pilih Daerah"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Poskod</ion-label>
-                <ion-input formControlName="poskod" type="text" placeholder="Masukkan Poskod"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Negeri</ion-label>
-                <ion-input formControlName="negeri" type="text" placeholder="Pilih Negeri"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Status Jalan</ion-label>
+                <ion-label position="floating">Status</ion-label>
                 <ion-input formControlName="status" type="text" placeholder="Nyatakan Status Jalan"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Tarikh Mula</ion-label>
+                <ion-input formControlName="start_date" type="date" placeholder="Pilih"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Tarikh Akhir</ion-label>
+                <ion-input formControlName="end_date" type="date" placeholder="Pilih"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Pihak Bertanggungjawab</ion-label>
+                <ion-input formControlName="response_party" type="text" placeholder="Nyatakan Pihak"></ion-input>
               </ion-item>
             </div>
             <div padding>

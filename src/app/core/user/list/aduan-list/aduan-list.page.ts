@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { Observable } from 'rxjs';
 import { AduanService } from './../../../../shared/services/aduan.service';
 /* eslint-disable @typescript-eslint/no-shadow */
@@ -18,6 +19,7 @@ export class AduanListPage implements OnInit {
   private aduans = data;
 
   constructor(
+    private authService: AuthService,
     private modalCtrl: ModalController,
     private aduanService: AduanService,
     private loadingCtrl: LoadingController
@@ -70,9 +72,7 @@ export class AduanListPage implements OnInit {
     }
   }
 
-  async open(row) {
-    console.log(row.complaint_title);
+  logout() {
+    this.authService.logout();
   }
-
-  switchStyle() {}
 }

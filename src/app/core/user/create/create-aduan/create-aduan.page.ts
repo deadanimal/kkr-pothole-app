@@ -12,8 +12,6 @@ import { PhotoService } from '../../../../shared/services/photo/photo.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import {
   NativeGeocoder,
-  NativeGeocoderResult,
-  NativeGeocoderOptions,
 } from '@ionic-native/native-geocoder/ngx';
 import { AduanService } from 'src/app/shared/services/aduan.service';
 import { take } from 'rxjs/operators';
@@ -40,6 +38,7 @@ export class CreateAduanPage implements OnInit {
   longitude: number;
   myMarker: any;
   center: any;
+  infoWindow: any;
 
   constructor(
     public photoService: PhotoService,
@@ -66,8 +65,6 @@ export class CreateAduanPage implements OnInit {
       title: new FormControl(null, [Validators.required]),
       detail: new FormControl(null, [Validators.required]),
       gambar_id: new FormControl(null),
-      kategori_jalan: new FormControl(null, [Validators.required]),
-      negeri: new FormControl(null, [Validators.required]),
       pengadu_id: new FormControl(null),
       latitud: new FormControl(this.latitude),
       langitud: new FormControl(this.latitude),
@@ -79,8 +76,6 @@ export class CreateAduanPage implements OnInit {
       title: this.aduan.title,
       detail: this.aduan.detail,
       gambar_id: this.aduan.gambar_id,
-      kategori_jalan: this.aduan.kategori_jalan,
-      negeri: this.aduan.negeri,
       pengadu_id: this.aduan.pengadu_id,
       latitud: this.aduan.latitud,
       langitud: this.aduan.langitud,
@@ -127,26 +122,33 @@ export class CreateAduanPage implements OnInit {
   ionViewWillEnter() {
     this.googleMap();
   }
-  // 3.0738, 101.5183
-  addMarker() {
+
+  // ============  GOOGLE MAPS =============
+  async addMarker() {
     this.myMarker = new google.maps.Marker({
       map: this.map2,
       // animation: google.maps.Animation.DROP,
       position: this.map2.getCenter(),
-      draggable: true,
+      draggable: false,
     });
 
-    const content = '<h4>Information!</h4>';
-
-    this.addInfoWindow(this.myMarker, content);
+    const content = '<p>' + this.address + '</p>';
+    console.log(this.address, this.map2.center.lat());
+    await this.addInfoWindow(this.myMarker, content);
   }
+
   addInfoWindow(marker, content) {
-    const infoWindow = new google.maps.InfoWindow({
+    this.infoWindow = new google.maps.InfoWindow({
       content,
     });
-
-    google.maps.event.addListener(marker, 'click', () => {
-      infoWindow.open(this.map2, marker);
+    google.maps.event.addListener(marker, 'click', async () => {
+      this.infoWindow.open({
+        anchor: marker,
+        map: this.map2,
+        shouldFocus: false,
+      });
+      await this.infoWindow.setContent('<p>' + this.address + '</p>');
+      console.log(this.address);
     });
   }
 
@@ -163,23 +165,15 @@ export class CreateAduanPage implements OnInit {
         );
         const mapOptions = {
           center: latLng,
-          zoom: 17,
+          zoom: 15,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           mapTypeControl: false,
-          mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-            position: google.maps.ControlPosition.LEFT_TOP,
-          },
           zoomControl: false,
-          zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_TOP,
-          },
           scaleControl: false,
           streetViewControl: false,
-          streetViewControlOptions: {
-            position: google.maps.ControlPosition.LEFT_TOP,
-          },
+          fullscreenControl: false,
         };
+
         this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
 
         this.map2 = new google.maps.Map(
@@ -191,9 +185,14 @@ export class CreateAduanPage implements OnInit {
         this.map2.addListener('drag', () => {
           this.latitude = this.map2.center.lat();
           this.longitude = this.map2.center.lng();
-
-          this.getAddressFromCoords(this.latitude, this.longitude);
           this.myMarker.setPosition(this.map2.getCenter());
+          this.infoWindow.close();
+        });
+        this.map2.addListener('dragend', () => {
+          this.getAddressFromCoords(
+            this.map2.center.lat(),
+            this.map2.center.lng()
+          );
         });
       })
       .catch((error) => {
@@ -203,30 +202,42 @@ export class CreateAduanPage implements OnInit {
 
   getAddressFromCoords(lattitude, longitude) {
     console.log('getAddressFromCoords :' + lattitude + ',' + longitude);
-    const options: NativeGeocoderOptions = {
-      useLocale: true,
-      maxResults: 5,
-    };
+    const latlng = new google.maps.LatLng(lattitude, longitude);
+    // This is making the Geocode request
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ latLng: latlng }, (results, status) => {
+      if (status !== google.maps.GeocoderStatus.OK) {
+        alert(status);
+      }
+      // This is checking to see if the Geoeode Status is OK before proceeding
+      if (status === google.maps.GeocoderStatus.OK) {
+        this.address = results[0].formatted_address;
+        console.log(this.address);
+      }
+    });
+  }
 
-    this.nativeGeocoder
-      .reverseGeocode(lattitude, longitude, options)
-      .then((result: NativeGeocoderResult[]) => {
-        this.address = '';
-        const responseAddress = [];
-        for (const [, value] of Object.entries(result[0])) {
-          if (value.length > 0) {
-            responseAddress.push(value);
-          }
-        }
-        responseAddress.reverse();
-        for (const value of responseAddress) {
-          this.address += value + ', ';
-        }
-        this.address = this.address.slice(0, -2);
-        console.log('Address:', this.address);
+  getCurrentCoords() {
+    this.geolocation
+      .getCurrentPosition()
+      .then((resp) => {
+        this.latitude = resp.coords.latitude;
+        this.longitude = resp.coords.longitude;
+        const pos = {
+          zoom: 14,
+          lat: resp.coords.latitude,
+          lng: resp.coords.longitude,
+        };
+
+        const content = '<p>' + this.address + '</p>';
+        this.infoWindow.setContent(content);
+        this.map2.setCenter(pos);
+        this.myMarker.setPosition(pos);
+
+        this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
       })
-      .catch(() => {
-        this.address = 'Address Not Available!';
+      .catch((error) => {
+        console.log('Error getting location', error);
       });
   }
 

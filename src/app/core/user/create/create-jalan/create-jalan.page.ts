@@ -52,24 +52,32 @@ export class CreateJalanPage implements OnInit {
 
   initAddJalanForm() {
     this.jalanForm = this.formBuilder.group({
+      name: new FormControl(null, [Validators.required]),
       detail: new FormControl(null, [Validators.required]),
-      alamat: new FormControl(null, [Validators.required]),
-      daerah: new FormControl(null, [Validators.required]),
-      negeri: new FormControl(null, [Validators.required]),
-      poskod: new FormControl(null, [Validators.required]),
       status: new FormControl(null, [Validators.required]),
+      start_date: new FormControl(null),
+      end_date: new FormControl(null),
+      response_party: new FormControl(null, [Validators.required]),
+      // alamat: new FormControl(null, [Validators.required]),
+      // daerah: new FormControl(null, [Validators.required]),
+      // negeri: new FormControl(null, [Validators.required]),
+      // poskod: new FormControl(null, [Validators.required]),
       admin_id: new FormControl(null),
     });
   }
 
   setFormValues() {
     this.jalanForm.setValue({
+      name: this.jalan.name,
       detail: this.jalan.detail,
-      alamat: this.jalan.alamat,
-      daerah: this.jalan.daerah,
-      negeri: this.jalan.negeri,
-      poskod: this.jalan.poskod,
       status: this.jalan.status,
+      start_date: this.jalan.start_date,
+      end_date: this.jalan.end_date,
+      response_party: this.jalan.response_party,
+      // alamat: this.jalan.alamat,
+      // daerah: this.jalan.daerah,
+      // negeri: this.jalan.negeri,
+      // poskod: this.jalan.poskod,
       admin_id: this.jalan.admin_id,
     });
   }
@@ -79,7 +87,7 @@ export class CreateJalanPage implements OnInit {
     loading.present();
 
     let response: Observable<Jalan>;
-
+    console.log('JALAN :',this.jalanForm.value);
     if (this.isEditMode) {
       response = this.jalanService.updateJalan(
         this.jalan.id,
