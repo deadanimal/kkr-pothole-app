@@ -58,10 +58,6 @@ export class CreateJalanPage implements OnInit {
       start_date: new FormControl(null),
       end_date: new FormControl(null),
       response_party: new FormControl(null, [Validators.required]),
-      // alamat: new FormControl(null, [Validators.required]),
-      // daerah: new FormControl(null, [Validators.required]),
-      // negeri: new FormControl(null, [Validators.required]),
-      // poskod: new FormControl(null, [Validators.required]),
       admin_id: new FormControl(null),
     });
   }
@@ -74,10 +70,6 @@ export class CreateJalanPage implements OnInit {
       start_date: this.jalan.start_date,
       end_date: this.jalan.end_date,
       response_party: this.jalan.response_party,
-      // alamat: this.jalan.alamat,
-      // daerah: this.jalan.daerah,
-      // negeri: this.jalan.negeri,
-      // poskod: this.jalan.poskod,
       admin_id: this.jalan.admin_id,
     });
   }

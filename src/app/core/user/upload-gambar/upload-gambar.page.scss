@@ -1,0 +1,49 @@
+ion-item {
+  --background: transparent !important;
+  --border-color: transparent !important;
+  border-bottom: 2px solid var(--ion-color-medium);
+
+
+}
+
+ion-toolbar {
+  --background: transparent no-repeat fixed center;
+  --color: var(--ion-color-primary);
+  position: absolute;
+  top: 5px;
+}
+
+
+.card-body {
+  background: linear-gradient(var(--ion-color-primary), #b6c0cafc);
+  padding: 20px;
+  width: 100%;
+  overflow: hidden;
+  bottom: 0;
+  position: absolute;
+  border-top-left-radius: 2.5rem;
+  border-top-right-radius: 2.5rem;
+
+}
+
+ion-button {
+  --border-radius: 19px;
+}
+
+ion-card {
+  border-radius: 19px;
+  height: 200px;
+}
+
+.background {
+  background: url(../../../../assets/img/bg-login.png) no-repeat center/cover fixed;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.butiran {
+  margin-top: 100px;
+  padding: 5px 40px 5px;
+}

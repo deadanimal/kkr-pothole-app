@@ -10,9 +10,6 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PhotoService } from '../../../../shared/services/photo/photo.service';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import {
-  NativeGeocoder,
-} from '@ionic-native/native-geocoder/ngx';
 import { AduanService } from 'src/app/shared/services/aduan.service';
 import { take } from 'rxjs/operators';
 import { Aduan } from 'src/app/shared/model/aduan.model';
@@ -43,7 +40,6 @@ export class CreateAduanPage implements OnInit {
   constructor(
     public photoService: PhotoService,
     private geolocation: Geolocation,
-    private nativeGeocoder: NativeGeocoder,
     private formBuilder: FormBuilder,
     private aduanService: AduanService,
     private loadingCtrl: LoadingController,
@@ -239,9 +235,5 @@ export class CreateAduanPage implements OnInit {
       .catch((error) => {
         console.log('Error getting location', error);
       });
-  }
-
-  addPhotoToGallery() {
-    this.photoService.addNewToGallery();
   }
 }

@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,11 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./info.page.scss'],
 })
 export class InfoPage implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {}
 
-  logout() {
-    this.authService.logout();
+  async logout() {
+    await this.authService.logout();
+    this.router.navigateByUrl('/', { replaceUrl: true });
   }
 }

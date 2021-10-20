@@ -1,3 +1,4 @@
+import { PhotoService } from './../../../shared/services/photo/photo.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./upload-gambar.page.scss'],
 })
 export class UploadGambarPage implements OnInit {
+  constructor(private photoService: PhotoService) {}
 
-  constructor() { }
+  ngOnInit() {}
 
-  ngOnInit() {
+  addPhotoToGallery() {
+    this.photoService.addNewToGallery();
   }
-
 }

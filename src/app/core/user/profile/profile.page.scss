@@ -1,68 +1,58 @@
-ion-content {
-  // --background: url(./assets/img/lando.jpeg) no-repeat top center/cover fixed, #fff;
-  position: relative;
-  height: 100%;
-  width: 100%;
-
-  ion-button {
-      margin-top: 1em;
-      margin-bottom: 1em
-  }
-}
-
 ion-toolbar {
-  --background: transparent;
+  --background: transparent no-repeat fixed center;
+  --color: var(--ion-color-primary);
+  position: absolute;
+  top: 5px;
 }
 
-ion-chip {
-  --background: #9dc912;
-  --color: #fff;
+ion-item {
+  border-radius: 18px;
 }
 
-.card {
-  margin: 0 auto;
+.input {
+  border-radius: 18px;
+  background: linear-gradient(#429AE0, white);
+  padding: 1px;
+  margin-bottom: .7rem;
+  margin-right: 10px;
+}
 
-  .header {
-      height: 200px; // 20vh;
+.input2 {
+  margin-bottom: .7rem;
+  margin-right: 10px;
+}
 
-      .avatar {
-          width: 160px; //40vw
-          height: 160px;
-          position: relative;
-          margin: 0 auto;
+.header {
+  margin-top: 100px;
 
-          img {
-              display: block;
-              border-radius: 50%;
-              position: absolute;
-              bottom: calc(-1*(80px + 4px)); // -42px;
-              border: 6px solid #129ec9;
-              background-color: #fff;
-          }
-      }
+  .avatar {
+    width: 180px; //40vw
+    height: 180px;
+    border-radius: 50%;
+    margin: 0 0 10px -30px;
+    padding: 1rem;
+    position: absolute;
+    background: linear-gradient(#429AE0, white);
+    padding: 1px;
+
+    img {
+      display: block;
+      border-radius: 50%;
+      background-color: #fff;
+      padding: 3px;
+    }
   }
 }
 
 .card-body {
-  background-color: #7c7c7c;
-  padding: 30px;
-  height: calc(100vh - (200px + 56px));
+  background: var(--ion-color-light);
+  padding: 10px 50px 10px;
+  width: 100%;
   overflow: hidden;
+  bottom: 0;
+  position: absolute;
+  border-top-left-radius: 2.5rem;
+  border-top-right-radius: 2.5rem;
+  box-shadow: 2px -3px 9px -6px black;
 
-  .user-meta {
-      padding-top: 40px;
-
-      .playername {
-          font-size: 24px;
-          font-weight: 600;
-          color: #ffffff;
-          text-transform: uppercase;
-      }
-
-      .email {
-          font-size: 100%;
-          color: #bbbbbb;
-          margin: 0 auto;
-      }
-  }
 }

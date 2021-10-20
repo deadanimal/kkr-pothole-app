@@ -23,8 +23,8 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.credentials = this.fb.group({
-      email: ['eve.holt@reqres.in', [Validators.required, Validators.email]],
-      password: ['cityslicka', [Validators.required, Validators.minLength(6)]],
+      email: ['pengadutest2@email.com', [Validators.required, Validators.email]],
+      password: ['password', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -35,7 +35,7 @@ export class LoginPage implements OnInit {
     this.authService.login(this.credentials.value).subscribe(
       async (res) => {
         await loading.dismiss();
-        this.router.navigateByUrl('/dashboard', { replaceUrl: true });
+        this.router.navigateByUrl('user/dashboard', { replaceUrl: true });
       },
       async (res) => {
         await loading.dismiss();

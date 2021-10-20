@@ -1,6 +1,7 @@
 import { AuthGuard } from './shared/guards/auth.guard';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AutoLoginGuard } from './shared/guards/auto-login.guard';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () =>
       import('./auth/login/login.module').then((m) => m.LoginPageModule),
+    canLoad: [AutoLoginGuard],
   },
   {
     path: 'forgot',
@@ -31,25 +33,18 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'dashboard',
+    path: 'user/dashboard',
     loadChildren: () =>
       import('./core/user/dashboard/dashboard.module').then(
         (m) => m.DashboardPageModule
       ),
-    // canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
   {
     path: 'aduan-list',
     loadChildren: () =>
-      import('./core/user/list/aduan-list/aduan-list.module').then(
+      import('./core/superadmin/list/aduan-list/aduan-list.module').then(
         (m) => m.AduanListPageModule
-      ),
-  },
-  {
-    path: 'user-list',
-    loadChildren: () =>
-      import('./core/user/list/user-list/user-list.module').then(
-        (m) => m.UserListPageModule
       ),
   },
   {
@@ -71,13 +66,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./core/user/chart/chart.module').then((m) => m.ChartPageModule),
   },
-  // {
-  //   path: 'upload-picture',
-  //   loadChildren: () =>
-  //     import('./core/global/upload-picture/upload-picture.module').then(
-  //       (m) => m.UploadPicturePageModule
-  //     ),
-  // },
+  {
+    path: 'upload-picture',
+    loadChildren: () =>
+      import('./core/global/upload-picture/upload-picture.module').then(
+        (m) => m.UploadPicturePageModule
+      ),
+  },
   {
     path: 'profile-edit',
     loadChildren: () =>
@@ -90,6 +85,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./core/user/amchart/amchart.module').then(
         (m) => m.AmchartPageModule
+      ),
+  },
+  {
+    path: 'upload-gambar',
+    loadChildren: () =>
+      import('./core/user/upload-gambar/upload-gambar.module').then(
+        (m) => m.UploadGambarPageModule
       ),
   },
   {
@@ -119,9 +121,17 @@ const routes: Routes = [
       import('./pages/home/home.module').then((m) => m.HomePageModule),
   },
   {
-    path: 'jalan-list',
+    path: 'superadmin/jalan-list',
     loadChildren: () =>
-      import('./core/user/list/jalan-list/jalan-list.module').then(
+      import('./core/superadmin/list/jalan-list/jalan-list.module').then(
+        (m) => m.JalanListPageModule
+      ),
+  },
+
+  {
+    path: 'admin/jalan-list',
+    loadChildren: () =>
+      import('./core/admin/jalan-list/jalan-list.module').then(
         (m) => m.JalanListPageModule
       ),
   },
@@ -164,6 +174,48 @@ const routes: Routes = [
     path: 'info',
     loadChildren: () =>
       import('./core/global/info/info.module').then((m) => m.InfoPageModule),
+  },
+  {
+    path: 'superadmin/profile',
+    loadChildren: () =>
+      import('./core/superadmin/profile/profile.module').then(
+        (m) => m.ProfilePageModule
+      ),
+  },
+  {
+    path: 'superadmin-list',
+    loadChildren: () =>
+      import(
+        './core/superadmin/list/superadmin-list/superadmin-list.module'
+      ).then((m) => m.SuperadminListPageModule),
+  },
+  {
+    path: 'admin-list',
+    loadChildren: () =>
+      import('./core/superadmin/list/admin-list/admin-list.module').then(
+        (m) => m.AdminListPageModule
+      ),
+  },
+  {
+    path: 'admin-management',
+    loadChildren: () =>
+      import('./core/superadmin/admin-management/admin-management.module').then(
+        (m) => m.AdminManagementPageModule
+      ),
+  },
+  {
+    path: 'superadmin/dashboard',
+    loadChildren: () =>
+      import('./core/superadmin/dashboard/dashboard.module').then(
+        (m) => m.DashboardPageModule
+      ),
+  },
+  {
+    path: 'admin/dashboard',
+    loadChildren: () =>
+      import('./core/admin/dashboard/dashboard.module').then(
+        (m) => m.DashboardPageModule
+      ),
   },
 ];
 
