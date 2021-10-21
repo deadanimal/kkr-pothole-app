@@ -127,7 +127,6 @@ const routes: Routes = [
         (m) => m.JalanListPageModule
       ),
   },
-
   {
     path: 'admin/jalan-list',
     loadChildren: () =>
@@ -136,9 +135,16 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'user/jalan-list',
+    loadChildren: () =>
+      import('./core/user/list/jalan-list/jalan-list.module').then(
+        (m) => m.JalanListPageModule
+      ),
+  },
+  {
     path: 'create-jalan',
     loadChildren: () =>
-      import('./core/user/create/create-jalan/create-jalan.module').then(
+      import('./core/admin/create-jalan/create-jalan.module').then(
         (m) => m.CreateJalanPageModule
       ),
   },
@@ -216,6 +222,10 @@ const routes: Routes = [
       import('./core/admin/dashboard/dashboard.module').then(
         (m) => m.DashboardPageModule
       ),
+  },
+  {
+    path: 'user-detail',
+    loadChildren: () => import('./modal/user-detail/user-detail.module').then( m => m.UserDetailPageModule)
   },
 ];
 

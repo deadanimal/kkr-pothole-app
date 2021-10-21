@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AduanDetailPageRoutingModule } from './aduan-detail-routing.module';
+import { JalanListPageRoutingModule } from './jalan-list-routing.module';
 
-import { AduanDetailPage } from './aduan-detail.page';
+import { JalanListPage } from './jalan-list.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AduanDetailPageRoutingModule
+    JalanListPageRoutingModule
   ],
-  declarations: [AduanDetailPage]
+  declarations: [JalanListPage]
 })
-export class AduanDetailPageModule {}
+export class JalanListPageModule {}

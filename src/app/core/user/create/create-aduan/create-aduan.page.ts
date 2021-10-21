@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
@@ -43,7 +44,8 @@ export class CreateAduanPage implements OnInit {
     private formBuilder: FormBuilder,
     private aduanService: AduanService,
     private loadingCtrl: LoadingController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -104,10 +106,10 @@ export class CreateAduanPage implements OnInit {
       console.log(aduan);
       this.aduanForm.reset();
       loading.dismiss();
-
       if (this.isEditMode) {
         this.closeModal(aduan);
       }
+      this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
     });
   }
 

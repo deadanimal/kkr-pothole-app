@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
-import { PhotoService } from '../../../../shared/services/photo/photo.service';
+import { PhotoService } from '../../../shared/services/photo/photo.service';
 
 import { take } from 'rxjs/operators';
 import { Observable } from 'rxjs';

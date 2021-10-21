@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { AduanService } from '../../../../shared/services/aduan.service';
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnInit } from '@angular/core';
-import data from '../../../../../assets/data/aduanlist.json';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { AduanDetailPage } from 'src/app/modal/aduan-detail/aduan-detail.page';
 import { Aduan } from '../../../../shared/model/aduan.model';
@@ -16,7 +15,6 @@ import { map, tap } from 'rxjs/operators';
 })
 export class AduanListPage implements OnInit {
   aduans$: Observable<Aduan[]>;
-  private aduans = data;
 
   constructor(
     private authService: AuthService,
@@ -24,7 +22,6 @@ export class AduanListPage implements OnInit {
     private aduanService: AduanService,
     private loadingCtrl: LoadingController
   ) {
-    console.log(this.aduans);
   }
 
   async ngOnInit() {

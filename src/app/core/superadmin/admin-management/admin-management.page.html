@@ -1,9 +1,58 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>admin-management</ion-title>
+    <ion-buttons slot="start">
+      <ion-button href="/superadmin/dashboard">
+        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title mode="ios">Super Admin</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
+
+  <div id="container" class="background">
+    <ion-list>
+      <ion-card href="/register-admin">
+        <ion-card-content>
+          <ion-text color="light">
+            <ion-icon size="large" name="person-add"></ion-icon>
+            <h3>Daftar Admin Jalan</h3>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
+      <ion-card href="/register-superadmin">
+        <ion-card-content>
+          <ion-text color="light">
+            <ion-icon size="large" name="person-add"></ion-icon>
+            <h3>Daftar Super Admin</h3>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
+      <ion-card href="/admin-list">
+        <ion-card-content>
+          <ion-text color="light">
+            <ion-icon size="large" name="people"></ion-icon>
+            <h3>Papar Admin Jalan</h3>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
+      <ion-card href="/superadmin-list">
+        <ion-card-content>
+          <ion-text color="light">
+            <ion-icon size="large" name="people"></ion-icon>
+            <h3>Daftar Super Admin</h3>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </div>
 
 </ion-content>

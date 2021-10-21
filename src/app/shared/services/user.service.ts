@@ -13,8 +13,24 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiUrl}/user`);
   }
 
+  getAdmins(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/user/admin`);
+  }
+
+  getSAdmins(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/user/superadmin`);
+  }
+
   registerUser(user: User): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/register/`, user);
+    return this.http.post<User>(`${this.apiUrl}/register/user`, user);
+  }
+
+  registerAdmin(user: User): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/register/admin`, user);
+  }
+
+  registerSAdmin(user: User): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/register/superadmin`, user);
   }
 
   updateUser(userId: number, user: User): Observable<User> {

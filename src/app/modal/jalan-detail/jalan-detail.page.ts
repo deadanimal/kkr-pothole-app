@@ -1,6 +1,6 @@
 import { take } from 'rxjs/operators';
 import { JalanService } from 'src/app/shared/services/jalan.service';
-import { CreateJalanPage } from './../../core/user/create/create-jalan/create-jalan.page';
+import { CreateJalanPage } from '../../core/admin/create-jalan/create-jalan.page';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalController, NavParams, LoadingController } from '@ionic/angular';
 import { Jalan } from 'src/app/shared/model/jalan.model';

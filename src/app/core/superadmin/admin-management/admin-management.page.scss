@@ -1,0 +1,42 @@
+.background {
+  background-image: url(../../../../assets/img/bg-login.png);
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+ion-card {
+  border-radius: 20px;
+  background: linear-gradient(var(--ion-color-primary), #cad3dcfc);
+  justify-content: center;
+  text-align: center;
+  box-shadow: 2px -3px 9px -6px black;
+
+  ion-card-title {
+    color: white;
+    font-size: medium;
+  }
+}
+
+ion-list {
+  background-color: transparent;
+  margin-top: 80px;
+  margin: 80px 30px 10px;
+}
+
+.text-limit {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: whitesmoke
+}
+
+ion-toolbar {
+  --background: transparent no-repeat fixed center;
+  --color: var(--ion-color-primary);
+  position: absolute;
+  top: 5px;
+}

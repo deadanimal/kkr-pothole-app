@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
-import { JalanService } from './../../../shared/services/jalan.service';
+import { JalanService } from './../../../../shared/services/jalan.service';
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { JalanDetailPage } from 'src/app/modal/jalan-detail/jalan-detail.page';
-import { Jalan } from '../../../shared/model/jalan.model';
+import { Jalan } from '../../../../shared/model/jalan.model';
 import { map, tap } from 'rxjs/operators';
 
 @Component({

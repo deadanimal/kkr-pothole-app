@@ -1,0 +1,58 @@
+.background {
+  background-image: url(../../../../../assets/img/bg-login.png);
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+ion-card {
+  border-radius: 20px;
+  // background: var(--ion-color-light);
+  margin-bottom: 8px;
+
+  ion-card-content {
+    padding: 10px;
+  }
+
+  ion-card-title {
+    color: var(--ion-color-primary);
+    font-size: small;
+  }
+}
+
+ion-list {
+  background-color: transparent;
+  margin: 60px 30px 10px;
+
+  ion-list-header {
+    display: block;
+    text-align: center !important;
+    justify-content: center !important;
+    padding-left: 0;
+
+    ion-label {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+  }
+}
+
+
+
+.text-limit {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  // text-overflow: ellipsis;
+  font-size: small;
+  color: gray
+}
+
+ion-toolbar {
+  --background: transparent no-repeat fixed center;
+  --color: var(--ion-color-primary);
+  position: absolute;
+  top: 5px;
+}
