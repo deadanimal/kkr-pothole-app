@@ -2,8 +2,8 @@
 export interface User {
   id: number;
   name: string;
-  nric: string;
-  // old_nric: string;
+  doc_type: string;
+  doc_no: string;
   telefon: string;
   email: string;
   role: string;

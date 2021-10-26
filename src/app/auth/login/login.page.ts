@@ -1,7 +1,11 @@
-
+import { RegisterUserPage } from './../register/register-user/register-user.page';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, LoadingController } from '@ionic/angular';
+import {
+  AlertController,
+  LoadingController,
+  ModalController,
+} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 
@@ -17,19 +21,20 @@ export class LoginPage implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private alertCtrl: AlertController,
+    private modalCtrl: ModalController,
     private router: Router,
     private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {
     this.credentials = this.fb.group({
-      email: ['pengadutest2@email.com', [Validators.required, Validators.email]],
+      email: ['zubir@email.com', [Validators.required, Validators.email]],
       password: ['password', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   async login() {
-    const loading = await this.loadingCtrl.create({message: 'Loading...'});
+    const loading = await this.loadingCtrl.create({ message: 'Loading...' });
     await loading.present();
 
     this.authService.login(this.credentials.value).subscribe(
@@ -40,14 +45,22 @@ export class LoginPage implements OnInit {
       async (res) => {
         await loading.dismiss();
         const alert = await this.alertCtrl.create({
-          header: 'Login failed',
-          message: res.error,
-          buttons: ['OK'],
+          header: 'Log Masuk Gagal',
+          message: 'Sila masukkan emel dan kata laluan yang sah.',
+          buttons: ['Okay'],
         });
 
         await alert.present();
       }
     );
+  }
+
+  async openRegister() {
+    const modal = await this.modalCtrl.create({
+      component: RegisterUserPage,
+    });
+
+    await modal.present();
   }
 
   // Easy access for form fields

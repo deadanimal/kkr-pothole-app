@@ -13,6 +13,10 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiUrl}/user`);
   }
 
+  getAuthUser(body): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/auth/user`, body);
+  }
+
   getAdmins(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/user/admin`);
   }

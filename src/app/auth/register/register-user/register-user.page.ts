@@ -25,17 +25,6 @@ export class RegisterUserPage implements OnInit {
   regUserForm: FormGroup;
 
   error_messages = {
-    // fname: [{ type: 'required', message: 'First Name is required.' }],
-
-    // lname: [{ type: 'required', message: 'Last Name is required.' }],
-
-    // email: [
-    //   { type: 'required', message: 'Email is required.' },
-    //   { type: 'minlength', message: 'Email length.' },
-    //   { type: 'maxlength', message: 'Email length.' },
-    //   { type: 'required', message: 'please enter a valid email address.' },
-    // ],
-
     password: [
       { type: 'required', message: 'password is required.' },
       { type: 'minlength', message: 'password length.' },
@@ -65,7 +54,7 @@ export class RegisterUserPage implements OnInit {
     this.regUserForm = this.formBuilder.group(
       {
         name: new FormControl(null, [Validators.required]),
-        email: new FormControl(null, [Validators.required]),
+        email: new FormControl(null, [Validators.required, Validators.email]),
         password: new FormControl(
           null,
           Validators.compose([Validators.required, Validators.minLength(8)])
@@ -104,5 +93,8 @@ export class RegisterUserPage implements OnInit {
     return password === confirmPassword ? null : { passwordNotMatch: true };
   }
 
+  closeModal() {
+    this.modalCtrl.dismiss();
+  }
   //======== insert photoservice here =====
 }

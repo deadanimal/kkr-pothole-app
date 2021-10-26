@@ -45,11 +45,13 @@ export class RegisterAdminPage implements OnInit {
   initAddUserForm() {
     this.regAdminForm = this.formBuilder.group({
       name: new FormControl(null, [Validators.required]),
-      email: new FormControl(null, [Validators.required]),
+      email: new FormControl(null, [Validators.required, Validators.email]),
       telefon: new FormControl(null, [Validators.required]),
-      nric: new FormControl(null, [Validators.required]),
+      doc_type: new FormControl(null, [Validators.required]),
+      doc_no: new FormControl(null, [Validators.required]),
       organisasi: new FormControl(null, [Validators.required]),
       jawatan: new FormControl(null, [Validators.required]),
+      role: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -58,9 +60,11 @@ export class RegisterAdminPage implements OnInit {
       name: this.user.name,
       email: this.user.email,
       telefon: this.user.telefon,
-      nric: this.user.nric,
+      doc_type: this.user.doc_type,
+      doc_no: this.user.doc_no,
       organisasi: this.user.organisasi,
       jawatan: this.user.jawatan,
+      role: this.user.role,
     });
     console.log(this.user);
   }

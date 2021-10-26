@@ -1,68 +1,94 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button slot="start" name="chevron-back-outline"></ion-back-button>
+      <ion-back-button>
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="logout()">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title mode="ios">Profil</ion-title>
+    <ion-title mode="ios">Profil Pengadu</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div id="container" class="header">
-    <ion-grid fixed>
-      <ion-row>
-        <ion-col size="5">
-          <div class="avatar">
-            <img src="../../assets/img/default_icon.jpeg" alt="">
-          </div>
-        </ion-col>
-        <ion-col size="7">
-          <div class="input">
-            <ion-item>
-              <ion-input placeholder="Nama Penuh" type="text"></ion-input>
-            </ion-item>
-          </div>
-          <div class="input">
-            <ion-item>
-              <ion-input placeholder="Alamat Emel" type="text"></ion-input>
-            </ion-item>
-          </div>
-          <div class="input2">
-            <ion-item>
-              <ion-input placeholder="No Telefon Bimbit" type="text"></ion-input>
-            </ion-item>
-          </div>
-          <div class="input2">
-            <ion-item>
-              <ion-input placeholder="No Kad Pengenalan" type="text"></ion-input>
-            </ion-item>
-          </div>
-          <div class="input">
-            <ion-item>
-              <ion-select placeholder="Jenis Kad Pengenalan" interface="action-sheet">
-                <ion-select-option value="new_nric">Baru</ion-select-option>
-                <ion-select-option value="old_mric">Lama</ion-select-option>
-              </ion-select>
-            </ion-item>
-          </div>
-          <div class="input">
-            <ion-item>
-              <ion-input placeholder="Kata Laluan Baru" type="text"></ion-input>
-            </ion-item>
-          </div>
-          <div class="input">
-            <ion-item>
-              <ion-input placeholder="Sah Kata Laluan " type="text"></ion-input>
-            </ion-item>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <form [formGroup]="profileForm" class="container">
+    <div id="container" class="header">
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12">
+            <div class="avatar">
+              <img src="../../assets/img/default_icon.jpeg" alt="">
+            </div>
+          </ion-col>
+          <ion-col size="12">
+            <div class="input">
+              <ion-item>
+                <ion-input formControlName="name" placeholder="Nama Penuh" type="text"></ion-input>
+              </ion-item>
+            </div>
+            <div class="input">
+              <ion-item>
+                <ion-input formControlName="email" placeholder="Alamat Emel" type="text"></ion-input>
+              </ion-item>
+            </div>
+            <div class="input">
+              <ion-item>
+                <ion-input formControlName="organisasi" placeholder="Nama Organisasi" type="text"></ion-input>
+              </ion-item>
+            </div>
+            <div class="input">
+              <ion-item>
+                <ion-input formControlName="jawatan" placeholder="Nama Jawatan" type="text"></ion-input>
+              </ion-item>
+            </div>
+            <div class="input">
+              <ion-item>
+                <ion-select formControlName="doc_type" placeholder="Jenis Pengenalan" interface="action-sheet">
+                  <ion-select-option value="NRIC">NRIC No</ion-select-option>
+                  <ion-select-option value="PASS">Paspot No</ion-select-option>
+                  <ion-select-option value="COMP">No Syarikat</ion-select-option>
+                  <ion-select-option value="OTH">Lain-lain</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </div>
+            <div class="input2">
+              <ion-item>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number"></ion-input>
+              </ion-item>
+            </div>
+            <div class="input2">
+              <ion-item>
+                <ion-input formControlName="telefon" placeholder="No Telefon Bimbit" type="number"></ion-input>
+              </ion-item>
+            </div>
+            <div class="input">
+              <ion-item>
+                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="password" autocomplete="off"></ion-input>
+              </ion-item>
+            </div>
+            <div class="input">
+              <ion-item>
+                <ion-input formControlName="confirmpassword" placeholder="Sah Kata Laluan" type="password" autocomplete="off"></ion-input>
+              </ion-item>
+            </div>
+            <div *ngFor="let error of error_messages.confirmpassword">
+              <div class="error"
+                *ngIf="profileForm.get('confirmpassword').hasError(error.type) && (profileForm.get('confirmpassword').dirty || profileForm.get('confirmpassword').touched)">
+                {{ error.message }}
+              </div>
+            </div>
+            <div class="error"
+              *ngIf="!profileForm.get('confirmpassword').errors && profileForm.hasError('passwordNotMatch') && (profileForm.get('confirmpassword').dirty || profileForm.get('confirmpassword').touched)">
+              Sila masukkan kata laluan yang sama
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
     <div class="card-body">
       <ion-grid fixed>
         <ion-row>
@@ -70,12 +96,12 @@
             <ion-text color="primary">
               <p>Sila pastikan maklumat peribadi anda telah diisi dengan lengkap</p>
             </ion-text>
-            <ion-button (click)="onClick()" mode="ios" shape="round">
+            <ion-button (click)="updateProfile()" [disabled]="profileForm.invalid" mode="ios" shape="round">
               Kemas Kini
             </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
     </div>
-  </div>
+  </form>
 </ion-content>

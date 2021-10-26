@@ -60,7 +60,7 @@ export class CreateAduanPage implements OnInit {
 
   initAddAduanForm() {
     this.aduanForm = this.formBuilder.group({
-      title: new FormControl(null, [Validators.required]),
+      title: new FormControl('Jalan Berlubang', [Validators.required]),
       detail: new FormControl(null, [Validators.required]),
       gambar_id: new FormControl(null),
       pengadu_id: new FormControl(null),
@@ -109,7 +109,7 @@ export class CreateAduanPage implements OnInit {
       if (this.isEditMode) {
         this.closeModal(aduan);
       }
-      this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
+      this.router.navigateByUrl('/upload-gambar', { replaceUrl: true });
     });
   }
 

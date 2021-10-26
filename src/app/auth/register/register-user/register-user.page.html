@@ -6,8 +6,8 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title mode="ios">Daftar Pengadu</ion-title>
@@ -19,12 +19,12 @@
     <form [formGroup]="regUserForm">
       <ion-grid fixed>
         <ion-row>
-          <ion-col size="5">
+          <ion-col size="12">
             <div class="avatar">
               <img src="../../assets/img/default_icon.jpeg" alt="">
             </div>
           </ion-col>
-          <ion-col size="7">
+          <ion-col size="12">
             <div class="input">
               <ion-item>
                 <ion-input formControlName="name" placeholder="Nama Penuh" type="text"></ion-input>
@@ -46,18 +46,18 @@
               </ion-item>
             </div>
             <div *ngFor="let error of error_messages.confirmpassword">
-              <div class="error-message"
+              <div class="error"
                 *ngIf="regUserForm.get('confirmpassword').hasError(error.type) && (regUserForm.get('confirmpassword').dirty || regUserForm.get('confirmpassword').touched)">
                 {{ error.message }}
               </div>
             </div>
             <div class="error"
               *ngIf="!regUserForm.get('confirmpassword').errors && regUserForm.hasError('passwordNotMatch') && (regUserForm.get('confirmpassword').dirty || regUserForm.get('confirmpassword').touched)">
-              Password and Confirm Password fields should match
+              Sila masukkan kata laluan yang sama
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="telefon" placeholder="No Telefon Bimbit" type="text"></ion-input>
+                <ion-input formControlName="telefon" placeholder="No Telefon Bimbit" type="number"></ion-input>
               </ion-item>
             </div>
             <div class="input2">

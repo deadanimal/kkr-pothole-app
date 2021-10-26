@@ -6,7 +6,7 @@ import { AutoLoginGuard } from './shared/guards/auto-login.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
@@ -18,7 +18,7 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () =>
       import('./auth/login/login.module').then((m) => m.LoginPageModule),
-    canLoad: [AutoLoginGuard],
+    // canLoad: [AutoLoginGuard],
   },
   {
     path: 'forgot',
@@ -26,9 +26,23 @@ const routes: Routes = [
       import('./auth/forgot/forgot.module').then((m) => m.ForgotPageModule),
   },
   {
-    path: 'profile',
+    path: 'user/profile',
     loadChildren: () =>
       import('./core/user/profile/profile.module').then(
+        (m) => m.ProfilePageModule
+      ),
+  },
+  {
+    path: 'admin/profile',
+    loadChildren: () =>
+      import('./core/admin/profile/profile.module').then(
+        (m) => m.ProfilePageModule
+      ),
+  },
+  {
+    path: 'superadmin/profile',
+    loadChildren: () =>
+      import('./core/superadmin/profile/profile.module').then(
         (m) => m.ProfilePageModule
       ),
   },
@@ -95,13 +109,6 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'register-superadmin',
-    loadChildren: () =>
-      import(
-        './auth/register/register-superadmin/register-superadmin.module'
-      ).then((m) => m.RegisterSuperadminPageModule),
-  },
-  {
     path: 'register-admin',
     loadChildren: () =>
       import('./auth/register/register-admin/register-admin.module').then(
@@ -119,13 +126,6 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home.module').then((m) => m.HomePageModule),
-  },
-  {
-    path: 'superadmin/jalan-list',
-    loadChildren: () =>
-      import('./core/superadmin/list/jalan-list/jalan-list.module').then(
-        (m) => m.JalanListPageModule
-      ),
   },
   {
     path: 'admin/jalan-list',
@@ -182,13 +182,6 @@ const routes: Routes = [
       import('./core/global/info/info.module').then((m) => m.InfoPageModule),
   },
   {
-    path: 'superadmin/profile',
-    loadChildren: () =>
-      import('./core/superadmin/profile/profile.module').then(
-        (m) => m.ProfilePageModule
-      ),
-  },
-  {
     path: 'superadmin-list',
     loadChildren: () =>
       import(
@@ -225,7 +218,10 @@ const routes: Routes = [
   },
   {
     path: 'user-detail',
-    loadChildren: () => import('./modal/user-detail/user-detail.module').then( m => m.UserDetailPageModule)
+    loadChildren: () =>
+      import('./modal/user-detail/user-detail.module').then(
+        (m) => m.UserDetailPageModule
+      ),
   },
 ];
 

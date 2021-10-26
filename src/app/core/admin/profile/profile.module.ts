@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { RegisterSuperadminPageRoutingModule } from './register-superadmin-routing.module';
+import { ProfilePageRoutingModule } from './profile-routing.module';
 
-import { RegisterSuperadminPage } from './register-superadmin.page';
+import { ProfilePage } from './profile.page';
 
 @NgModule({
   imports: [
@@ -14,8 +14,8 @@ import { RegisterSuperadminPage } from './register-superadmin.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    RegisterSuperadminPageRoutingModule,
+    ProfilePageRoutingModule
   ],
-  declarations: [RegisterSuperadminPage],
+  declarations: [ProfilePage]
 })
-export class RegisterSuperadminPageModule {}
+export class ProfilePageModule {}

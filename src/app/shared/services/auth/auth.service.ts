@@ -32,6 +32,7 @@ export class AuthService {
       this.isAuthenticated.next(false);
     }
   }
+
   login(credentials: { email; password }): Observable<any> {
     return this.http.post(`http://127.0.0.1:8000/api/login`, credentials).pipe(
       map((data: any) => data.access_token),

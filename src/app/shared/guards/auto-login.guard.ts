@@ -8,19 +8,16 @@ import { AuthService } from '../services/auth/auth.service';
   providedIn: 'root',
 })
 export class AutoLoginGuard implements CanLoad {
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canLoad(): Observable<boolean> {
     return this.authService.isAuthenticated.pipe(
       filter((val) => val !== null), // Filter out initial Behaviour subject value
       take(1), // Otherwise the Observable doesn't complete!
       map((isAuthenticated) => {
-        console.log('Found previous token, automatic login');
         if (isAuthenticated) {
           // Directly open inside area
+          console.log('Found previous token, automatic login');
           this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
         } else {
           // Simply allow access to the login

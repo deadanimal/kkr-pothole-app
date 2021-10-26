@@ -31,7 +31,7 @@ import { HttpClientModule } from '@angular/common/http';
     IonicStorageModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     AuthGuard,
