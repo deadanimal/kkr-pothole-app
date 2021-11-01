@@ -20,7 +20,7 @@
 
   <div id="container" class="background">
     <ion-list>
-      <ion-card href="/register-admin">
+      <ion-card (click)="registerAdmin()">
         <ion-card-content>
           <ion-text color="light">
             <ion-icon size="large" name="person-add"></ion-icon>
@@ -28,14 +28,7 @@
           </ion-text>
         </ion-card-content>
       </ion-card>
-      <ion-card href="/register-superadmin">
-        <ion-card-content>
-          <ion-text color="light">
-            <ion-icon size="large" name="person-add"></ion-icon>
-            <h3>Daftar Super Admin</h3>
-          </ion-text>
-        </ion-card-content>
-      </ion-card>
+      <hr>
       <ion-card href="/admin-list">
         <ion-card-content>
           <ion-text color="light">
@@ -44,11 +37,12 @@
           </ion-text>
         </ion-card-content>
       </ion-card>
+      <hr>
       <ion-card href="/superadmin-list">
         <ion-card-content>
           <ion-text color="light">
             <ion-icon size="large" name="people"></ion-icon>
-            <h3>Daftar Super Admin</h3>
+            <h3>Papar Super Admin</h3>
           </ion-text>
         </ion-card-content>
       </ion-card>

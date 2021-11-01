@@ -1,6 +1,6 @@
-<ion-header translucent>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>{{jalan.detail}}</ion-title>
+    <ion-title mode="ios">Hebahan Jalan</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="closeModal()">
         <ion-icon slot="start" name="close"></ion-icon>
@@ -9,20 +9,36 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div #map3 id="map3"></div>
-  <!-- <img src="https://c8.alamy.com/comp/B3MXEK/broken-road-B3MXEK.jpg" alt="Picture"/> -->
-  <div class="ion-padding">
-    <ion-text>
-      <ion-card-title>{{jalan.detail}}</ion-card-title>
-      <p class="ion-margin-vertical">{{jalan.status}}</p>
-    </ion-text>
+<ion-content [fullscreen]="true" fixed>
+  <div id="container" class="background">
+    <!-- <ion-content class="transparent"> -->
+    <ion-list>
+      <ion-card>
+        <ion-card-header>
+          <img src="https://www.falconheights.org/home/showpublishedimage/802/637171079319470000" alt="">
+        </ion-card-header>
+        <ion-card-content>
+          <ion-card-title>{{jalan.name}}</ion-card-title>
+          <br>
+          <ion-label>Status: </ion-label><span>{{jalan.status}}</span>
+          <br><br>
+          <ion-label>Keterangan: </ion-label><span style="color: lightslategray">{{jalan.detail}}</span>
+          <br><br>
+          <ion-label>Pihak Bertanggungjawab: </ion-label><span style="color: lightslategray"
+            align="justify">{{jalan.response_party}}</span>
+        </ion-card-content>
+      </ion-card>
+      <div class="ion-text-center">
+        <ion-button *ngIf="isAdmin" (click)="openEditModal()" mode="ios" color="primary" shape="round">
+          Kemaskini
+        </ion-button>
+        <ion-button *ngIf="isAdmin" (click)="onDeleteJalan()" mode="ios" color="danger" shape="round">
+          Hapus
+        </ion-button>
+      </div>
 
-    <ion-button (click)="openEditModal()" expand="block" color="primary" shape="round">
-      Kemaskini
-    </ion-button>
-    <ion-button (click)="onDeleteJalan()" expand="block" color="danger" shape="round">
-      Hapus
-    </ion-button>
+    </ion-list>
+
+    <!-- </ion-content> -->
   </div>
 </ion-content>

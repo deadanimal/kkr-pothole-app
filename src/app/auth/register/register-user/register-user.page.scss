@@ -1,8 +1,8 @@
 ion-toolbar {
-  --background: transparent no-repeat fixed center;
+  --background: white no-repeat fixed center;
   --color: var(--ion-color-primary);
   position: absolute;
-  top: 5px;
+  padding-top: 5px;
 }
 
 ion-item {
@@ -14,54 +14,53 @@ ion-item {
   background: linear-gradient(#429AE0, white);
   padding: 1px;
   margin-bottom: .7rem;
-  margin-right: 10px;
 }
 
 .input2 {
   margin-bottom: .7rem;
-  margin-right: 10px;
 }
 
-.header {
-  margin-top: 100px;
+.container {
+  width: 100%;
 
-  .avatar {
-    width: 180px; //40vw
-    height: 180px;
-    border-radius: 50%;
-    margin: 0 0 10px -30px;
-    padding: 1rem;
-    position: absolute;
-    background: linear-gradient(#429AE0, white);
-    padding: 1px;
+  .header {
+    margin: 70px 50px 10px;
 
-    img {
-      display: block;
+    .avatar {
+      width: 160px; //40vw
+      height: 160px;
       border-radius: 50%;
-      background-color: #fff;
-      padding: 3px;
+      justify-content: center !important;
+      text-align: center;
+      margin: 0 auto;
+      background: linear-gradient(#429AE0, white);
+      padding: 1px;
+      margin-bottom: 20px;
+
+      img {
+        border-radius: 50%;
+        background-color: #fff;
+        padding: 3px;
+      }
     }
+  }
+
+  .card-body {
+    background: var(--ion-color-light);
+    padding: 10px 50px 10px;
+    width: 100%;
+    overflow: hidden;
+    // bottom: 0;
+    position: absolute;
+    border-top-left-radius: 2.5rem;
+    border-top-right-radius: 2.5rem;
+    box-shadow: 2px -3px 9px -6px black;
+
   }
 }
 
-.card-body {
-  background: var(--ion-color-light);
-  padding: 10px 50px 10px;
-  width: 100%;
-  overflow: hidden;
-  bottom: 0;
-  position: absolute;
-  border-top-left-radius: 2.5rem;
-  border-top-right-radius: 2.5rem;
-  box-shadow: 2px -3px 9px -6px black;
-
-}
-
-.errors {
-  float: left;
-  font-size: small;
-  color: var(--ion-color-danger);
-  padding-left: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+.error {
+  color: orangered;
+  font-size: 10px;
+  margin: 1px auto;
 }

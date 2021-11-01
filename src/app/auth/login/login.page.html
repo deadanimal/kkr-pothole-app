@@ -1,5 +1,4 @@
 <ion-content [fullscreen]="true">
-
   <div id="container" class="background">
     <div class="bg-primary"></div>
     <form (ngSubmit)="login()" [formGroup]="credentials">
@@ -12,27 +11,34 @@
             <ion-card>
               <ion-card-content>
                 <ion-card-title color="primary" class="login-title">Daftar Masuk</ion-card-title>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-label>E-mel</ion-label>
+                    <ion-item>
+                      <ion-icon name="bookmark-outline" slot="end"></ion-icon>
+                      <ion-input type="email" placeholder="Emel Anda" formControlName="email" required></ion-input>
+                    </ion-item>
+                    <div *ngIf="(email.dirty || email.touched) && email.errors" class="errors">
+                      <span *ngIf="email.errors?.required">Emel diperlukan</span>
+                      <span *ngIf="email.errors?.email">Emel tidak sah</span>
+                    </div>
+                  </ion-col>
+                  <ion-col size="12">
+                    <ion-label>Kata Laluan</ion-label>
+                    <ion-item>
+                      <ion-icon name="lock-open-outline" slot="end"></ion-icon>
+                      <ion-input type="password" placeholder="Kata Laluan" formControlName="password" required>
+                      </ion-input>
+                    </ion-item>
+                    <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
+                      <span *ngIf="password.errors?.required">Kata laluan diperlukan</span>
+                      <span *ngIf="password.errors?.minlength">Kata laluan mestilah lebih 6 patah perkataan</span>
+                    </div>
+                  </ion-col>
+                </ion-row>
                 <div padding>
-                  <ion-label>E-mel</ion-label>
-                  <ion-item>
-                    <ion-icon name="bookmark-outline" slot="end"></ion-icon>
-                    <ion-input type="email" placeholder="Emel Anda" formControlName="email" required></ion-input>
-                  </ion-item>
-                  <div *ngIf="(email.dirty || email.touched) && email.errors" class="errors">
-                    <span *ngIf="email.errors?.required">Email is required</span>
-                    <span *ngIf="email.errors?.email">Email is invalid</span>
-                  </div>
-                  <ion-label>Kata Laluan</ion-label>
-                  <ion-item>
-                    <ion-icon name="lock-open-outline" slot="end"></ion-icon>
-                    <ion-input type="password" placeholder="Kata Laluan" formControlName="password" required></ion-input>
-                  </ion-item>
-                  <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
-                    <span *ngIf="password.errors?.required">Password is required</span>
-                    <span *ngIf="password.errors?.minlength">Password needs to be 6 characters</span>
-                  </div>
-                  <br>
-                  <ion-button mode="ios" size="medium" type="submit" expand="block" [disabled]="credentials.invalid">Log Masuk</ion-button>
+                  <ion-button mode="ios" size="medium" type="submit" expand="block" [disabled]="credentials.invalid">Log
+                    Masuk</ion-button>
                   <br>
                   <div class="ion-text-center">
                     <ion-router-link color="primary" href="/forgot">Lupa Kata Laluan?</ion-router-link>
@@ -44,8 +50,8 @@
         </ion-row>
       </ion-grid>
     </form>
-    <div style="display: flex; align-items: flex-end; margin-top:2rem; justify-content: center;">
-      Tiada akaun?
+    <div class="no-account">
+      <span color="medium">Tiada akaun?</span>
       <ion-router-link color="primary" (click)="openRegister()">&nbsp;Daftar Sekarang
       </ion-router-link>
     </div>

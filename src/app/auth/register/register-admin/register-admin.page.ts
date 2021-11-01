@@ -90,7 +90,6 @@ export class RegisterAdminPage implements OnInit {
       if (this.isEditMode) {
         this.closeModal('edit');
       }
-      this.router.navigateByUrl('/admin-management', { replaceUrl: true });
     });
   }
 

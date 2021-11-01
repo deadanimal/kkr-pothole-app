@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { AduanService } from 'src/app/shared/services/aduan.service';
 import { CreateAduanPage } from './../../core/user/create/create-aduan/create-aduan.page';
@@ -22,6 +23,8 @@ declare let google;
 export class AduanDetailPage implements OnInit {
   @ViewChild('map3', { static: false }) mapElement: ElementRef;
   @Input() aduan: Aduan;
+
+  isAdmin = false;
   map3: any;
   address: string;
 
@@ -33,13 +36,23 @@ export class AduanDetailPage implements OnInit {
 
   constructor(
     private geolocation: Geolocation,
-    private nativeGeocoder: NativeGeocoder,
+    private authService: AuthService,
     private aduanService: AduanService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController
-  ) {}
+  ) {
+    const role = this.authService.userRole;
+    console.log(role);
+    if (role !== 'pengadu') {
+      this.isAdmin = true;
+    }
+  }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  async ionViewWillEnter() {
+    const loading = await this.loadingCtrl.create({ message: 'Loading...' });
+    // loading.present();
     this.googleMap();
   }
 

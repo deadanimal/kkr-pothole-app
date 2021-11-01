@@ -5,7 +5,8 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class JalanService {
-  apiUrl = 'https://kkr-pothole-stg.prototype.com.my/api';
+  // apiUrl = 'https://kkr-pothole-stg.prototype.com.my/api';
+  apiUrl = 'http://127.0.0.1:8000/api';
 
   constructor(private http: HttpClient) {}
 

@@ -1,3 +1,4 @@
+import { SuccessPage } from './../../../global/alert/success/success.page';
 import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -89,6 +90,14 @@ export class CreateAduanPage implements OnInit {
 
   async submitAduan() {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
+    const modal = await this.modalCtrl.create({
+      component: SuccessPage,
+      componentProps: {
+        title: 'Daftar Aduan',
+        message:
+          'Daftar Aduan telah BERJAYA, Sila semak aduan anda di Laman Status Aduan',
+      },
+    });
     loading.present();
 
     let response: Observable<Aduan>;
@@ -109,7 +118,8 @@ export class CreateAduanPage implements OnInit {
       if (this.isEditMode) {
         this.closeModal(aduan);
       }
-      this.router.navigateByUrl('/upload-gambar', { replaceUrl: true });
+      this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
+      modal.present();
     });
   }
 

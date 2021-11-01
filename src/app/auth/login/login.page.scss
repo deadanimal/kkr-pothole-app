@@ -60,10 +60,22 @@ ion-item.item-inner {
 }
 
 .errors {
-  float: left;
+  float: right;
   font-size: small;
   color: var(--ion-color-danger);
-  padding-left: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 0;
+}
+
+.no-account {
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  bottom: 10px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+}
+
+ion-col {
+  --ion-grid-column-padding: 2px;
 }

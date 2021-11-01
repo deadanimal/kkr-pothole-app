@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { LoadingController, ModalController } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
@@ -37,7 +38,8 @@ export class CreateJalanPage implements OnInit {
     private formBuilder: FormBuilder,
     private jalanService: JalanService,
     private loadingCtrl: LoadingController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -57,6 +59,8 @@ export class CreateJalanPage implements OnInit {
       status: new FormControl(null, [Validators.required]),
       start_date: new FormControl(null),
       end_date: new FormControl(null),
+      negeri: new FormControl(null, [Validators.required]),
+      daerah: new FormControl(null, [Validators.required]),
       response_party: new FormControl(null, [Validators.required]),
       admin_id: new FormControl(null),
     });
@@ -69,6 +73,8 @@ export class CreateJalanPage implements OnInit {
       status: this.jalan.status,
       start_date: this.jalan.start_date,
       end_date: this.jalan.end_date,
+      negeri: this.jalan.negeri,
+      daerah: this.jalan.daerah,
       response_party: this.jalan.response_party,
       admin_id: this.jalan.admin_id,
     });
@@ -101,6 +107,10 @@ export class CreateJalanPage implements OnInit {
 
   closeModal(data = null) {
     this.modalCtrl.dismiss(data);
+  }
+
+  logout(){
+    this.authService.logout();
   }
 
   addPhotoToGallery() {

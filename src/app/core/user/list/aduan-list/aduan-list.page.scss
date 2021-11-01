@@ -1,5 +1,5 @@
 .background {
-  background-image: url(../../../../assets/img/bg-login.png);
+  background-image: url(../../../../../assets/img/bg-login.png);
   z-index: -1;
   height: 100%;
   width: 100%;
@@ -9,22 +9,18 @@
 ion-card {
   border-radius: 20px;
   background: linear-gradient(var(--ion-color-primary), #cad3dcfc);
-  justify-content: center;
-  text-align: center;
-  box-shadow: 2px -3px 9px -6px black;
-  padding: 15px auto;
+  margin-top: 0;
+  padding: 10px;
 
   ion-card-title {
     color: white;
     font-size: medium;
   }
-
 }
 
 ion-list {
   background-color: transparent;
-  margin-top: 80px;
-  margin: 80px 30px 10px;
+  margin: 10px 40px 10px;
 }
 
 .text-limit {
@@ -43,6 +39,16 @@ ion-toolbar {
   top: 5px;
 }
 
-h3 {
-  margin: 0;
+ion-content.transparent {
+  --background: transparent;
+  top: 60px;
+}
+
+ion-badge {
+  color: rgb(63, 63, 63);
+  font-weight: 400;
+  display: inline;
+  margin-left: 190px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }

@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Status Aduan</ion-title>
+    <ion-title mode="ios">Status Aduan</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="closeModal()">
         <ion-icon slot="start" name="close"></ion-icon>
@@ -28,7 +28,7 @@
     <!-- <ion-button (click)="openEditModal()" expand="block" color="primary" shape="round">
       Kemaskini
     </ion-button> -->
-    <ion-button (click)="onDeleteAduan()" expand="block" color="danger" shape="round">
+    <ion-button *ngIf="!isAdmin"  (click)="onDeleteAduan()" expand="block" color="danger" shape="round">
       Hapus
     </ion-button>
   </div>

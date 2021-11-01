@@ -1,0 +1,31 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button *ngIf="isSuperAdmin" href="/superadmin/dashboard">
+        <ion-icon color="light" slot="icon-only" name="chevron-back-circle"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="isAdmin" href="/admin/dashboard">
+        <ion-icon color="light" slot="icon-only" name="chevron-back-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title mode="ios" color="light">Statistik Aduan</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="bg-primary">
+  </div>
+  <div class="center-box">
+    <div class="circle"></div>
+    <div id="chartdiv" class="donut-chart">
+    </div>
+  </div>
+
+</ion-content>

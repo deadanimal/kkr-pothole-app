@@ -6,6 +6,7 @@ import { LoadingController, ModalController } from '@ionic/angular';
 import { JalanDetailPage } from 'src/app/modal/jalan-detail/jalan-detail.page';
 import { Jalan } from '../../../shared/model/jalan.model';
 import { map, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-jalan-list',
@@ -14,12 +15,21 @@ import { map, tap } from 'rxjs/operators';
 })
 export class JalanListPage implements OnInit {
   jalans$: Observable<Jalan[]>;
+  isAdmin = false;
+  isSuperAdmin = false;
 
   constructor(
     private modalCtrl: ModalController,
     private jalanService: JalanService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private authService: AuthService
   ) {
+    const role = this.authService.userRole;
+    if (role === 'super_admin') {
+      this.isSuperAdmin = true;
+    } else if (role === 'admin') {
+      this.isAdmin = true;
+    }
   }
 
   async ngOnInit() {
@@ -65,5 +75,9 @@ export class JalanListPage implements OnInit {
         })
       );
     }
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

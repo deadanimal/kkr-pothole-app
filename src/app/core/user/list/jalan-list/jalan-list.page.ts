@@ -6,6 +6,7 @@ import { LoadingController, ModalController } from '@ionic/angular';
 import { JalanDetailPage } from 'src/app/modal/jalan-detail/jalan-detail.page';
 import { Jalan } from '../../../../shared/model/jalan.model';
 import { map, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-jalan-list',
@@ -18,9 +19,9 @@ export class JalanListPage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private jalanService: JalanService,
-    private loadingCtrl: LoadingController
-  ) {
-  }
+    private loadingCtrl: LoadingController,
+    private authService: AuthService
+  ) {}
 
   async ngOnInit() {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
@@ -65,5 +66,9 @@ export class JalanListPage implements OnInit {
         })
       );
     }
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

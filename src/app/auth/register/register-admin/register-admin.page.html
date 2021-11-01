@@ -1,21 +1,16 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <!-- <ion-buttons slot="start">
       <ion-button href="/admin-management">
         <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
       </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end" *ngIf="!isEditMode">
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end" *ngIf="isEditMode">
+    </ion-buttons> -->
+    <ion-buttons slot="end">
       <ion-button (click)="closeModal()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title mode="ios">{{isEditMode ? 'Kemaskini':'Daftar'}} Admin Jalan</ion-title>
+    <ion-title mode="ios">{{isEditMode ? 'Kemaskini':'Daftar'}} Admin</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -47,7 +42,7 @@
               <ion-item>
                 <ion-select formControlName="role" placeholder="Peranan" interface="action-sheet">
                   <ion-select-option value="super_admin">Super Admin</ion-select-option>
-                  <ion-select-option value="admin">Admin</ion-select-option>
+                  <ion-select-option value="admin">Admin Jalan</ion-select-option>
                 </ion-select>
               </ion-item>
             </div>
@@ -63,12 +58,12 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="doc_no" placeholder="No Kad Pengenalan" type="number"></ion-input>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number"></ion-input>
               </ion-item>
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="telefon" placeholder="No Telefon Bimbit" type="number"></ion-input>
+                <ion-input formControlName="telefon" placeholder="No Telefon" type="number"></ion-input>
               </ion-item>
             </div>
             <div class="input">

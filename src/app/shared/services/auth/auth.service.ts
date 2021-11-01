@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 /* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
@@ -6,6 +7,7 @@ import { map, tap, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
 
 import { Storage } from '@capacitor/storage';
+import { User } from '../../model/user.model';
 
 const TOKEN_KEY = 'my-token';
 
@@ -13,12 +15,14 @@ const TOKEN_KEY = 'my-token';
   providedIn: 'root',
 })
 export class AuthService {
+  apiUrl = 'http://127.0.0.1:8000/api';
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     null
   );
   token = '';
+  public userRole: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.loadToken();
   }
 
@@ -34,11 +38,14 @@ export class AuthService {
   }
 
   login(credentials: { email; password }): Observable<any> {
-    return this.http.post(`http://127.0.0.1:8000/api/login`, credentials).pipe(
-      map((data: any) => data.access_token),
+    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+      map((data: any) => data),
       switchMap((token) => {
         //console.log(token);
-        return from(Storage.set({ key: TOKEN_KEY, value: token }));
+        console.log('Access token: ', this.token);
+        this.token = token.access_token;
+        this.userRole = token.data.role;
+        return from(Storage.set({ key: TOKEN_KEY, value: token.access_token }));
       }),
       tap((_) => {
         this.isAuthenticated.next(true);
@@ -46,8 +53,21 @@ export class AuthService {
     );
   }
 
-  logout(): Promise<void> {
+  getAuthUser(): Observable<User> {
+    const body = {
+      bearer_token: this.token,
+    };
+    return this.http.post<User>(`${this.apiUrl}/auth/user`, body).pipe(
+      tap((res) => {
+        this.userRole = res.role;
+        console.log('response user role: ', this.userRole);
+      })
+    );
+  }
+
+  async logout(): Promise<void> {
     this.isAuthenticated.next(false);
-    return Storage.remove({ key: TOKEN_KEY });
+    Storage.remove({ key: TOKEN_KEY });
+    this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 }

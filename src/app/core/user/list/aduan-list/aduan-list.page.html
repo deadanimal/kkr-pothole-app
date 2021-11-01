@@ -1,0 +1,43 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button href="/user/dashboard">
+        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title mode="ios">Status Aduan</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" fixed>
+  <div id="container" class="background">
+    <ion-content class="transparent">
+
+      <ion-list>
+        <div *ngFor="let aduan of aduans$|async" (click)="openDetailModal(aduan)">
+          <ion-badge color="secondary" mode="ios">Dalam Perhatian</ion-badge>
+          <ion-card>
+            <ion-card-content>
+              <ion-card-title>{{aduan.title}}</ion-card-title>
+              <span class="text-limit">{{aduan.detail}}</span>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </ion-list>
+
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+
+    </ion-content>
+  </div>
+</ion-content>
+

@@ -21,59 +21,186 @@ const routes: Routes = [
     // canLoad: [AutoLoginGuard],
   },
   {
+    path: 'register-user',
+    loadChildren: () =>
+      import('./auth/register/register-user/register-user.module').then(
+        (m) => m.RegisterUserPageModule
+      ),
+  },
+  {
     path: 'forgot',
     loadChildren: () =>
       import('./auth/forgot/forgot.module').then((m) => m.ForgotPageModule),
   },
   {
-    path: 'user/profile',
-    loadChildren: () =>
-      import('./core/user/profile/profile.module').then(
-        (m) => m.ProfilePageModule
-      ),
+    canActivate: [AuthGuard],
+    data: {
+      role: 'pengadu',
+    },
+    path: 'user',
+    children: [
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./core/user/profile/profile.module').then(
+            (m) => m.ProfilePageModule
+          ),
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./core/user/dashboard/dashboard.module').then(
+            (m) => m.DashboardPageModule
+          ),
+      },
+      {
+        path: 'create-aduan',
+        loadChildren: () =>
+          import('./core/user/create/create-aduan/create-aduan.module').then(
+            (m) => m.CreateAduanPageModule
+          ),
+      },
+      {
+        path: 'aduan-list',
+        loadChildren: () =>
+          import('./core/user/list/aduan-list/aduan-list.module').then(
+            (m) => m.AduanListPageModule
+          ),
+      },
+      {
+        path: 'hebahan',
+        loadChildren: () =>
+          import('./core/user/list/jalan-list/jalan-list.module').then(
+            (m) => m.JalanListPageModule
+          ),
+      },
+    ],
   },
   {
-    path: 'admin/profile',
-    loadChildren: () =>
-      import('./core/admin/profile/profile.module').then(
-        (m) => m.ProfilePageModule
-      ),
+    canActivate: [AuthGuard],
+    data: {
+      role: 'admin',
+    },
+    path: 'admin',
+    children: [
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./core/admin/profile/profile.module').then(
+            (m) => m.ProfilePageModule
+          ),
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./core/admin/dashboard/dashboard.module').then(
+            (m) => m.DashboardPageModule
+          ),
+      },
+
+      {
+        path: 'create-jalan',
+        loadChildren: () =>
+          import('./core/admin/create-jalan/create-jalan.module').then(
+            (m) => m.CreateJalanPageModule
+          ),
+      },
+      {
+        path: 'jalan-list',
+        loadChildren: () =>
+          import('./core/admin/jalan-list/jalan-list.module').then(
+            (m) => m.JalanListPageModule
+          ),
+      },
+
+      {
+        path: 'statistic',
+        loadChildren: () =>
+          import('./core/admin/statistic/statistic.module').then(
+            (m) => m.StatisticPageModule
+          ),
+      },
+    ],
   },
   {
-    path: 'superadmin/profile',
-    loadChildren: () =>
-      import('./core/superadmin/profile/profile.module').then(
-        (m) => m.ProfilePageModule
-      ),
-  },
-  {
-    path: 'user/dashboard',
-    loadChildren: () =>
-      import('./core/user/dashboard/dashboard.module').then(
-        (m) => m.DashboardPageModule
-      ),
-    canLoad: [AuthGuard],
-  },
-  {
-    path: 'aduan-list',
-    loadChildren: () =>
-      import('./core/superadmin/list/aduan-list/aduan-list.module').then(
-        (m) => m.AduanListPageModule
-      ),
-  },
-  {
-    path: 'create-user',
-    loadChildren: () =>
-      import('./core/user/create/create-user/create-user.module').then(
-        (m) => m.CreateUserPageModule
-      ),
-  },
-  {
-    path: 'create-aduan',
-    loadChildren: () =>
-      import('./core/user/create/create-aduan/create-aduan.module').then(
-        (m) => m.CreateAduanPageModule
-      ),
+    canActivate: [AuthGuard],
+    data: {
+      role: 'super_admin',
+    },
+    path: 'superadmin',
+    children: [
+      {
+        path: 'register-admin',
+        loadChildren: () =>
+          import('./auth/register/register-admin/register-admin.module').then(
+            (m) => m.RegisterAdminPageModule
+          ),
+      },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./core/superadmin/profile/profile.module').then(
+            (m) => m.ProfilePageModule
+          ),
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./core/superadmin/dashboard/dashboard.module').then(
+            (m) => m.DashboardPageModule
+          ),
+      },
+      {
+        path: 'aduan-list',
+        loadChildren: () =>
+          import('./core/superadmin/list/aduan-list/aduan-list.module').then(
+            (m) => m.AduanListPageModule
+          ),
+      },
+      {
+        path: 'superadmin-list',
+        loadChildren: () =>
+          import(
+            './core/superadmin/list/superadmin-list/superadmin-list.module'
+          ).then((m) => m.SuperadminListPageModule),
+      },
+      {
+        path: 'admin-list',
+        loadChildren: () =>
+          import('./core/superadmin/list/admin-list/admin-list.module').then(
+            (m) => m.AdminListPageModule
+          ),
+      },
+      {
+        path: 'admin-management',
+        loadChildren: () =>
+          import(
+            './core/superadmin/admin-management/admin-management.module'
+          ).then((m) => m.AdminManagementPageModule),
+      },
+      {
+        path: 'jalan-list',
+        loadChildren: () =>
+          import('./core/admin/jalan-list/jalan-list.module').then(
+            (m) => m.JalanListPageModule
+          ),
+      },
+      {
+        path: 'create-jalan',
+        loadChildren: () =>
+          import('./core/admin/create-jalan/create-jalan.module').then(
+            (m) => m.CreateJalanPageModule
+          ),
+      },
+
+      {
+        path: 'statistic',
+        loadChildren: () =>
+          import('./core/admin/statistic/statistic.module').then(
+            (m) => m.StatisticPageModule
+          ),
+      },
+    ],
   },
   {
     path: 'chart',
@@ -109,44 +236,9 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'register-admin',
-    loadChildren: () =>
-      import('./auth/register/register-admin/register-admin.module').then(
-        (m) => m.RegisterAdminPageModule
-      ),
-  },
-  {
-    path: 'register-user',
-    loadChildren: () =>
-      import('./auth/register/register-user/register-user.module').then(
-        (m) => m.RegisterUserPageModule
-      ),
-  },
-  {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home.module').then((m) => m.HomePageModule),
-  },
-  {
-    path: 'admin/jalan-list',
-    loadChildren: () =>
-      import('./core/admin/jalan-list/jalan-list.module').then(
-        (m) => m.JalanListPageModule
-      ),
-  },
-  {
-    path: 'user/jalan-list',
-    loadChildren: () =>
-      import('./core/user/list/jalan-list/jalan-list.module').then(
-        (m) => m.JalanListPageModule
-      ),
-  },
-  {
-    path: 'create-jalan',
-    loadChildren: () =>
-      import('./core/admin/create-jalan/create-jalan.module').then(
-        (m) => m.CreateJalanPageModule
-      ),
   },
   {
     path: 'aduan-detail',
@@ -180,41 +272,6 @@ const routes: Routes = [
     path: 'info',
     loadChildren: () =>
       import('./core/global/info/info.module').then((m) => m.InfoPageModule),
-  },
-  {
-    path: 'superadmin-list',
-    loadChildren: () =>
-      import(
-        './core/superadmin/list/superadmin-list/superadmin-list.module'
-      ).then((m) => m.SuperadminListPageModule),
-  },
-  {
-    path: 'admin-list',
-    loadChildren: () =>
-      import('./core/superadmin/list/admin-list/admin-list.module').then(
-        (m) => m.AdminListPageModule
-      ),
-  },
-  {
-    path: 'admin-management',
-    loadChildren: () =>
-      import('./core/superadmin/admin-management/admin-management.module').then(
-        (m) => m.AdminManagementPageModule
-      ),
-  },
-  {
-    path: 'superadmin/dashboard',
-    loadChildren: () =>
-      import('./core/superadmin/dashboard/dashboard.module').then(
-        (m) => m.DashboardPageModule
-      ),
-  },
-  {
-    path: 'admin/dashboard',
-    loadChildren: () =>
-      import('./core/admin/dashboard/dashboard.module').then(
-        (m) => m.DashboardPageModule
-      ),
   },
   {
     path: 'user-detail',

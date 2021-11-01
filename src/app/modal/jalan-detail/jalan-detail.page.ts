@@ -1,18 +1,10 @@
 import { take } from 'rxjs/operators';
 import { JalanService } from 'src/app/shared/services/jalan.service';
 import { CreateJalanPage } from '../../core/admin/create-jalan/create-jalan.page';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ModalController, NavParams, LoadingController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController, LoadingController } from '@ionic/angular';
 import { Jalan } from 'src/app/shared/model/jalan.model';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import {
-  NativeGeocoder,
-  NativeGeocoderOptions,
-  NativeGeocoderResult,
-} from '@ionic-native/native-geocoder/ngx';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
-
-declare let google;
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-jalan-detail',
@@ -20,24 +12,22 @@ declare let google;
   styleUrls: ['./jalan-detail.page.scss'],
 })
 export class JalanDetailPage implements OnInit {
-  @ViewChild('map3', { static: false }) mapElement: ElementRef;
   @Input() jalan: Jalan;
-  map3: any;
-  address: string;
-
-  latitude: number;
-  longitude: number;
-  myMarker: any;
-  center: any;
-
+  isAdmin = false;
   constructor(
     private jalanService: JalanService,
     private loadingCtrl: LoadingController,
-    private modalCtrl: ModalController
-  ) {}
-
-  ngOnInit() {
+    private modalCtrl: ModalController,
+    private authService: AuthService
+  ) {
+    const role = this.authService.userRole;
+    console.log(role);
+    if (role !== 'pengadu') {
+      this.isAdmin = true;
+    }
   }
+
+  ngOnInit() {}
 
   closeModal(role = 'edit') {
     this.modalCtrl.dismiss(this.jalan, role);
@@ -69,5 +59,4 @@ export class JalanDetailPage implements OnInit {
   }
 
   // 3.0738, 101.5183
-
 }

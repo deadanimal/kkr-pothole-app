@@ -28,7 +28,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.credentials = this.fb.group({
-      email: ['zubir@email.com', [Validators.required, Validators.email]],
+      email: ['@email.com', [Validators.required, Validators.email]],
       password: ['password', [Validators.required, Validators.minLength(6)]],
     });
   }
@@ -40,9 +40,19 @@ export class LoginPage implements OnInit {
     this.authService.login(this.credentials.value).subscribe(
       async (res) => {
         await loading.dismiss();
-        this.router.navigateByUrl('user/dashboard', { replaceUrl: true });
+        const role = await this.authService.userRole;
+        await console.log('login role', role);
+        if (role === 'super_admin') {
+          this.router.navigateByUrl('superadmin/dashboard', {
+            replaceUrl: true,
+          });
+        } else if (role === 'admin') {
+          this.router.navigateByUrl('admin/dashboard', { replaceUrl: true });
+        } else if (role === 'pengadu') {
+          this.router.navigateByUrl('user/dashboard', { replaceUrl: true });
+        }
       },
-      async (res) => {
+      async (err) => {
         await loading.dismiss();
         const alert = await this.alertCtrl.create({
           header: 'Log Masuk Gagal',

@@ -1,0 +1,44 @@
+.bg-primary {
+  background: var(--ion-color-primary);
+  height: 45%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  border-bottom-left-radius: 2.5rem;
+  border-bottom-right-radius: 2.5rem;
+  // box-shadow: 0 1px 3px 0 var(--ion-color-medium);
+}
+
+ion-toolbar {
+  --background: transparent no-repeat fixed center;
+  --color: var(--ion-color-primary);
+  position: absolute;
+  top: 5px;
+}
+
+.donut-chart {
+  height: 55%;
+  width: 100%;
+  border-radius: 50%;
+  top: 130px;
+  position: absolute;
+
+}
+
+
+.center-box {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  width: 100%;
+
+  .circle {
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    background-color: white;
+    margin: 60% auto;
+    position: relative;
+
+  }
+}
