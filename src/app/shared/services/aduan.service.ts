@@ -24,4 +24,8 @@ export class AduanService {
   deleteAduan(aduanId: number): Observable<Aduan> {
     return this.http.delete<Aduan>(`${this.apiUrl}/aduan/${aduanId}`);
   }
+
+  getGambarAduan(gambarId: number) {
+    return this.http.get(`${this.apiUrl}/gambar/${gambarId}`);
+  }
 }

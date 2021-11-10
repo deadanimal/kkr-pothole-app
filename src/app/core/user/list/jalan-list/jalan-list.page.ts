@@ -15,6 +15,7 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 })
 export class JalanListPage implements OnInit {
   jalans$: Observable<Jalan[]>;
+  haveInfo = false;
 
   constructor(
     private modalCtrl: ModalController,
@@ -31,6 +32,10 @@ export class JalanListPage implements OnInit {
       tap((jalans) => {
         loading.dismiss();
         console.log('jalans:', jalans);
+        if (jalans) {
+          this.haveInfo = true;
+        }
+
         return jalans;
       })
     );

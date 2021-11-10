@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/dot-notation */
+import { HttpClient } from '@angular/common/http';
+import { Daerah } from './../../../shared/model/daerah.model';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { LoadingController, ModalController } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -10,10 +13,11 @@ import {
 import { Component, Input, OnInit } from '@angular/core';
 import { PhotoService } from '../../../shared/services/photo/photo.service';
 
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Jalan } from 'src/app/shared/model/jalan.model';
 import { JalanService } from 'src/app/shared/services/jalan.service';
+import { Negeri } from 'src/app/shared/model/negeri.model';
 
 @Component({
   selector: 'app-create-jalan',
@@ -22,6 +26,8 @@ import { JalanService } from 'src/app/shared/services/jalan.service';
 })
 export class CreateJalanPage implements OnInit {
   @Input() jalan: Jalan;
+  daerahs: Observable<Daerah[]>;
+  negeris: Observable<Negeri[]>;
   isEditMode = false;
   jalanForm: FormGroup;
 
@@ -32,6 +38,7 @@ export class CreateJalanPage implements OnInit {
   longitude: number;
   myMarker: any;
   center: any;
+  res_party: any;
 
   constructor(
     public photoService: PhotoService,
@@ -39,17 +46,28 @@ export class CreateJalanPage implements OnInit {
     private jalanService: JalanService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient
   ) {}
 
-  ngOnInit() {
-    // await this.photoService.loadSaved();
+  async ngOnInit() {
     this.initAddJalanForm();
     console.log('jalan data', this.jalanForm.value);
     if (this.jalan) {
       this.isEditMode = true;
       this.setFormValues();
     }
+
+    const loading = await this.loadingCtrl.create({ message: 'Loading...' });
+    // loading.present();
+
+    this.negeris = this.jalanService.getNegeris().pipe(
+      tap((negeri) => {
+        loading.dismiss();
+        console.log('Daerah:', negeri);
+        return negeri;
+      })
+    );
   }
 
   initAddJalanForm() {
@@ -85,7 +103,7 @@ export class CreateJalanPage implements OnInit {
     loading.present();
 
     let response: Observable<Jalan>;
-    console.log('JALAN :',this.jalanForm.value);
+    console.log('JALAN :', this.jalanForm.value);
     if (this.isEditMode) {
       response = this.jalanService.updateJalan(
         this.jalan.id,
@@ -95,7 +113,7 @@ export class CreateJalanPage implements OnInit {
       response = this.jalanService.addJalan(this.jalanForm.value);
     }
     response.pipe(take(1)).subscribe((jalan) => {
-      console.log(jalan);
+      console.log('SAVED TO DB JALAN',jalan);
       this.jalanForm.reset();
       loading.dismiss();
 
@@ -105,15 +123,35 @@ export class CreateJalanPage implements OnInit {
     });
   }
 
+  selectDaerah($event) {
+    console.log('NEGERI ID: ', $event.target.value);
+    const negeriId = $event.target.value;
+    this.daerahs = this.jalanService.getDaerahs(negeriId).pipe(
+      tap((res) => {
+        console.log('Daerah:', res);
+        return res;
+      })
+    );
+  }
+
+  getResponseParty($event) {
+    const url = 'http://127.0.0.1:8000/api/get_jkr';
+    const daerah = {
+      nama_daerah: $event.target.value,
+    };
+    console.log($event.target.value);
+    this.http.post(url, daerah).subscribe((res) => {
+      this.res_party = res[0].jkr_daerah;
+      console.log('JKR: ',this.res_party);
+      return res;
+    });
+  }
+
   closeModal(data = null) {
     this.modalCtrl.dismiss(data);
   }
 
-  logout(){
+  logout() {
     this.authService.logout();
-  }
-
-  addPhotoToGallery() {
-    this.photoService.addNewToGallery();
   }
 }

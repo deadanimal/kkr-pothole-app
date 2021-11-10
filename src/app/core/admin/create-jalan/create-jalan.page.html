@@ -59,15 +59,23 @@
               </ion-row>
               <ion-label position="floating">Negeri</ion-label>
               <ion-item color="light">
-                <ion-input formControlName="negeri" type="text" placeholder="Nyatakan Negeri"></ion-input>
+                <ion-select formControlName="negeri" placeholder="Pilih Negeri" interface="action-sheet" (ionChange)="selectDaerah($event)">
+                  <ion-select-option *ngFor="let negeri of negeris|async; let i = index" [value]="negeri.id">
+                    {{negeri.nama_negeri}}
+                  </ion-select-option>
+                </ion-select>
               </ion-item>
               <ion-label position="floating">Daerah</ion-label>
               <ion-item color="light">
-                <ion-input formControlName="daerah" type="text" placeholder="Nyatakan Daerah"></ion-input>
+                <ion-select formControlName="daerah" placeholder="Pilih Daerah" interface="action-sheet" (ionChange)="getResponseParty($event)">
+                  <ion-select-option *ngFor="let daerah of daerahs|async; let i = index" [value]="daerah.nama_daerah">
+                    {{daerah.nama_daerah}}
+                  </ion-select-option>
+                </ion-select>
               </ion-item>
               <ion-label position="floating">Pihak Bertanggungjawab</ion-label>
               <ion-item color="light">
-                <ion-input formControlName="response_party" type="text" placeholder="Nyatakan Pihak"></ion-input>
+                <ion-input formControlName="response_party" type="text" placeholder="Nyatakan Pihak" [value]="res_party"></ion-input>
               </ion-item>
             </div>
             <div padding class="btn-custom">

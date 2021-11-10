@@ -19,7 +19,6 @@ ion-toolbar {
 
 .card-body {
   background: linear-gradient(var(--ion-color-primary), #a8b6c5fc);
-  padding: 10px 30px 10px;
   height: 55%;
   width: 100%;
   overflow: hidden;
@@ -34,3 +33,18 @@ ion-toolbar {
   width: 100%;
   position: absolute;
 }
+
+ion-thumbnail {
+  width: 100%;
+  height: fit-content;
+  --border-radius: 1rem;
+}
+
+ion-content {
+  .content {
+    --background: transparent no-repeat fixed center;
+    margin: 0;
+    padding: 10px 30px 10px;
+  }
+}
+

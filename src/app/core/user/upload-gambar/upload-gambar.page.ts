@@ -17,7 +17,4 @@ export class UploadGambarPage implements OnInit {
     this.authService.logout();
   }
 
-  addPhotoToGallery() {
-    this.photoService.addNewToGallery();
-  }
 }

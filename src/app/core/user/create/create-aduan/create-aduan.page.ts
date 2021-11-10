@@ -1,6 +1,13 @@
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable @typescript-eslint/dot-notation */
 import { SuccessPage } from './../../../global/alert/success/success.page';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import {
+  LoadingController,
+  ModalController,
+  Platform,
+  ToastController,
+} from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   FormBuilder,
@@ -13,11 +20,20 @@ import { PhotoService } from '../../../../shared/services/photo/photo.service';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { AduanService } from 'src/app/shared/services/aduan.service';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { Aduan } from 'src/app/shared/model/aduan.model';
 import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Filesystem } from '@capacitor/filesystem';
+import { Photo } from '@capacitor/camera';
 
 declare let google;
+
+interface LocalFile {
+  name: string;
+  path: string;
+  data: string;
+}
 
 @Component({
   selector: 'app-create-aduan',
@@ -32,7 +48,8 @@ export class CreateAduanPage implements OnInit {
 
   map2: any;
   address: string;
-
+  /* Variabe to store file data */
+  images: LocalFile[];
   latitude: number;
   longitude: number;
   myMarker: any;
@@ -44,9 +61,12 @@ export class CreateAduanPage implements OnInit {
     private geolocation: Geolocation,
     private formBuilder: FormBuilder,
     private aduanService: AduanService,
-    private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController,
+    private plt: Platform
   ) {}
 
   ngOnInit() {
@@ -57,6 +77,8 @@ export class CreateAduanPage implements OnInit {
       this.isEditMode = true;
       this.setFormValues();
     }
+
+    this.images = [];
   }
 
   initAddAduanForm() {
@@ -67,6 +89,7 @@ export class CreateAduanPage implements OnInit {
       pengadu_id: new FormControl(null),
       latitud: new FormControl(this.latitude),
       langitud: new FormControl(this.latitude),
+      image: new FormControl(null, [Validators.required])
     });
   }
 
@@ -86,6 +109,52 @@ export class CreateAduanPage implements OnInit {
       latitud: this.latitude,
       langitud: this.longitude,
     });
+  }
+
+  // Convert the base64 to blob data
+  // and create  formData with it
+  async fileEvent(e) {
+    const files = e.target.files;
+    const file = files[0];
+    const filePath = files[0].size;
+    const base64Data = await this.readAsBase64(file);
+
+    const fileName = new Date().getTime() + '.jpeg';
+
+    this.images.push({
+      name: fileName,
+      path: filePath,
+      data: `${base64Data}`,
+    });
+
+    console.log(this.images);
+  }
+
+  // https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
+  private async readAsBase64(blob) {
+    // Fetch the photo, read as a blob, then convert to base64 format
+    // const response = await fetch(photo.webPath);
+    // const blob = await response.blob();
+
+    return (await this.convertBlobToBase64(blob)) as string;
+  }
+
+  convertBlobToBase64 = (blob: Blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    });
+
+  // Upload the formData to our API
+  async uploadData(formData) {
+    const loading = await this.loadingCtrl.create({
+      message: 'Uploading image...',
+    });
+    await loading.present();
   }
 
   async submitAduan() {
@@ -109,18 +178,49 @@ export class CreateAduanPage implements OnInit {
         this.aduanForm.value
       );
     } else {
-      response = this.aduanService.addAduan(this.aduanForm.value);
+      const formData = new FormData();
+      formData.append('img', this.images[0].data);
+      formData.append('filename', this.images[0].name);
+      const url = 'http://127.0.0.1:8000/api/upload_image';
+      const header = new HttpHeaders({
+        'Content-Type':
+          'application/form-data; charset=UTF-8, application/json',
+      });
+
+      console.log('Data: ', formData, { headers: header });
+
+      this.http
+        .post(url, formData)
+        .pipe(
+          finalize(() => {
+            loading.dismiss();
+          })
+        )
+        .subscribe((res) => {
+          console.log(res);
+          if (res['success']) {
+            this.presentToast('File upload complete.');
+            const img_id = res['gambar_id'];
+            this.aduanForm.patchValue({ gambar_id: img_id });
+            response = this.aduanService.addAduan(this.aduanForm.value);
+
+            response.pipe(take(1)).subscribe((aduan) => {
+              console.log(aduan);
+              this.aduanForm.reset();
+              loading.dismiss();
+              if (this.isEditMode) {
+                this.closeModal(aduan);
+              }
+              this.router.navigateByUrl('/user/dashboard', {
+                replaceUrl: true,
+              });
+              modal.present();
+            });
+          } else {
+            this.presentToast('File upload failed.');
+          }
+        });
     }
-    response.pipe(take(1)).subscribe((aduan) => {
-      console.log(aduan);
-      this.aduanForm.reset();
-      loading.dismiss();
-      if (this.isEditMode) {
-        this.closeModal(aduan);
-      }
-      this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
-      modal.present();
-    });
   }
 
   closeModal(data = null) {
@@ -247,5 +347,13 @@ export class CreateAduanPage implements OnInit {
       .catch((error) => {
         console.log('Error getting location', error);
       });
+  }
+
+  async presentToast(text) {
+    const toast = await this.toastCtrl.create({
+      message: text,
+      duration: 3000,
+    });
+    toast.present();
   }
 }

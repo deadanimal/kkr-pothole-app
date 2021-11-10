@@ -45,3 +45,9 @@ ion-card {
   height: 90px;
   margin: 0 0 .7rem;
 }
+
+ion-select-option{
+  .select-interface-option {
+    text-transform: capitalize !important;
+  }
+}

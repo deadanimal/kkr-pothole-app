@@ -1,8 +1,30 @@
-ion-item{
-  --background: #3880ff;
-  --color: #fff;
+.background {
+  background-image: url(../../../assets/img/bg-forgot.png);
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 
-ion-button{
-  --background: #062f77;
+ion-item {
+  border-radius: 18px;
+}
+
+ion-list {
+  background-color: transparent;
+  margin-top: 80px;
+  margin: 80px 30px 10px;
+}
+
+ion-label{
+  color: var(--ion-color-primary);
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+ion-toolbar {
+  --background: transparent no-repeat fixed center;
+  --color: var(--ion-color-primary);
+  position: absolute;
+  top: 5px;
 }

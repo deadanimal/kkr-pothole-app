@@ -1,128 +1,144 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Injectable } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { LoadingController, Platform, ToastController } from '@ionic/angular';
+import { finalize } from 'rxjs/operators';
+
 import {
   Camera,
-  CameraPhoto,
   CameraResultType,
   CameraSource,
   Photo,
 } from '@capacitor/camera';
-import { Capacitor } from '@capacitor/core';
-import { Directory, Filesystem } from '@capacitor/filesystem';
-import { Storage } from '@capacitor/storage';
-import { Platform } from '@ionic/angular';
+
+const IMAGE_DIR = 'stored-images';
+
+interface LocalFile {
+  name: string;
+  path: string;
+  data: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class PhotoService {
+  images: LocalFile[] = [];
 
-  public photos: UserPhoto[] = [];
-  private PHOTO_STORAGE: string = 'photos';
-  private platform: Platform;
+  constructor(
+    private plt: Platform,
+    private http: HttpClient,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController
+  ) {}
 
-  constructor(platform: Platform) {
-    this.platform = platform;
+  async loadFiles() {
+    this.images = [];
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Loading data...',
+    });
+    await loading.present();
+
+    Filesystem.readdir({
+      path: IMAGE_DIR,
+      directory: Directory.Data,
+    })
+      .then(
+        (result) => {
+          this.loadFileData(result.files);
+        },
+        async (err) => {
+          // Folder does not yet exists!
+          await Filesystem.mkdir({
+            path: IMAGE_DIR,
+            directory: Directory.Data,
+          });
+        }
+      )
+      .then((_) => {
+        loading.dismiss();
+      });
   }
 
-  public async addNewToGallery() {
-    // Take a photo
-    const capturedPhoto = await Camera.getPhoto({
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Camera,
-      quality: 100,
-    });
+  // Get the actual base64 data of an image
+  // base on the name of the file
+  async loadFileData(fileNames: string[]) {
+    for (let f of fileNames) {
+      const filePath = `${IMAGE_DIR}/${f}`;
 
-    this.photos.unshift({
-      filepath: 'soon...',
-      webviewPath: capturedPhoto.webPath
-    });
+      const readFile = await Filesystem.readFile({
+        path: filePath,
+        directory: Directory.Data,
+      });
 
-    // // Save the picture and add it to photo collection
-    // const savedImageFile = await this.savePicture(capturedPhoto);
-    // this.photos.unshift(savedImageFile);
-
-    // Storage.set({
-    //   key: this.PHOTO_STORAGE,
-    //   value: JSON.stringify(this.photos),
-    // });
-  }
-
-  public async loadSaved() {
-    // Retrieve cached photo array data
-    const photoList = await Storage.get({ key: this.PHOTO_STORAGE });
-    this.photos = JSON.parse(photoList.value) || [];
-
-    // Easiest way to detect when running on the web:
-    // “when the platform is NOT hybrid, do this”
-    if (!this.platform.is('hybrid')) {
-      // Display the photo by reading into base64 format
-      for (const photo of this.photos) {
-        // Read each saved photo's data from the Filesystem
-        const readFile = await Filesystem.readFile({
-            path: photo.filepath,
-            directory: Directory.Data
-        });
-
-        // Web platform only: Load the photo as base64 data
-        photo.webviewPath = `data:image/jpeg;base64,${readFile.data}`;
-      }
+      this.images.push({
+        name: f,
+        path: filePath,
+        data: `data:image/jpeg;base64,${readFile.data}`,
+      });
     }
   }
 
-  private async readAsBase64(cameraPhoto: CameraPhoto) {
-    // "hybrid" will detect Cordova or Capacitor
-    if (this.platform.is('hybrid')) {
-      // Read the file into base64 format
+  // Little helper
+  async presentToast(text) {
+    const toast = await this.toastCtrl.create({
+      message: text,
+      duration: 3000,
+    });
+    toast.present();
+  }
+
+  async selectImage() {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Photos, // Camera, Photos or Prompt!
+    });
+
+    if (image) {
+      this.saveImage(image);
+    }
+  }
+
+  // Create a new file from a capture image
+  async saveImage(photo: Photo) {
+    const base64Data = await this.readAsBase64(photo);
+
+    const fileName = new Date().getTime() + '.jpeg';
+    const savedFile = await Filesystem.writeFile({
+      path: `${IMAGE_DIR}/${fileName}`,
+      data: base64Data,
+      directory: Directory.Data,
+    });
+
+    // Reload the file list
+    // Improve by only loading for the new image and unshifting array!
+    this.loadFiles();
+  }
+
+  // https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
+  private async readAsBase64(photo: Photo) {
+    if (this.plt.is('hybrid')) {
       const file = await Filesystem.readFile({
-        path: cameraPhoto.path
+        path: photo.path,
       });
 
       return file.data;
-    }
-    else {
+    } else {
       // Fetch the photo, read as a blob, then convert to base64 format
-      const response = await fetch(cameraPhoto.webPath);
+      const response = await fetch(photo.webPath);
       const blob = await response.blob();
 
-      return await this.convertBlobToBase64(blob) as string;
+      return (await this.convertBlobToBase64(blob)) as string;
     }
   }
 
-  // Save picture to file on device
-  // private async savePicture(cameraPhoto: CameraPhoto) {
-  //   // Convert photo to base64 format, required by Filesystem API to save
-  //   const base64Data = await this.readAsBase64(cameraPhoto);
-
-  //   // Write the file to the data directory
-  //   const fileName = new Date().getTime() + '.jpeg';
-  //   const savedFile = await Filesystem.writeFile({
-  //     path: fileName,
-  //     data: base64Data,
-  //     directory: Directory.Data
-  //   });
-
-  //   if (this.platform.is('hybrid')) {
-  //     // Display the new image by rewriting the 'file://' path to HTTP
-  //     // Details: https://ionicframework.com/docs/building/webview#file-protocol
-  //     return {
-  //       filepath: savedFile.uri,
-  //       webviewPath: Capacitor.convertFileSrc(savedFile.uri),
-  //     };
-  //   }
-  //   else {
-  //     // Use webPath to display the new image instead of base64 since it's
-  //     // already loaded into memory
-  //     return {
-  //       filepath: fileName,
-  //       webviewPath: cameraPhoto.webPath
-  //     };
-  //   }
-  // }
-
+  // Helper function
   convertBlobToBase64 = (blob: Blob) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -132,9 +148,53 @@ export class PhotoService {
       };
       reader.readAsDataURL(blob);
     });
-}
 
-export interface UserPhoto {
-  filepath: string;
-  webviewPath: string;
+  // Convert the base64 to blob data
+  // and create  formData with it
+  async startUpload(file: LocalFile) {
+    const response = await fetch(file.data);
+    const blob = await response.blob();
+    const formData = new FormData();
+
+    formData.append('file', blob, file.name);
+    this.uploadData(formData);
+  }
+
+  // Upload the formData to our API
+  async uploadData(formData: FormData) {
+    const loading = await this.loadingCtrl.create({
+      message: 'Uploading image...',
+    });
+    await loading.present();
+
+    // Use your own API!
+    const url = 'http://127.0.0.1:8000/api/upload_image';
+    const header = new HttpHeaders();
+    header.append('Content-Type', 'multipart/form-data');
+    header.append('Accept', 'application/json');
+
+    this.http
+      .post(url, formData, { headers: header })
+      .pipe(
+        finalize(() => {
+          loading.dismiss();
+        })
+      )
+      .subscribe((res) => {
+        if (res['success']) {
+          this.presentToast('File upload complete.');
+        } else {
+          this.presentToast('File upload failed.');
+        }
+      });
+  }
+
+  async deleteImage(file: LocalFile) {
+    await Filesystem.deleteFile({
+      directory: Directory.Data,
+      path: file.path,
+    });
+    this.loadFiles();
+    this.presentToast('File removed.');
+  }
 }

@@ -2,6 +2,8 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Jalan } from '../model/jalan.model';
 import { HttpClient } from '@angular/common/http';
+import { Daerah } from '../model/daerah.model';
+import { Negeri } from '../model/negeri.model';
 
 @Injectable({ providedIn: 'root' })
 export class JalanService {
@@ -12,6 +14,14 @@ export class JalanService {
 
   getJalans(): Observable<Jalan[]> {
     return this.http.get<Jalan[]>(`${this.apiUrl}/jalan`);
+  }
+
+  getDaerahs(negeriId: number): Observable<Daerah[]> {
+    return this.http.get<Daerah[]>(`${this.apiUrl}/getdaerah/${negeriId}`);
+  }
+
+  getNegeris(): Observable<Negeri[]> {
+    return this.http.get<Negeri[]>(`${this.apiUrl}/negeri`);
   }
 
   addJalan(jalan: Jalan): Observable<Jalan> {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { take } from 'rxjs/operators';
 import { AduanService } from 'src/app/shared/services/aduan.service';
@@ -27,6 +28,7 @@ export class AduanDetailPage implements OnInit {
   isAdmin = false;
   map3: any;
   address: string;
+  image: string;
 
   latitude: number;
   longitude: number;
@@ -51,9 +53,14 @@ export class AduanDetailPage implements OnInit {
   ngOnInit() {}
 
   async ionViewWillEnter() {
-    const loading = await this.loadingCtrl.create({ message: 'Loading...' });
-    // loading.present();
     this.googleMap();
+    this.aduanService
+      .getGambarAduan(this.aduan.gambar_id)
+      .pipe(take(1))
+      .subscribe((res) => {
+        console.log(res);
+        this.image = res['url'];
+      });
   }
 
   closeModal(role = 'edit') {
@@ -80,8 +87,8 @@ export class AduanDetailPage implements OnInit {
       .deleteAduan(this.aduan.id)
       .pipe(take(1))
       .subscribe(() => {
-        loading.dismiss();
         this.closeModal('delete');
+        loading.dismiss();
       });
   }
   async addMarker() {
@@ -112,7 +119,9 @@ export class AduanDetailPage implements OnInit {
     });
   }
 
-  googleMap() {
+  async googleMap() {
+    const loading = await this.loadingCtrl.create({ message: 'Loading...' });
+    loading.present();
     this.geolocation
       .getCurrentPosition()
       .then((resp) => {
@@ -140,6 +149,7 @@ export class AduanDetailPage implements OnInit {
           mapOptions
         );
         this.addMarker();
+        loading.dismiss();
       })
       .catch((error) => {
         console.log('Error getting location', error);
