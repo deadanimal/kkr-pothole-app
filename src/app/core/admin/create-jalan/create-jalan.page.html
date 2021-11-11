@@ -25,12 +25,11 @@
       <ion-grid>
         <ion-row color="primary" justify-content-center>
           <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
-            <ion-card>
-              <ion-card-content>
-                no image
-              </ion-card-content>
-            </ion-card>
             <div padding>
+              <ion-item color="light">
+                <ion-input formControlName="image" type="file" (change)="fileEvent($event)" accept="image/*">
+                </ion-input>
+              </ion-item>
               <ion-label position="floating">Nama Jalan</ion-label>
               <ion-item color="light">
                 <ion-input formControlName="name" type="text" placeholder="Nama Jalan"></ion-input>
@@ -59,7 +58,8 @@
               </ion-row>
               <ion-label position="floating">Negeri</ion-label>
               <ion-item color="light">
-                <ion-select formControlName="negeri" placeholder="Pilih Negeri" interface="action-sheet" (ionChange)="selectDaerah($event)">
+                <ion-select formControlName="negeri" placeholder="Pilih Negeri" interface="action-sheet"
+                  (ionChange)="selectDaerah($event)">
                   <ion-select-option *ngFor="let negeri of negeris|async; let i = index" [value]="negeri.id">
                     {{negeri.nama_negeri}}
                   </ion-select-option>
@@ -67,7 +67,8 @@
               </ion-item>
               <ion-label position="floating">Daerah</ion-label>
               <ion-item color="light">
-                <ion-select formControlName="daerah" placeholder="Pilih Daerah" interface="action-sheet" (ionChange)="getResponseParty($event)">
+                <ion-select formControlName="daerah" placeholder="Pilih Daerah" interface="action-sheet"
+                  (ionChange)="getResponseParty($event)">
                   <ion-select-option *ngFor="let daerah of daerahs|async; let i = index" [value]="daerah.nama_daerah">
                     {{daerah.nama_daerah}}
                   </ion-select-option>
@@ -75,7 +76,8 @@
               </ion-item>
               <ion-label position="floating">Pihak Bertanggungjawab</ion-label>
               <ion-item color="light">
-                <ion-input formControlName="response_party" type="text" placeholder="Nyatakan Pihak" [value]="res_party"></ion-input>
+                <ion-input formControlName="response_party" type="text" placeholder="Nyatakan Pihak"
+                  [value]="res_party"></ion-input>
               </ion-item>
             </div>
             <div padding class="btn-custom">

@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const expectedRole = route.data?.role || null;
-    return this.authService.getAuthUser().pipe(
+    return this.authService.getAuthUserRole().pipe(
       filter((val) => val !== null), // Filter out initial Behaviour subject value
       take(1), // Otherwise the Observable doesn't complete!
       map((user) => {

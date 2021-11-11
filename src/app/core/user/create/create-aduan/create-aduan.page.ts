@@ -149,14 +149,6 @@ export class CreateAduanPage implements OnInit {
       reader.readAsDataURL(blob);
     });
 
-  // Upload the formData to our API
-  async uploadData(formData) {
-    const loading = await this.loadingCtrl.create({
-      message: 'Uploading image...',
-    });
-    await loading.present();
-  }
-
   async submitAduan() {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
     const modal = await this.modalCtrl.create({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { take } from 'rxjs/operators';
 import { JalanService } from 'src/app/shared/services/jalan.service';
 import { CreateJalanPage } from '../../core/admin/create-jalan/create-jalan.page';
@@ -14,6 +15,8 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 export class JalanDetailPage implements OnInit {
   @Input() jalan: Jalan;
   isAdmin = false;
+  image: any;
+
   constructor(
     private jalanService: JalanService,
     private loadingCtrl: LoadingController,
@@ -27,7 +30,15 @@ export class JalanDetailPage implements OnInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.jalanService
+      .getGambarJalan(this.jalan.gambar_id)
+      .pipe(take(1))
+      .subscribe((res) => {
+        console.log(res);
+        this.image = res['url'];
+      });
+  }
 
   closeModal(role = 'edit') {
     this.modalCtrl.dismiss(this.jalan, role);

@@ -15,7 +15,9 @@ const TOKEN_KEY = 'my-token';
   providedIn: 'root',
 })
 export class AuthService {
-  apiUrl = 'http://127.0.0.1:8000/api';
+  // apiUrl = 'http://127.0.0.1:8000/api';
+  apiUrl = 'https://kkr-pothole-stg.prototype.com.my/api';
+
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     null
   );
@@ -53,7 +55,7 @@ export class AuthService {
     );
   }
 
-  getAuthUser(): Observable<User> {
+  getAuthUserRole(): Observable<User> {
     const body = {
       bearer_token: this.token,
     };

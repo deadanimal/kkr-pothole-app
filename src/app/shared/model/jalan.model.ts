@@ -12,4 +12,5 @@ export interface Jalan {
   status: string;
   response_party: string;
   admin_id: number;
+  gambar_id: number;
 }

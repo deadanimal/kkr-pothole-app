@@ -7,8 +7,8 @@ import { Negeri } from '../model/negeri.model';
 
 @Injectable({ providedIn: 'root' })
 export class JalanService {
-  // apiUrl = 'https://kkr-pothole-stg.prototype.com.my/api';
-  apiUrl = 'http://127.0.0.1:8000/api';
+  // apiUrl = 'http://127.0.0.1:8000/api';
+  apiUrl = 'https://kkr-pothole-stg.prototype.com.my/api';
 
   constructor(private http: HttpClient) {}
 
@@ -34,5 +34,9 @@ export class JalanService {
 
   deleteJalan(aduanId: number): Observable<Jalan> {
     return this.http.delete<Jalan>(`${this.apiUrl}/jalan/${aduanId}`);
+  }
+
+  getGambarJalan(gambarId: number) {
+    return this.http.get(`${this.apiUrl}/gambar/${gambarId}`);
   }
 }

@@ -46,12 +46,7 @@ export class DashboardPage implements OnInit {
   ngOnInit() {}
 
   async ionViewWillEnter() {
-    const loading = await this.loadingCtrl.create({ message: 'Loading...' });
-    loading.present();
     this.googleMap();
-    if (this.googleMap) {
-      loading.dismiss();
-    }
   }
   // 3.0738, 101.5183
   async addMarker() {
@@ -82,7 +77,11 @@ export class DashboardPage implements OnInit {
     });
   }
 
-  googleMap() {
+  async googleMap() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Loading Map...',
+    });
+    loading.present();
     this.geolocation
       .getCurrentPosition()
       .then((resp) => {
@@ -110,6 +109,8 @@ export class DashboardPage implements OnInit {
           this.mapElement.nativeElement,
           mapOptions
         );
+
+        loading.dismiss();
         this.addMarker();
 
         this.map.addListener('drag', () => {
