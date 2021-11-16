@@ -23,34 +23,42 @@
   <ion-content>
     <div #map2 id="map2"></div>
     <div class="card-body">
-      <form [formGroup]="aduanForm">
-        <ion-grid>
-          <ion-row color="primary" justify-content-center>
-            <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
-              <div padding>
-                <ion-item>
-                  <ion-input formControlName="title" type="text" placeholder="Tajuk Aduan">
-                  </ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-textarea formControlName="detail" type="text" placeholder="Keterangan Aduan">
-                  </ion-textarea>
-                </ion-item>
-                <ion-label>Gambar Aduan</ion-label>
-                <ion-item>
-                  <ion-input formControlName="image" type="file" (change)="fileEvent($event)" accept="image/*"></ion-input>
-                </ion-item>
-              </div>
-              <br>
-              <div padding>
-                <ion-button color="success" size="medium" [disabled]="aduanForm.invalid" (click)="submitAduan()"
-                  expand="block">
-                  Seterusnya</ion-button>
-              </div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </form>
+      <ion-content class="content">
+        <div style="margin: 10px 30px;">
+          <form [formGroup]="aduanForm">
+            <ion-grid>
+              <ion-row color="primary" justify-content-center>
+                <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+                  <div padding>
+                    <ion-item>
+                      <ion-input formControlName="title" type="text" placeholder="Tajuk Aduan">
+                      </ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-textarea formControlName="detail" type="text" placeholder="Keterangan Aduan">
+                      </ion-textarea>
+                    </ion-item>
+                    <ion-label>Gambar Aduan</ion-label>
+                    <ion-item style="padding: 0;">
+                      <label>
+                        <img [src]="url" alt="">
+                        <ion-input style="display:none" formControlName="image" id="image" type="file"
+                          (change)="fileEvent($event)" accept="image/*"></ion-input>
+                      </label>
+                    </ion-item>
+                  </div>
+                  <br>
+                  <div padding>
+                    <ion-button color="success" size="medium" [disabled]="aduanForm.invalid" (click)="submitAduan()"
+                      expand="block">
+                      Seterusnya</ion-button>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </form>
+        </div>
+      </ion-content>
     </div>
 
   </ion-content>

@@ -21,7 +21,7 @@
     <ion-content class="transparent">
 
       <ion-list>
-        <p *ngIf="haveInfo" class="ion-text-center" style="color:rgb(206, 206, 206)">Tiada maklumat hebahan</p>
+        <p *ngIf="!haveInfo" class="ion-text-center" style="color:rgb(206, 206, 206)">Tiada maklumat hebahan</p>
         <ion-card *ngFor="let jalan of jalans$|async" (click)="openDetailModal(jalan)" color="light">
           <ion-grid fixed>
             <ion-row>

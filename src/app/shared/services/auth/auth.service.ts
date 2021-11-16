@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, tap, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 import { Storage } from '@capacitor/storage';
 import { User } from '../../model/user.model';
@@ -15,8 +16,7 @@ const TOKEN_KEY = 'my-token';
   providedIn: 'root',
 })
 export class AuthService {
-  // apiUrl = 'http://127.0.0.1:8000/api';
-  apiUrl = 'https://kkr-pothole-stg.prototype.com.my/api';
+  apiUrl = environment.baseUrl;
 
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     null

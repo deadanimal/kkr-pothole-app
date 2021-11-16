@@ -2,11 +2,11 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Aduan } from '../model/aduan.model';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AduanService {
-  // apiUrl = 'http://127.0.0.1:8000/api';
-  apiUrl = 'https://kkr-pothole-stg.prototype.com.my/api';
+  apiUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}
 

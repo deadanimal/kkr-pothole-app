@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+import { UserService } from 'src/app/shared/services/user.service';
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { SuccessPage } from './../../../global/alert/success/success.page';
@@ -17,10 +19,11 @@ import {
 } from '@angular/forms';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PhotoService } from '../../../../shared/services/photo/photo.service';
+import { Storage } from '@capacitor/storage';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { AduanService } from 'src/app/shared/services/aduan.service';
-import { finalize, take } from 'rxjs/operators';
+import { debounce, finalize, take } from 'rxjs/operators';
 import { Aduan } from 'src/app/shared/model/aduan.model';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -28,6 +31,8 @@ import { Filesystem } from '@capacitor/filesystem';
 import { Photo } from '@capacitor/camera';
 
 declare let google;
+
+const TOKEN_KEY = 'my-token';
 
 interface LocalFile {
   name: string;
@@ -46,6 +51,7 @@ export class CreateAduanPage implements OnInit {
   isEditMode = false;
   aduanForm: FormGroup;
 
+  nama_jalan: string;
   map2: any;
   address: string;
   /* Variabe to store file data */
@@ -55,12 +61,15 @@ export class CreateAduanPage implements OnInit {
   myMarker: any;
   center: any;
   infoWindow: any;
+  Overlays: any = [];
+  iw: any;
 
   constructor(
     public photoService: PhotoService,
     private geolocation: Geolocation,
     private formBuilder: FormBuilder,
     private aduanService: AduanService,
+    private userService: UserService,
     private modalCtrl: ModalController,
     private router: Router,
     private http: HttpClient,
@@ -72,6 +81,7 @@ export class CreateAduanPage implements OnInit {
   ngOnInit() {
     // await this.photoService.loadSaved();
     this.initAddAduanForm();
+    this.loadUserId();
     console.log('aduan data', this.aduanForm.value);
     if (this.aduan) {
       this.isEditMode = true;
@@ -81,15 +91,43 @@ export class CreateAduanPage implements OnInit {
     this.images = [];
   }
 
+  async loadUserId() {
+    const loading = await this.loadingCtrl.create({ message: 'Loading...' });
+    loading.present();
+
+    const token = await Storage.get({ key: TOKEN_KEY });
+    console.log('Token:', token.value);
+
+    const body = {
+      bearer_token: token.value,
+    };
+
+    this.userService.getAuthUser(body).subscribe(
+      (res) => {
+        console.log(res);
+        loading.dismiss();
+        this.aduanForm.patchValue({
+          pengadu_id: res.id,
+        });
+        console.log('this user id', res.id, res.role);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
   initAddAduanForm() {
     this.aduanForm = this.formBuilder.group({
       title: new FormControl('Jalan Berlubang', [Validators.required]),
       detail: new FormControl(null, [Validators.required]),
+      address: new FormControl(null),
+      nama_jalan: new FormControl(null),
       gambar_id: new FormControl(null),
       pengadu_id: new FormControl(null),
       latitud: new FormControl(this.latitude),
       langitud: new FormControl(this.latitude),
-      image: new FormControl(null, [Validators.required])
+      image: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -113,13 +151,25 @@ export class CreateAduanPage implements OnInit {
 
   // Convert the base64 to blob data
   // and create  formData with it
-  async fileEvent(e) {
-    const files = e.target.files;
+  url: any = 'assets/img/no_image.png';
+  async fileEvent(event) {
+    const files = event.target.files;
     const file = files[0];
     const filePath = files[0].size;
     const base64Data = await this.readAsBase64(file);
 
     const fileName = new Date().getTime() + '.jpeg';
+
+    if (files && files[0]) {
+      const reader = new FileReader();
+
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+      reader.onload = (event) => {
+        // called once readAsDataURL is completed
+        this.url = event.target.result;
+      };
+    }
 
     this.images.push({
       name: fileName,
@@ -173,13 +223,14 @@ export class CreateAduanPage implements OnInit {
       const formData = new FormData();
       formData.append('img', this.images[0].data);
       formData.append('filename', this.images[0].name);
-      const url = 'http://127.0.0.1:8000/api/upload_image';
+      const url = `${this.aduanService.apiUrl}/upload_image`;
       const header = new HttpHeaders({
         'Content-Type':
           'application/form-data; charset=UTF-8, application/json',
       });
 
       console.log('Data: ', formData, { headers: header });
+      console.log(this.aduanForm.value);
 
       this.http
         .post(url, formData)
@@ -252,7 +303,9 @@ export class CreateAduanPage implements OnInit {
     });
   }
 
-  googleMap() {
+  async googleMap() {
+    const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
+    loading.present();
     this.geolocation
       .getCurrentPosition()
       .then((resp) => {
@@ -280,6 +333,7 @@ export class CreateAduanPage implements OnInit {
           this.mapElement.nativeElement,
           mapOptions
         );
+        loading.dismiss();
         this.addMarker();
 
         this.map2.addListener('drag', () => {
@@ -294,10 +348,191 @@ export class CreateAduanPage implements OnInit {
             this.map2.center.lng()
           );
         });
+        google.maps.event.addListener(this.map2, 'idle', async () => {
+          await this.getOverlayImage(this.map2.getBounds());
+        });
       })
       .catch((error) => {
         console.log('Error getting location', error);
       });
+  }
+
+  getOverlayImage(bounds) {
+    const mygosBaseURL = 'https://mygos.mygeoportal.gov.my';
+    const mygosMapServer =
+      '/gisserver/rest/services/Fundamental_GDC/Transportation_SemenanjungMsia/MapServer';
+    // see https://developers.arcgis.com/rest/services-reference/enterprise/query-map-service-layer-.htm
+    const mygosMapServiceURL = new URL(
+      mygosBaseURL + mygosMapServer + '/export'
+    );
+    // see https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
+    const mygosFeatureServiceURL = new URL(
+      mygosBaseURL + mygosMapServer + '/9/query'
+    );
+    const mygosFeatureServiceURL1 = new URL(
+      mygosBaseURL + mygosMapServer + '/10/query'
+    );
+    const mygosFeatureServiceURL2 = new URL(
+      mygosBaseURL + mygosMapServer + '/11/query'
+    );
+    const mygosFeatureServiceURL3 = new URL(
+      mygosBaseURL + mygosMapServer + '/12/query'
+    );
+    const mygosFeatureServiceURL4 = new URL(
+      mygosBaseURL + mygosMapServer + '/13/query'
+    );
+    const ne = bounds.getNorthEast();
+    const sw = bounds.getSouthWest();
+    console.log('BOUND APA NI', ne, sw);
+    const sr = 4326; // Spatial Reference
+
+    const exportBBOX =
+      sw.lng() + ',' + sw.lat() + ',' + ne.lng() + ',' + ne.lat();
+    const mapdiv = this.map2.getDiv();
+    mygosMapServiceURL.search = new URLSearchParams({
+      bbox: exportBBOX,
+      format: 'png',
+      transparent: 'true',
+      f: 'image',
+      bboxSR: sr.toString(),
+      imageSR: sr.toString(),
+      size: mapdiv.offsetWidth + ',' + mapdiv.offsetHeight,
+      layers: 'show:10',
+    }).toString();
+
+    // Delete by remove all overlay in overlays array.
+    while (this.Overlays[0]) {
+      this.Overlays.pop().setMap(null);
+    }
+
+    const Overlay = new google.maps.GroundOverlay(
+      mygosMapServiceURL.toString(),
+      bounds,
+      { map: this.map2, opacity: 0.9 }
+    );
+
+    // Push new overlay into overlays array
+    this.Overlays.push(Overlay);
+    const metersPerPx =
+      (156543.03392 * Math.cos((sw.lat() * Math.PI) / 180)) /
+      Math.pow(2, this.map2.getZoom());
+    this.map2.addListener('dragend', () => {
+      console.log(this.map2.center.lat());
+      const queryURL = new URL(mygosFeatureServiceURL.toString());
+      const queryURL1 = new URL(mygosFeatureServiceURL1.toString());
+      const queryURL2 = new URL(mygosFeatureServiceURL2.toString());
+      const queryURL3 = new URL(mygosFeatureServiceURL3.toString());
+      const queryURL4 = new URL(mygosFeatureServiceURL4.toString());
+      const bodyRoad = {
+        where: '1=1',
+        geometry:
+          '{"x": ' +
+          this.map2.getCenter().lng() +
+          ', "y":' +
+          this.map2.getCenter().lat() +
+          ', "spatialReference":{"wkid":4326}}',
+        geometryType: 'esriGeometryPoint',
+        inSR: sr.toString(),
+        spatialRel: 'esriSpatialRelIntersects',
+        outFields: '*',
+        distance: (4 * metersPerPx).toString(), // 4 pixels, distance from click to nearest feature
+        units: 'esriSRUnit_Meter',
+        returnGeometry: 'false',
+        resultRecordCount: '1',
+        returnExtentOnly: 'false',
+        featureEncoding: 'esriDefault',
+        f: 'pjson',
+      };
+      queryURL.search = new URLSearchParams(bodyRoad).toString();
+      queryURL1.search = new URLSearchParams(bodyRoad).toString();
+      queryURL2.search = new URLSearchParams(bodyRoad).toString();
+      queryURL3.search = new URLSearchParams(bodyRoad).toString();
+      queryURL4.search = new URLSearchParams(bodyRoad).toString();
+
+      fetch(queryURL.toString())
+        .then((r) => r.json())
+        .then((r) => {
+          if (r.features && r.features.length > 0) {
+            this.addIW(this.map2.getCenter(), r);
+            console.log('masuk');
+          }
+        });
+      fetch(queryURL1.toString())
+        .then((r) => r.json())
+        .then((r) => {
+          if (r.features && r.features.length > 0) {
+            this.addIW(this.map2.getCenter(), r);
+            console.log('masuk1');
+          }
+        });
+      fetch(queryURL2.toString())
+        .then((r) => r.json())
+        .then((r) => {
+          if (r.features && r.features.length > 0) {
+            this.addIW(this.map2.getCenter(), r);
+            console.log('masuk2');
+          }
+        });
+      fetch(queryURL3.toString())
+        .then((r) => r.json())
+        .then((r) => {
+          if (r.features && r.features.length > 0) {
+            this.addIW(this.map2.getCenter(), r);
+            console.log('masuk3');
+          }
+        });
+      fetch(queryURL4.toString())
+        .then((r) => r.json())
+        .then((r) => {
+          if (r.features && r.features.length > 0) {
+            this.addIW(this.map2.getCenter(), r);
+            console.log('masuk4');
+          }
+        });
+    });
+  }
+
+  addIW(loc, d) {
+    const val = d.features[0].attributes;
+    const roadname = val['NAM'] === null ? '' : val['NAM'];
+    const authority = val['AUT'] === null ? '' : val['AUT'];
+    const roadcat = val['RDC'] === null ? '' : val['RDC'];
+
+    this.aduanForm.patchValue({
+      nama_jalan: roadname,
+      response_party: authority,
+    });
+
+    if (!this.iw) {
+      this.iw = new google.maps.InfoWindow();
+    }
+    this.iw.setPosition(loc);
+    if (d.features && d.features.length > 0) {
+      console.log(d.features[0].attributes);
+      this.iw.setContent(
+        '<b>' +
+          d.fieldAliases['NAM'] +
+          ':</b>' +
+          (val['NAM'] === null ? '' : val['NAM']) +
+          '<br>' +
+          '<b>' +
+          d.fieldAliases['AUT'] +
+          ':</b>' +
+          (val['AUT'] === null ? '' : val['AUT']) +
+          '<br>' +
+          '<b>' +
+          d.fieldAliases['RDC'] +
+          ':</b>' +
+          (val['RDC'] === null ? '' : val['RDC']) +
+          '<br>'
+        // Object.entries(d.features[0].attributes)
+        // .map(([k, v]) => d.fieldAliases[k] + ': ' + (v === null ? '' : v))
+        // .join('<br>')
+      );
+      this.iw.open({ map: this.map2 });
+    } else {
+      this.iw.close();
+    }
   }
 
   getAddressFromCoords(lattitude, longitude) {
@@ -312,6 +547,9 @@ export class CreateAduanPage implements OnInit {
       // This is checking to see if the Geoeode Status is OK before proceeding
       if (status === google.maps.GeocoderStatus.OK) {
         this.address = results[0].formatted_address;
+        this.aduanForm.patchValue({
+          address: this.address,
+        });
         console.log(this.address);
       }
     });

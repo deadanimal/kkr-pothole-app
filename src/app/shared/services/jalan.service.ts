@@ -4,11 +4,11 @@ import { Jalan } from '../model/jalan.model';
 import { HttpClient } from '@angular/common/http';
 import { Daerah } from '../model/daerah.model';
 import { Negeri } from '../model/negeri.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class JalanService {
-  // apiUrl = 'http://127.0.0.1:8000/api';
-  apiUrl = 'https://kkr-pothole-stg.prototype.com.my/api';
+  apiUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}
 

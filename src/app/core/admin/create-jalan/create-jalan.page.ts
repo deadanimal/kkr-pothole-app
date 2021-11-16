@@ -23,6 +23,7 @@ import { Jalan } from 'src/app/shared/model/jalan.model';
 import { JalanService } from 'src/app/shared/services/jalan.service';
 import { Negeri } from 'src/app/shared/model/negeri.model';
 import { Storage } from '@capacitor/storage';
+import { environment } from 'src/environments/environment';
 
 interface LocalFile {
   name: string;
@@ -53,6 +54,8 @@ export class CreateJalanPage implements OnInit {
   myMarker: any;
   center: any;
   res_party: any;
+
+  apiUrl = environment.baseUrl;
 
   constructor(
     public photoService: PhotoService,
@@ -197,7 +200,7 @@ export class CreateJalanPage implements OnInit {
       const formData = new FormData();
       formData.append('img', this.images[0].data);
       formData.append('filename', this.images[0].name);
-      const url = 'http://127.0.0.1:8000/api/upload_image';
+      const url = `${this.apiUrl}/upload_image`;
       const header = new HttpHeaders({
         'Content-Type':
           'application/form-data; charset=UTF-8, application/json',
@@ -257,7 +260,7 @@ export class CreateJalanPage implements OnInit {
   }
 
   getResponseParty($event) {
-    const url = 'http://127.0.0.1:8000/api/get_jkr';
+    const url = `${this.apiUrl}/get_jkr`;
     const daerah = {
       nama_daerah: $event.target.value,
     };

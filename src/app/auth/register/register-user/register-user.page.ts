@@ -90,6 +90,7 @@ export class RegisterUserPage implements OnInit {
       loading.dismiss();
       this.router.navigateByUrl('/login', { replaceUrl: true });
       modal.present();
+      this.closeModal();
     });
   }
 
