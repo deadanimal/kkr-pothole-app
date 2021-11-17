@@ -142,7 +142,7 @@ export class AduanDetailPage implements OnInit {
           streetViewControl: false,
           fullscreenControl: false,
         };
-        this.getAddressFromCoords(this.aduan.latitud, this.aduan.langitud);
+        // this.getAddressFromCoords(this.aduan.latitud, this.aduan.langitud);
 
         this.map3 = new google.maps.Map(
           this.mapElement.nativeElement,

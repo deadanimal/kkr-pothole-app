@@ -18,15 +18,15 @@
     <ion-content class="content">
       <div style="margin: 10px 30px;">
         <ion-text class="ion-text-center" color="light">
-          <h4>{{address}}</h4>
+          <h4>{{aduan.address}}</h4>
         </ion-text>
         <ion-item>
           <ion-label position="stacked" color="primary">Keterangan Aduan :</ion-label>
-          <ion-textarea readonly value="{{aduan.detail}}" rows="6">
+          <ion-textarea readonly value="{{aduan.detail}}" rows="4">
           </ion-textarea>
         </ion-item>
         <ion-thumbnail>
-            <img src="{{image}}"/>
+          <img src="{{image}}" />
         </ion-thumbnail>
         <br>
         <!-- <ion-button (click)="openEditModal()" expand="block" color="primary" shape="round">
@@ -36,6 +36,9 @@
           Hapus
         </ion-button> -->
         <br>
+      </div>
+      <div class="butiran">
+        TEST BUTIRAN
       </div>
     </ion-content>
   </div>

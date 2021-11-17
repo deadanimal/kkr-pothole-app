@@ -93,7 +93,6 @@ export class ProfilePage implements OnInit {
         doc_type: new FormControl(null, [Validators.required]),
         doc_no: new FormControl(null, [Validators.required]),
         organisasi: new FormControl(null, [Validators.required]),
-        jawatan: new FormControl(null, [Validators.required]),
         password: new FormControl(null),
         confirmpassword: new FormControl(null),
       },
@@ -111,7 +110,6 @@ export class ProfilePage implements OnInit {
       doc_type: this.user.doc_type,
       doc_no: this.user.doc_no,
       organisasi: this.user.organisasi,
-      jawatan: this.user.jawatan,
     });
   }
 

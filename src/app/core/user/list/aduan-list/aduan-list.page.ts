@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { Observable } from 'rxjs';
 import { AduanService } from '../../../../shared/services/aduan.service';
@@ -21,14 +22,12 @@ export class AduanListPage implements OnInit {
   aduans$: Observable<Aduan[]>;
   aduans: Aduan[];
 
-  topLimit = 15;
-  dataList: any = [];
-
   constructor(
     private authService: AuthService,
     private modalCtrl: ModalController,
     private aduanService: AduanService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private http: HttpClient
   ) {}
 
   async ngOnInit() {
@@ -42,13 +41,12 @@ export class AduanListPage implements OnInit {
       })
     );
     console.log(this.aduans$);
-    this.dataList = this.aduans$.forEach((element) => {});
   }
 
   loadData(event) {
     setTimeout(() => {
       console.log('Done');
-      // event.target.complete();
+      event.target.complete();
 
       // App logic to determine if all data is loaded
       // and disable the infinite scroll

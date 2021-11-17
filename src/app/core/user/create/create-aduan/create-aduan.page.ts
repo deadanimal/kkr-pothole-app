@@ -1,3 +1,4 @@
+import { InfoPage } from './../../../global/info/info.page';
 /* eslint-disable @typescript-eslint/no-shadow */
 import { UserService } from 'src/app/shared/services/user.service';
 /* eslint-disable @typescript-eslint/member-ordering */
@@ -63,6 +64,7 @@ export class CreateAduanPage implements OnInit {
   infoWindow: any;
   Overlays: any = [];
   iw: any;
+  road_type: any;
 
   constructor(
     public photoService: PhotoService,
@@ -78,16 +80,19 @@ export class CreateAduanPage implements OnInit {
     private plt: Platform
   ) {}
 
-  ngOnInit() {
-    // await this.photoService.loadSaved();
+  async ngOnInit() {
     this.initAddAduanForm();
+    const modal = await this.modalCtrl.create({
+      component: InfoPage
+    });
+    modal.present();
+
     this.loadUserId();
     console.log('aduan data', this.aduanForm.value);
     if (this.aduan) {
       this.isEditMode = true;
       this.setFormValues();
     }
-
     this.images = [];
   }
 
@@ -122,12 +127,15 @@ export class CreateAduanPage implements OnInit {
       title: new FormControl('Jalan Berlubang', [Validators.required]),
       detail: new FormControl(null, [Validators.required]),
       address: new FormControl(null),
-      nama_jalan: new FormControl(null),
+      nama_jalan: new FormControl(null, [Validators.required]),
+      response_party: new FormControl(null, [Validators.required]),
       gambar_id: new FormControl(null),
-      pengadu_id: new FormControl(null),
+      pengadu_id: new FormControl(null, [Validators.required]),
       latitud: new FormControl(this.latitude),
       langitud: new FormControl(this.latitude),
       image: new FormControl(null, [Validators.required]),
+      pbt_code: new FormControl(null, [Validators.required]),
+      complaint_category: new FormControl(null),
     });
   }
 
@@ -242,7 +250,7 @@ export class CreateAduanPage implements OnInit {
         .subscribe((res) => {
           console.log(res);
           if (res['success']) {
-            this.presentToast('File upload complete.');
+            this.presentToast('Gambar berjaya dimuat naik.');
             const img_id = res['gambar_id'];
             this.aduanForm.patchValue({ gambar_id: img_id });
             response = this.aduanService.addAduan(this.aduanForm.value);
@@ -260,7 +268,7 @@ export class CreateAduanPage implements OnInit {
               modal.present();
             });
           } else {
-            this.presentToast('File upload failed.');
+            this.presentToast('Gambar gagal dimuat naik.');
           }
         });
     }
@@ -348,9 +356,6 @@ export class CreateAduanPage implements OnInit {
             this.map2.center.lng()
           );
         });
-        google.maps.event.addListener(this.map2, 'idle', async () => {
-          await this.getOverlayImage(this.map2.getBounds());
-        });
       })
       .catch((error) => {
         console.log('Error getting location', error);
@@ -416,122 +421,152 @@ export class CreateAduanPage implements OnInit {
     const metersPerPx =
       (156543.03392 * Math.cos((sw.lat() * Math.PI) / 180)) /
       Math.pow(2, this.map2.getZoom());
-    this.map2.addListener('dragend', () => {
-      console.log(this.map2.center.lat());
-      const queryURL = new URL(mygosFeatureServiceURL.toString());
-      const queryURL1 = new URL(mygosFeatureServiceURL1.toString());
-      const queryURL2 = new URL(mygosFeatureServiceURL2.toString());
-      const queryURL3 = new URL(mygosFeatureServiceURL3.toString());
-      const queryURL4 = new URL(mygosFeatureServiceURL4.toString());
-      const bodyRoad = {
-        where: '1=1',
-        geometry:
-          '{"x": ' +
-          this.map2.getCenter().lng() +
-          ', "y":' +
-          this.map2.getCenter().lat() +
-          ', "spatialReference":{"wkid":4326}}',
-        geometryType: 'esriGeometryPoint',
-        inSR: sr.toString(),
-        spatialRel: 'esriSpatialRelIntersects',
-        outFields: '*',
-        distance: (4 * metersPerPx).toString(), // 4 pixels, distance from click to nearest feature
-        units: 'esriSRUnit_Meter',
-        returnGeometry: 'false',
-        resultRecordCount: '1',
-        returnExtentOnly: 'false',
-        featureEncoding: 'esriDefault',
-        f: 'pjson',
-      };
-      queryURL.search = new URLSearchParams(bodyRoad).toString();
-      queryURL1.search = new URLSearchParams(bodyRoad).toString();
-      queryURL2.search = new URLSearchParams(bodyRoad).toString();
-      queryURL3.search = new URLSearchParams(bodyRoad).toString();
-      queryURL4.search = new URLSearchParams(bodyRoad).toString();
+    console.log('NI LAT', this.map2.center.lat());
+    const queryURL = new URL(mygosFeatureServiceURL.toString());
+    const queryURL1 = new URL(mygosFeatureServiceURL1.toString());
+    const queryURL2 = new URL(mygosFeatureServiceURL2.toString());
+    const queryURL3 = new URL(mygosFeatureServiceURL3.toString());
+    const queryURL4 = new URL(mygosFeatureServiceURL4.toString());
+    const bodyRoad = {
+      where: '1=1',
+      geometry:
+        '{"x": ' +
+        this.map2.getCenter().lng() +
+        ', "y":' +
+        this.map2.getCenter().lat() +
+        ', "spatialReference":{"wkid":4326}}',
+      geometryType: 'esriGeometryPoint',
+      inSR: sr.toString(),
+      spatialRel: 'esriSpatialRelIntersects',
+      outFields: '*',
+      distance: (4 * metersPerPx).toString(), // 4 pixels, distance from click to nearest feature
+      units: 'esriSRUnit_Meter',
+      returnGeometry: 'false',
+      resultRecordCount: '1',
+      returnExtentOnly: 'false',
+      featureEncoding: 'esriDefault',
+      f: 'pjson',
+    };
+    queryURL.search = new URLSearchParams(bodyRoad).toString();
+    queryURL1.search = new URLSearchParams(bodyRoad).toString();
+    queryURL2.search = new URLSearchParams(bodyRoad).toString();
+    queryURL3.search = new URLSearchParams(bodyRoad).toString();
+    queryURL4.search = new URLSearchParams(bodyRoad).toString();
 
-      fetch(queryURL.toString())
-        .then((r) => r.json())
-        .then((r) => {
-          if (r.features && r.features.length > 0) {
-            this.addIW(this.map2.getCenter(), r);
-            console.log('masuk');
-          }
-        });
-      fetch(queryURL1.toString())
-        .then((r) => r.json())
-        .then((r) => {
-          if (r.features && r.features.length > 0) {
-            this.addIW(this.map2.getCenter(), r);
-            console.log('masuk1');
-          }
-        });
-      fetch(queryURL2.toString())
-        .then((r) => r.json())
-        .then((r) => {
-          if (r.features && r.features.length > 0) {
-            this.addIW(this.map2.getCenter(), r);
-            console.log('masuk2');
-          }
-        });
-      fetch(queryURL3.toString())
-        .then((r) => r.json())
-        .then((r) => {
-          if (r.features && r.features.length > 0) {
-            this.addIW(this.map2.getCenter(), r);
-            console.log('masuk3');
-          }
-        });
-      fetch(queryURL4.toString())
-        .then((r) => r.json())
-        .then((r) => {
-          if (r.features && r.features.length > 0) {
-            this.addIW(this.map2.getCenter(), r);
-            console.log('masuk4');
-          }
-        });
-    });
+    fetch(queryURL.toString())
+      .then((r) => r.json())
+      .then((r) => {
+        if (r.features && r.features.length > 0) {
+          this.addIW(this.map2.getCenter(), r);
+          console.log('masuk');
+        }
+      });
+    fetch(queryURL1.toString())
+      .then((r) => r.json())
+      .then((r) => {
+        if (r.features && r.features.length > 0) {
+          this.addIW(this.map2.getCenter(), r);
+          console.log('masuk1');
+        }
+      });
+    fetch(queryURL2.toString())
+      .then((r) => r.json())
+      .then((r) => {
+        if (r.features && r.features.length > 0) {
+          this.addIW(this.map2.getCenter(), r);
+          console.log('masuk2');
+        }
+      });
+    fetch(queryURL3.toString())
+      .then((r) => r.json())
+      .then((r) => {
+        if (r.features && r.features.length > 0) {
+          this.addIW(this.map2.getCenter(), r);
+          console.log('masuk3');
+        }
+      });
+    fetch(queryURL4.toString())
+      .then((r) => r.json())
+      .then((r) => {
+        if (r.features && r.features.length > 0) {
+          this.addIW(this.map2.getCenter(), r);
+          console.log('masuk4');
+        }
+      });
   }
 
   addIW(loc, d) {
-    const val = d.features[0].attributes;
-    const roadname = val['NAM'] === null ? '' : val['NAM'];
-    const authority = val['AUT'] === null ? '' : val['AUT'];
-    const roadcat = val['RDC'] === null ? '' : val['RDC'];
+    if (d) {
+      const val = d.features[0].attributes;
+      const roadname = val['NAM'] === null ? '' : val['NAM'];
+      const authority =
+        val['AUT'] === ' ' ? 'Kementerian Kerja Raya' : val['AUT'];
+      const roadcat = val['RDC'] === null ? '' : val['RDC'];
 
-    this.aduanForm.patchValue({
-      nama_jalan: roadname,
-      response_party: authority,
-    });
+      if (roadcat === 1) {
+        this.road_type = 'Lebuhraya';
+      } else if (roadcat === 2) {
+        this.road_type = 'Jalan Persekutuan';
+      } else if (roadcat === 3) {
+        this.road_type = 'Jalan Negeri';
+      } else if (roadcat === 4) {
+        this.road_type = 'Jalan Pihak Berkuasa Tempatan (PBT)';
+      } else if (roadcat === 99) {
+        this.road_type = 'Lain-lain';
+      }
 
-    if (!this.iw) {
-      this.iw = new google.maps.InfoWindow();
-    }
-    this.iw.setPosition(loc);
-    if (d.features && d.features.length > 0) {
-      console.log(d.features[0].attributes);
-      this.iw.setContent(
-        '<b>' +
-          d.fieldAliases['NAM'] +
-          ':</b>' +
-          (val['NAM'] === null ? '' : val['NAM']) +
-          '<br>' +
+      const body = { pbt_nama: authority };
+      console.log(body);
+
+      this.aduanService.getPBTCode(body).subscribe((res) => {
+        console.log('KOD res: ', res);
+        const kod = res['kod'];
+        if (kod === 'LLM') {
+          this.aduanForm.patchValue({
+            complaint_category: roadcat,
+            nama_jalan: roadname,
+            response_party: 'Lembaga Lebuhraya',
+            pbt_code: kod,
+          });
+        } else {
+          this.aduanForm.patchValue({
+            complaint_category: roadcat,
+            nama_jalan: roadname,
+            response_party: authority,
+            pbt_code: kod,
+          });
+        }
+        console.log(this.aduanForm.value);
+        return res;
+      });
+
+      if (!this.iw) {
+        this.iw = new google.maps.InfoWindow();
+      }
+      this.iw.setPosition(loc);
+      if (d.features && d.features.length > 0) {
+        console.log(d.features[0].attributes);
+        this.iw.setContent(
           '<b>' +
-          d.fieldAliases['AUT'] +
-          ':</b>' +
-          (val['AUT'] === null ? '' : val['AUT']) +
-          '<br>' +
-          '<b>' +
-          d.fieldAliases['RDC'] +
-          ':</b>' +
-          (val['RDC'] === null ? '' : val['RDC']) +
-          '<br>'
-        // Object.entries(d.features[0].attributes)
-        // .map(([k, v]) => d.fieldAliases[k] + ': ' + (v === null ? '' : v))
-        // .join('<br>')
-      );
-      this.iw.open({ map: this.map2 });
-    } else {
-      this.iw.close();
+            d.fieldAliases['NAM'] +
+            ':</b>' +
+            (val['NAM'] === null ? '' : val['NAM']) +
+            '<br>' +
+            '<b>' +
+            d.fieldAliases['AUT'] +
+            ':</b>' +
+            (val['AUT'] === null ? 'KKR SISPAA' : val['AUT']) +
+            '<br>' +
+            '<b>' +
+            d.fieldAliases['RDC'] +
+            ':</b>' +
+            (val['RDC'] === null ? '' : val['RDC']) +
+            '<br>'
+        );
+        // this.iw.open({ map: this.map2 });
+      } else {
+        this.iw.close();
+      }
     }
   }
 
@@ -551,6 +586,7 @@ export class CreateAduanPage implements OnInit {
           address: this.address,
         });
         console.log(this.address);
+        this.getOverlayImage(this.map2.getBounds());
       }
     });
   }
