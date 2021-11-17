@@ -12,6 +12,10 @@ import { Platform, NavController } from '@ionic/angular';
 import { AuthService } from './shared/services/auth/auth.service';
 import { Storage } from '@ionic/storage-angular';
 
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -22,15 +26,18 @@ export class AppComponent implements OnInit {
   public isCollapsed = true;
   public menu;
 
+  locationCoords: any;
+  timetest: any;
+
   // public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
   constructor(
     private authService: AuthService,
-    private router: Router,
-    private storage: Storage,
+    private androidPermissions: AndroidPermissions,
+    private geolocation: Geolocation,
+    private locationAccuracy: LocationAccuracy,
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private navCtrl: NavController
+    private statusBar: StatusBar
   ) {
     this.initializeApp();
   }
@@ -46,25 +53,86 @@ export class AppComponent implements OnInit {
     await this.authService.logout();
   }
 
-  async ngOnInit() {
-    // if (this.authService) {
-    //   await setTimeout(() => {
-    //     this.authService.getUser().subscribe((user) => {
-    //       console.log('LOL', user);
-    //       const userRole = user.role;
-    //       if (userRole === 'ADMIN') {
-    //         this.menu = ROUTESSUPERADMIN;
-    //       } else if (userRole === 'USER') {
-    //         this.menu = ROUTESADMIN;
-    //       }
-    //     });
-    //     this.menuItems = this.menu.filter((menuItem) => menuItem);
-    //     this.router.events.subscribe((event) => {
-    //       this.isCollapsed = true;
-    //     });
-    //   }, 3000);
-    // }
+  ngOnInit() {
+    this.checkGPSPermission();
   }
 
-  async ionViewWillEnter() {}
+  //Check if application having GPS access permission
+  checkGPSPermission() {
+    this.androidPermissions
+      .checkPermission(
+        this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION
+      )
+      .then(
+        (result) => {
+          if (result.hasPermission) {
+            //If having permission show 'Turn On GPS' dialogue
+            this.askToTurnOnGPS();
+          } else {
+            //If not having permission ask for permission
+            this.requestGPSPermission();
+          }
+        },
+        (err) => {
+          alert(err);
+        }
+      );
+  }
+
+  requestGPSPermission() {
+    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      if (canRequest) {
+        console.log('4');
+      } else {
+        //Show 'GPS Permission Request' dialogue
+        this.androidPermissions
+          .requestPermission(
+            this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION
+          )
+          .then(
+            () => {
+              // call method to turn on GPS
+              this.askToTurnOnGPS();
+            },
+            (error) => {
+              //Show alert if user click on 'No Thanks'
+              alert(
+                'requestPermission Error requesting location permissions ' +
+                  error
+              );
+            }
+          );
+      }
+    });
+  }
+
+  askToTurnOnGPS() {
+    this.locationAccuracy
+      .request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
+      .then(
+        () => {
+          // When GPS Turned ON call method to get Accurate location coordinates
+          this.getLocationCoordinates();
+        },
+        (error) =>
+          alert(
+            'Error requesting location permissions ' + JSON.stringify(error)
+          )
+      );
+  }
+
+  // Methos to get device accurate coordinates using device GPS
+  getLocationCoordinates() {
+    this.geolocation
+      .getCurrentPosition()
+      .then((resp) => {
+        this.locationCoords.latitude = resp.coords.latitude;
+        this.locationCoords.longitude = resp.coords.longitude;
+        this.locationCoords.accuracy = resp.coords.accuracy;
+        this.locationCoords.timestamp = resp.timestamp;
+      })
+      .catch((error) => {
+        alert('Error getting location' + error);
+      });
+  }
 }

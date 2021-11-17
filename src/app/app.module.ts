@@ -14,7 +14,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthService } from './shared/services/auth/auth.service';
 import { AuthGuard } from './shared/guards/auth.guard';
 
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,7 +41,9 @@ import { HttpClientModule } from '@angular/common/http';
     AuthService,
     SplashScreen,
     StatusBar,
+    AndroidPermissions,
     Geolocation,
+    LocationAccuracy,
     NativeGeocoder,
     // FormBuilder,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
