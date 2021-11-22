@@ -71,6 +71,11 @@
                 </ion-input>
               </ion-item>
             </div>
+            <div *ngIf="(password.dirty || password.touched) && password.errors" class="error">
+              <span *ngIf="password.errors?.required">Kata laluan diperlukan</span>
+              <span *ngIf="password.errors?.minlength">Kata laluan mestilah lebih 8 patah perkataan <br></span>
+              <span *ngIf="password.errors?.pattern">Kata laluan mestilah dalam aksara</span>
+            </div>
             <div class="input">
               <ion-item>
                 <ion-input formControlName="confirmpassword" placeholder="Sah Kata Laluan" type="password"

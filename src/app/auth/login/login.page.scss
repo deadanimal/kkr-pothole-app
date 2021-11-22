@@ -40,7 +40,7 @@ ion-button {
 
 .bg-primary {
   background: linear-gradient(var(--ion-color-primary), #a8b6c5fc);
-  height: 45%;
+  height: 45vh;
   position: absolute;
   top: 0;
   width: 100%;
@@ -62,7 +62,7 @@ ion-item.item-inner {
 
 .errors {
   float: right;
-  font-size: small;
+  font-size: 10px;
   color: var(--ion-color-danger);
   padding: 0;
 }
@@ -73,8 +73,6 @@ ion-item.item-inner {
   width: 100%;
   bottom: 10px;
   position: absolute;
-  display: flex;
-  justify-content: center;
 }
 
 ion-col {

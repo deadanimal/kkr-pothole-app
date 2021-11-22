@@ -57,26 +57,26 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="telefon" placeholder="No Telefon" type="number"></ion-input>
+                <ion-input formControlName="telefon" placeholder="No Telefon" type="number" pattern="[0-9]*" max="12">
+                </ion-input>
               </ion-item>
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="password" autocomplete="off">
+                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="password" autocomplte="off">
                 </ion-input>
               </ion-item>
+            </div>
+            <div *ngIf="(password.dirty || password.touched) && password.errors" class="error">
+              <span *ngIf="password.errors?.required">Kata laluan diperlukan</span>
+              <span *ngIf="password.errors?.minlength">Kata laluan mestilah lebih 8 patah perkataan <br></span>
+              <span *ngIf="password.errors?.pattern">Kata laluan mestilah dalam aksara</span>
             </div>
             <div class="input">
               <ion-item>
                 <ion-input formControlName="confirmpassword" placeholder="Sah Kata Laluan" type="password"
                   autocomplete="off"></ion-input>
               </ion-item>
-            </div>
-            <div *ngFor="let error of error_messages.confirmpassword">
-              <div class="error"
-                *ngIf="profileForm.get('confirmpassword').hasError(error.type) && (profileForm.get('confirmpassword').dirty || profileForm.get('confirmpassword').touched)">
-                {{ error.message }}
-              </div>
             </div>
             <div class="error"
               *ngIf="!profileForm.get('confirmpassword').errors && profileForm.hasError('passwordNotMatch') && (profileForm.get('confirmpassword').dirty || profileForm.get('confirmpassword').touched)">

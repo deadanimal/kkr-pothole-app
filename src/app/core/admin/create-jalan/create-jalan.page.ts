@@ -74,10 +74,6 @@ export class CreateJalanPage implements OnInit {
     this.initAddJalanForm();
     this.loadUserId();
     console.log('jalan data', this.jalanForm.value);
-    if (this.jalan) {
-      this.isEditMode = true;
-      this.setFormValues();
-    }
 
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
     // loading.present();
@@ -89,6 +85,12 @@ export class CreateJalanPage implements OnInit {
         return negeri;
       })
     );
+
+    if (this.jalan) {
+      this.isEditMode = true;
+      await this.setFormValues();
+      console.log('SET JALAN DAH');
+    }
   }
 
   async loadUserId() {
@@ -128,13 +130,13 @@ export class CreateJalanPage implements OnInit {
       daerah: new FormControl(null, [Validators.required]),
       response_party: new FormControl(null, [Validators.required]),
       admin_id: new FormControl(null),
-      image: new FormControl(null, [Validators.required]),
+      image: new FormControl(null),
       gambar_id: new FormControl(null),
     });
   }
 
   setFormValues() {
-    this.jalanForm.setValue({
+    this.jalanForm.patchValue({
       name: this.jalan.name,
       detail: this.jalan.detail,
       status: this.jalan.status,

@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="md">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="!isEditMode">
       <ion-button href="/admin/dashboard">
         <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
       </ion-button>
@@ -46,13 +46,13 @@
                 <ion-col size="6">
                   <ion-label position="floating">Tarikh Mula</ion-label>
                   <ion-item color="light">
-                    <ion-datetime formControlName="start_date" placeholder="Pilih"></ion-datetime>
+                    <ion-datetime formControlName="start_date" min="2020" max="2099-10-31" placeholder="Pilih"></ion-datetime>
                   </ion-item>
                 </ion-col>
                 <ion-col size="6">
                   <ion-label position="floating">Tarikh Akhir</ion-label>
                   <ion-item color="light">
-                    <ion-datetime formControlName="end_date" placeholder="Pilih"></ion-datetime>
+                    <ion-datetime formControlName="end_date" min="2020" max="2099-10-31" placeholder="Pilih"></ion-datetime>
                   </ion-item>
                 </ion-col>
               </ion-row>

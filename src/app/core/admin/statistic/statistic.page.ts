@@ -116,14 +116,14 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
 
       chart.data = [
         {
-          country: 'Lithuania',
+          country: 'Selesai',
           litres: 201.9,
-          // color: am4core.color('#020100'),
+          color: am4core.color('#28EE00'),
         },
         {
-          country: 'Germany',
+          country: 'Ditolak',
           litres: 165.8,
-          // color: am4core.color('#020100'),
+          color: am4core.color('#FF3333'),
         },
       ];
     });

@@ -32,19 +32,6 @@ export class ProfilePage implements OnInit {
 
   token = '';
 
-  error_messages = {
-    password: [
-      { type: 'required', message: 'password is required.' },
-      { type: 'minlength', message: 'password length.' },
-      { type: 'maxlength', message: 'password length.' },
-    ],
-    confirmpassword: [
-      { type: 'required', message: 'password is required.' },
-      { type: 'minlength', message: 'password length.' },
-      { type: 'maxlength', message: 'password length.' },
-    ],
-  };
-
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
@@ -55,7 +42,6 @@ export class ProfilePage implements OnInit {
 
   async ngOnInit() {
     this.initAddUserForm();
-
     this.loadToken();
   }
 
@@ -93,11 +79,16 @@ export class ProfilePage implements OnInit {
         doc_type: new FormControl(null, [Validators.required]),
         doc_no: new FormControl(null, [Validators.required]),
         organisasi: new FormControl(null, [Validators.required]),
-        password: new FormControl(null),
+        password: new FormControl(null, [
+          Validators.pattern(
+            '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}'
+          ),
+          Validators.minLength(8),
+        ]),
         confirmpassword: new FormControl(null),
       },
       {
-        validators: this.password.bind(this),
+        validators: this.passwords.bind(this),
       }
     );
   }
@@ -132,7 +123,11 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  password(formGroup: FormGroup) {
+  get password() {
+    return this.profileForm.get('password');
+  }
+
+  passwords(formGroup: FormGroup) {
     const { value: password } = formGroup.get('password');
     const { value: confirmPassword } = formGroup.get('confirmpassword');
     return password === confirmPassword ? null : { passwordNotMatch: true };
