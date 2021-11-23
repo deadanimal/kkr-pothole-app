@@ -51,12 +51,17 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+      <!-- <div style="height:280px;">&nbsp;</div> -->
+      <style>
+        .scroll-content {
+          padding-bottom: 0 !important;
+        }
+      </style>
+      <div class="no-account" style="padding-top: 70px;">
+        <span color="medium">Tiada akaun?</span>
+        <ion-router-link color="primary" (click)="openRegister()">&nbsp;Daftar Sekarang
+        </ion-router-link>
+      </div>
     </form>
-    <div class="no-account">
-      <span color="medium">Tiada akaun?</span>
-      <ion-router-link color="primary" (click)="openRegister()">&nbsp;Daftar Sekarang
-      </ion-router-link>
-    </div>
-    <div style="height:280px;">&nbsp;</div>
   </div>
 </ion-content>

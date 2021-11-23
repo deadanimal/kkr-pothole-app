@@ -71,8 +71,8 @@ ion-item.item-inner {
   //margin: 0 auto;
   text-align: center;
   width: 100%;
-  bottom: 10px;
-  position: fixed;
+  //bottom: 10px;
+  position: absolute;
 }
 
 ion-col {
@@ -83,4 +83,8 @@ ion-label{
   color: var(--ion-color-medium);
   margin-left: 10px;
   font-weight: 500;
+}
+
+.scroll-content {
+  padding-bottom: 0 !important;
 }
