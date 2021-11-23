@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { SuccessPage } from 'src/app/core/global/alert/success/success.page';
@@ -45,8 +45,13 @@ export class RegisterUserPage implements OnInit {
     private userService: UserService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
-    private router: Router
-  ) {}
+    private router: Router,
+    private platform: Platform
+  ) {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.closeModal();
+    });
+  }
 
   ngOnInit() {
     this.initAddUserForm();
@@ -102,6 +107,12 @@ export class RegisterUserPage implements OnInit {
 
   closeModal() {
     this.modalCtrl.dismiss();
+  }
+
+  public showPass = true;
+
+  hideShowPassword(){
+    this.showPass = !(this.showPass);
   }
   //======== insert photoservice here =====
 }

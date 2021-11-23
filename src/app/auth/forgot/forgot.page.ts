@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-forgot',
@@ -7,7 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ForgotPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router,
+    private platform: Platform
+  ) { 
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/login'])
+    });
+  }
 
   ngOnInit() {
   }

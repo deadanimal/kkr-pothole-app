@@ -4,7 +4,7 @@ import { take } from 'rxjs/operators';
 import { AduanService } from 'src/app/shared/services/aduan.service';
 import { CreateAduanPage } from './../../core/user/create/create-aduan/create-aduan.page';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ModalController, NavParams, LoadingController } from '@ionic/angular';
+import { ModalController, NavParams, LoadingController, AlertController } from '@ionic/angular';
 import { Aduan } from 'src/app/shared/model/aduan.model';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {
@@ -41,7 +41,8 @@ export class AduanDetailPage implements OnInit {
     private authService: AuthService,
     private aduanService: AduanService,
     private loadingCtrl: LoadingController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    public alertController: AlertController
   ) {
     const role = this.authService.userRole;
     console.log(role);

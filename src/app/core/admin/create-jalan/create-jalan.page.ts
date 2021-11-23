@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 /* eslint-disable prefer-const */
 import { UserService } from './../../../shared/services/user.service';
@@ -6,7 +7,7 @@ import { UserService } from './../../../shared/services/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Daerah } from './../../../shared/model/daerah.model';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, Platform } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   FormBuilder,
@@ -66,8 +67,14 @@ export class CreateJalanPage implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private http: HttpClient,
-    private toastCtrl: ToastController
-  ) {}
+    private toastCtrl: ToastController,
+    private router: Router,
+    private platform: Platform
+  ) {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/admin/dashboard'])
+    });
+  }
 
   async ngOnInit() {
     this.images = [];

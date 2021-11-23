@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable max-len */
+import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import {
   Component,
   Inject,
@@ -31,10 +33,20 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) private platformId,
     private zone: NgZone,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private platform: Platform
   ) {
     const role = this.authService.userRole;
-    console.log(role);
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      if (role === 'admin') {
+        this.router.navigate(['/admin/dashboard'])
+      } else if (role === 'super_admin') {
+        this.router.navigate(['/superadmin/dashboard'])
+      }
+    });
+
     if (role === 'admin') {
       this.isAdmin = true;
     } else if (role === 'super_admin') {

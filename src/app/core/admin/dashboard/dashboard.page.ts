@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import {
   Component,
   OnInit,
@@ -36,7 +36,8 @@ export class DashboardPage implements OnInit {
   constructor(
     private geolocation: Geolocation,
     private loadingCtrl: LoadingController,
-    public zone: NgZone
+    public zone: NgZone,
+    public alertController: AlertController
   ) {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
@@ -103,7 +104,7 @@ export class DashboardPage implements OnInit {
           fullscreenControl: false,
         };
 
-        this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
+        this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude, "");
 
         this.map = new google.maps.Map(
           this.mapElement.nativeElement,
@@ -119,10 +120,12 @@ export class DashboardPage implements OnInit {
           this.myMarker.setPosition(this.map.getCenter());
           this.infoWindow.close();
         });
+
         this.map.addListener('dragend', () => {
           this.getAddressFromCoords(
             this.map.center.lat(),
-            this.map.center.lng()
+            this.map.center.lng(),
+            latLng
           );
         });
       })
@@ -131,7 +134,7 @@ export class DashboardPage implements OnInit {
       });
   }
 
-  getAddressFromCoords(lattitude, longitude) {
+  getAddressFromCoords(lattitude, longitude, lastvalid) {
     console.log('getAddressFromCoords :' + lattitude + ',' + longitude);
     const latlng = new google.maps.LatLng(lattitude, longitude);
     // This is making the Geocode request
@@ -143,8 +146,39 @@ export class DashboardPage implements OnInit {
       // This is checking to see if the Geoeode Status is OK before proceeding
       if (status === google.maps.GeocoderStatus.OK) {
         this.address = results[0].formatted_address;
+        var temp = this.address.substr(this.address.length - 8);
+        if(temp == 'Malaysia'){
+          console.log('true');
+        }else{
+          this.showConfirm(lastvalid);
+        }
         console.log(this.address);
       }
+    });
+  }
+
+  showConfirm(para) {
+    this.alertController.create({
+      header: 'Caution',
+      subHeader: 'Non Malaysia Address Detected',
+      message: 'Are you sure?',
+      buttons: [
+        {
+          text: 'Current Location',
+          handler: () => {
+            this.map.panTo(para);
+            this.myMarker.setPosition(para);
+          }
+        },
+        {
+          text: 'Continue',
+          handler: () => {
+            console.log('Let me think');
+          }
+        }
+      ]
+    }).then(res => {
+      res.present();
     });
   }
 
@@ -165,7 +199,7 @@ export class DashboardPage implements OnInit {
         this.map.setCenter(pos);
         this.myMarker.setPosition(pos);
 
-        this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
+        this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude, "");
       })
       .catch((error) => {
         console.log('Error getting location', error);

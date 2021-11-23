@@ -67,8 +67,9 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="password" autocomplete="off">
+                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplete="off">
                 </ion-input>
+                <ion-icon slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
               </ion-item>
             </div>
             <div *ngIf="(password.dirty || password.touched) && password.errors" class="error">

@@ -157,4 +157,10 @@ export class LoginPage implements OnInit {
         }
       );
   }
+
+  public showPass = true;
+
+  hideShowPassword(){
+    this.showPass = !(this.showPass);
+  }
 }

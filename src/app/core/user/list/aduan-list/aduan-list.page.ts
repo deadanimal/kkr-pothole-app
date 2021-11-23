@@ -7,10 +7,12 @@ import {
   IonInfiniteScroll,
   LoadingController,
   ModalController,
+  Platform
 } from '@ionic/angular';
 import { AduanDetailPage } from 'src/app/modal/aduan-detail/aduan-detail.page';
 import { Aduan } from '../../../../shared/model/aduan.model';
 import { map, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-aduan-list',
@@ -27,8 +29,15 @@ export class AduanListPage implements OnInit {
     private modalCtrl: ModalController,
     private aduanService: AduanService,
     private loadingCtrl: LoadingController,
-    private http: HttpClient
-  ) {}
+    private http: HttpClient,
+    private router: Router,
+    private platform: Platform
+  ) {
+    
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/user/dashboard'])
+    });
+  }
 
   async ngOnInit() {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
