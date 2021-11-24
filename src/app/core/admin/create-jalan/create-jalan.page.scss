@@ -1,4 +1,4 @@
-ion-item{
+ion-item {
   border-radius: 18px;
   margin-bottom: .7rem;
 
@@ -23,19 +23,24 @@ ion-toolbar {
   border-top-left-radius: 2.5rem;
   border-top-right-radius: 2.5rem;
 
+
 }
 
-ion-label{
+img {
+  border-radius: 18px;
+}
+
+ion-label {
   color: var(--ion-color-primary);
   margin-left: 10px;
   font-weight: 500;
 }
 
-.btn-custom{
+.btn-custom {
   margin-top: 40px;
 }
 
-ion-row{
+ion-row {
   padding-left: 0;
   padding-right: 0;
 }
@@ -46,7 +51,7 @@ ion-card {
   margin: 0 0 .7rem;
 }
 
-ion-select-option{
+ion-select-option {
   .select-interface-option {
     text-transform: capitalize !important;
   }

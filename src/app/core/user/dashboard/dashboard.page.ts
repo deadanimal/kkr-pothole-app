@@ -1,3 +1,4 @@
+import { AlertController, ModalController } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
 import { LoadingController } from '@ionic/angular';
 import {
@@ -9,6 +10,8 @@ import {
 } from '@angular/core';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { InfoPage } from '../../global/info/info.page';
 
 declare let google;
 
@@ -32,11 +35,15 @@ export class DashboardPage implements OnInit {
   GoogleAutocomplete: any;
   infoWindow: any;
   geocoder: any;
+  routeAduan: any = '/user/create-aduan/';
 
   constructor(
     private geolocation: Geolocation,
     private loadingCtrl: LoadingController,
-    public zone: NgZone
+    public zone: NgZone,
+    private authService: AuthService,
+    private alertCtrl: AlertController,
+    private modalCtrl: ModalController
   ) {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
@@ -48,7 +55,17 @@ export class DashboardPage implements OnInit {
   async ionViewWillEnter() {
     this.googleMap();
   }
-  // 3.0738, 101.5183
+
+  async getInfo() {
+    const modal = await this.modalCtrl.create({
+      component: InfoPage,
+    });
+    modal.present();
+  }
+
+  closeModal() {
+    this.modalCtrl.dismiss();
+  }
   async addMarker() {
     this.myMarker = new google.maps.Marker({
       map: this.map,
@@ -115,6 +132,7 @@ export class DashboardPage implements OnInit {
           this.latitude = this.map.center.lat();
           this.longitude = this.map.center.lng();
           this.myMarker.setPosition(this.map.getCenter());
+
           this.infoWindow.close();
         });
         this.map.addListener('dragend', () => {
@@ -122,6 +140,9 @@ export class DashboardPage implements OnInit {
             this.map.center.lat(),
             this.map.center.lng()
           );
+          this.routeAduan = '/user/create-aduan/';
+          this.routeAduan =
+            this.routeAduan + this.latitude + '-' + this.longitude;
         });
       })
       .catch((error) => {
@@ -227,5 +248,36 @@ export class DashboardPage implements OnInit {
     return (window.location.href =
       'https://www.google.com/maps/search/?api=1&query=Google&query_place_id=' +
       this.placeid);
+  }
+
+  async logoutConfirm() {
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Pengesahan',
+      message: 'Anda pasti untuk log keluar?',
+      buttons: [
+        {
+          text: 'Batal',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          },
+        },
+        {
+          text: 'Pasti',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.logout();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async logout() {
+    await this.authService.logout();
   }
 }

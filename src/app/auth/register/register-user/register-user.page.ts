@@ -56,7 +56,7 @@ export class RegisterUserPage implements OnInit {
     this.regUserForm = this.formBuilder.group(
       {
         name: new FormControl(null, [Validators.required]),
-        email: new FormControl(null, [Validators.required]),
+        email: new FormControl(null, [Validators.required, Validators.email]),
         telefon: new FormControl(null, [Validators.required]),
         doc_type: new FormControl(null, [Validators.required]),
         doc_no: new FormControl(null, [Validators.required]),

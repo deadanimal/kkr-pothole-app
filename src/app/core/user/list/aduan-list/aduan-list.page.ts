@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/dot-notation */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable prefer-const */
+import { UserService } from './../../../../shared/services/user.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { Observable } from 'rxjs';
@@ -11,6 +15,8 @@ import {
 import { AduanDetailPage } from 'src/app/modal/aduan-detail/aduan-detail.page';
 import { Aduan } from '../../../../shared/model/aduan.model';
 import { map, tap } from 'rxjs/operators';
+import { Storage } from '@capacitor/storage';
+const TOKEN_KEY = 'my-token';
 
 @Component({
   selector: 'app-aduan-list',
@@ -21,26 +27,52 @@ export class AduanListPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   aduans$: Observable<Aduan[]>;
   aduans: Aduan[];
+  user_id: any;
+  token = '';
 
   constructor(
     private authService: AuthService,
     private modalCtrl: ModalController,
     private aduanService: AduanService,
     private loadingCtrl: LoadingController,
+    private userService: UserService,
     private http: HttpClient
   ) {}
 
   async ngOnInit() {
+    await this.loadToken();
+  }
+
+  async loadToken() {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
     loading.present();
-    this.aduans$ = this.aduanService.getAduans().pipe(
-      tap((aduans) => {
+
+    const token = await Storage.get({ key: TOKEN_KEY });
+    console.log('Token:', token.value);
+
+    let body = {
+      bearer_token: token.value,
+    };
+
+    this.userService.getAuthUser(body).subscribe(
+      (res) => {
+        console.log(res);
         loading.dismiss();
-        console.log('Aduans:', aduans);
-        return aduans;
-      })
+        this.user_id = res['id'];
+        console.log('this user', this.user_id);
+        this.aduans$ = this.aduanService.getAduansByUser(this.user_id).pipe(
+          tap((aduans) => {
+            loading.dismiss();
+            console.log('Aduans:', aduans);
+            return aduans;
+          })
+        );
+        console.log(this.aduans$);
+      },
+      (err) => {
+        console.log(err);
+      }
     );
-    console.log(this.aduans$);
   }
 
   loadData(event) {

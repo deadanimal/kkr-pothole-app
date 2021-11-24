@@ -1,7 +1,10 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="md">
     <ion-buttons slot="start" *ngIf="!isEditMode">
-      <ion-button href="/admin/dashboard">
+      <ion-button *ngIf="isSuperAdmin" href="/superadmin/dashboard">
+        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="isAdmin" href="/admin/dashboard">
         <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -26,10 +29,11 @@
         <ion-row color="primary" justify-content-center>
           <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
             <div padding>
-              <ion-item color="light">
-                <ion-input formControlName="image" type="file" (change)="fileEvent($event)" accept="image/*">
-                </ion-input>
-              </ion-item>
+              <label>
+                <img [src]="url" alt="">
+                <ion-input style="display:none" formControlName="image" id="image" type="file"
+                  (change)="fileEvent($event)" accept="image/*"></ion-input>
+              </label>
               <ion-label position="floating">Nama Jalan</ion-label>
               <ion-item color="light">
                 <ion-input formControlName="name" type="text" placeholder="Nama Jalan"></ion-input>
@@ -46,13 +50,15 @@
                 <ion-col size="6">
                   <ion-label position="floating">Tarikh Mula</ion-label>
                   <ion-item color="light">
-                    <ion-datetime formControlName="start_date" min="2020" max="2099-10-31" placeholder="Pilih"></ion-datetime>
+                    <ion-datetime formControlName="start_date" min="2020" max="2099-10-31" placeholder="Pilih">
+                    </ion-datetime>
                   </ion-item>
                 </ion-col>
                 <ion-col size="6">
                   <ion-label position="floating">Tarikh Akhir</ion-label>
                   <ion-item color="light">
-                    <ion-datetime formControlName="end_date" min="2020" max="2099-10-31" placeholder="Pilih"></ion-datetime>
+                    <ion-datetime formControlName="end_date" min="2020" max="2099-10-31" placeholder="Pilih">
+                    </ion-datetime>
                   </ion-item>
                 </ion-col>
               </ion-row>

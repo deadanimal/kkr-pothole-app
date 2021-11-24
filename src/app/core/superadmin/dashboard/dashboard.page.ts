@@ -1,3 +1,4 @@
+import { AlertController } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
 import { LoadingController } from '@ionic/angular';
 import {
@@ -9,6 +10,7 @@ import {
 } from '@angular/core';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 
 declare let google;
 
@@ -36,7 +38,9 @@ export class DashboardPage implements OnInit {
   constructor(
     private geolocation: Geolocation,
     private loadingCtrl: LoadingController,
-    public zone: NgZone
+    public zone: NgZone,
+    private alertCtrl: AlertController,
+    private authService: AuthService,
   ) {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
@@ -228,5 +232,36 @@ export class DashboardPage implements OnInit {
     return (window.location.href =
       'https://www.google.com/maps/search/?api=1&query=Google&query_place_id=' +
       this.placeid);
+  }
+
+  async logoutConfirm() {
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Pengesahan',
+      message: 'Anda pasti untuk log keluar?',
+      buttons: [
+        {
+          text: 'Batal',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          },
+        },
+        {
+          text: 'Pasti',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.logout();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async logout() {
+    await this.authService.logout();
   }
 }

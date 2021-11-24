@@ -14,6 +14,10 @@ export class AduanService {
     return this.http.get<Aduan[]>(`${this.apiUrl}/aduan`);
   }
 
+  getAduansByUser(userId: number): Observable<Aduan[]> {
+    return this.http.get<Aduan[]>(`${this.apiUrl}/get_aduan_by_user/${userId}`);
+  }
+
   addAduan(aduan: Aduan): Observable<Aduan> {
     return this.http.post<Aduan>(`${this.apiUrl}/aduan/`, aduan);
   }
@@ -30,7 +34,7 @@ export class AduanService {
     return this.http.get(`${this.apiUrl}/gambar/${gambarId}`);
   }
 
-  getPBTCode(body){
+  getPBTCode(body) {
     return this.http.post(`${this.apiUrl}/get_pbt`, body);
   }
 }

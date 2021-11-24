@@ -4,7 +4,7 @@
 import { Router } from '@angular/router';
 /* eslint-disable prefer-const */
 import { UserService } from 'src/app/shared/services/user.service';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { User } from 'src/app/shared/model/user.model';
 import {
   FormControl,
@@ -37,7 +37,8 @@ export class ProfilePage implements OnInit {
     private formBuilder: FormBuilder,
     private loadingCtrl: LoadingController,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private alertCtrl: AlertController
   ) {}
 
   async ngOnInit() {
@@ -131,6 +132,33 @@ export class ProfilePage implements OnInit {
     const { value: password } = formGroup.get('password');
     const { value: confirmPassword } = formGroup.get('confirmpassword');
     return password === confirmPassword ? null : { passwordNotMatch: true };
+  }
+
+  async logoutConfirm() {
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Pengesahan',
+      message: 'Anda pasti untuk log keluar?',
+      buttons: [
+        {
+          text: 'Batal',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          },
+        },
+        {
+          text: 'Pasti',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.logout();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   async logout() {

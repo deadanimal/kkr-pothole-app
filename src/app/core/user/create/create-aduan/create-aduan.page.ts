@@ -4,7 +4,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { SuccessPage } from './../../../global/alert/success/success.page';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   LoadingController,
   ModalController,
@@ -65,6 +65,7 @@ export class CreateAduanPage implements OnInit {
   Overlays: any = [];
   iw: any;
   road_type: any;
+  location: any;
 
   constructor(
     public photoService: PhotoService,
@@ -74,6 +75,7 @@ export class CreateAduanPage implements OnInit {
     private userService: UserService,
     private modalCtrl: ModalController,
     private router: Router,
+    private route: ActivatedRoute,
     private http: HttpClient,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
@@ -81,11 +83,9 @@ export class CreateAduanPage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.location = this.route.snapshot.params['location'].split('-');
+    console.log('aik', this.location);
     this.initAddAduanForm();
-    const modal = await this.modalCtrl.create({
-      component: InfoPage
-    });
-    modal.present();
 
     this.loadUserId();
     console.log('aduan data', this.aduanForm.value);
@@ -321,8 +321,8 @@ export class CreateAduanPage implements OnInit {
         this.longitude = resp.coords.longitude;
 
         const latLng = new google.maps.LatLng(
-          resp.coords.latitude,
-          resp.coords.longitude
+          this.location[0],
+          this.location[1]
         );
         const mapOptions = {
           center: latLng,

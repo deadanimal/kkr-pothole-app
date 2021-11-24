@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { ToastController } from '@ionic/angular';
 /* eslint-disable prefer-const */
 import { UserService } from './../../../shared/services/user.service';
@@ -54,6 +55,8 @@ export class CreateJalanPage implements OnInit {
   myMarker: any;
   center: any;
   res_party: any;
+  isAdmin = false;
+  isSuperAdmin =  false;
 
   apiUrl = environment.baseUrl;
 
@@ -67,7 +70,14 @@ export class CreateJalanPage implements OnInit {
     private userService: UserService,
     private http: HttpClient,
     private toastCtrl: ToastController
-  ) {}
+  ) {
+    const role = this.authService.userRole;
+    if (role === 'super_admin') {
+      this.isSuperAdmin = true;
+    } else if (role === 'admin') {
+      this.isAdmin = true;
+    }
+  }
 
   async ngOnInit() {
     this.images = [];
@@ -151,13 +161,25 @@ export class CreateJalanPage implements OnInit {
 
   // Convert the base64 to blob data
   // and create  formData with it
-  async fileEvent(e) {
-    const files = e.target.files;
+  url: any = 'assets/img/no_image.png';
+  async fileEvent(event) {
+    const files = event.target.files;
     const file = files[0];
     const filePath = files[0].size;
     const base64Data = await this.readAsBase64(file);
 
     const fileName = new Date().getTime() + '.jpeg';
+
+    if (files && files[0]) {
+      const reader = new FileReader();
+
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+      reader.onload = (event) => {
+        // called once readAsDataURL is completed
+        this.url = event.target.result;
+      };
+    }
 
     this.images.push({
       name: fileName,

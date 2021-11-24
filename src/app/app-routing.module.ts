@@ -54,7 +54,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'create-aduan',
+        path: 'create-aduan/:location',
         loadChildren: () =>
           import('./core/user/create/create-aduan/create-aduan.module').then(
             (m) => m.CreateAduanPageModule
@@ -192,7 +192,6 @@ const routes: Routes = [
             (m) => m.CreateJalanPageModule
           ),
       },
-
       {
         path: 'statistic',
         loadChildren: () =>
