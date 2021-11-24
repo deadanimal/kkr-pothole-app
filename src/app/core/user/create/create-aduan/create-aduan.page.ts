@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 import { InfoPage } from './../../../global/info/info.page';
 /* eslint-disable @typescript-eslint/no-shadow */
 import { UserService } from 'src/app/shared/services/user.service';
@@ -10,6 +11,7 @@ import {
   ModalController,
   Platform,
   ToastController,
+  AlertController,
 } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
@@ -79,8 +81,13 @@ export class CreateAduanPage implements OnInit {
     private http: HttpClient,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
-    private plt: Platform
-  ) {}
+    private plt: Platform,
+    public alertController: AlertController
+  ) {
+    this.plt.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/user/dashboard']);
+    });
+  }
 
   async ngOnInit() {
     this.location = this.route.snapshot.params['location'].split('-');
@@ -335,7 +342,11 @@ export class CreateAduanPage implements OnInit {
           fullscreenControl: false,
         };
 
-        this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
+        this.getAddressFromCoords(
+          resp.coords.latitude,
+          resp.coords.longitude,
+          ''
+        );
 
         this.map2 = new google.maps.Map(
           this.mapElement.nativeElement,
@@ -353,7 +364,8 @@ export class CreateAduanPage implements OnInit {
         this.map2.addListener('dragend', () => {
           this.getAddressFromCoords(
             this.map2.center.lat(),
-            this.map2.center.lng()
+            this.map2.center.lng(),
+            latLng
           );
         });
       })
@@ -570,7 +582,7 @@ export class CreateAduanPage implements OnInit {
     }
   }
 
-  getAddressFromCoords(lattitude, longitude) {
+  getAddressFromCoords(lattitude, longitude, lastvalid) {
     console.log('getAddressFromCoords :' + lattitude + ',' + longitude);
     const latlng = new google.maps.LatLng(lattitude, longitude);
     // This is making the Geocode request
@@ -582,13 +594,49 @@ export class CreateAduanPage implements OnInit {
       // This is checking to see if the Geoeode Status is OK before proceeding
       if (status === google.maps.GeocoderStatus.OK) {
         this.address = results[0].formatted_address;
-        this.aduanForm.patchValue({
-          address: this.address,
-        });
+        var temp = this.address.substr(this.address.length - 8);
+        if (temp === 'Malaysia') {
+          this.aduanForm.patchValue({
+            address: this.address,
+          });
+          this.getOverlayImage(this.map2.getBounds());
+        } else {
+          this.showConfirm(lastvalid);
+        }
+
         console.log(this.address);
-        this.getOverlayImage(this.map2.getBounds());
       }
     });
+  }
+
+  showConfirm(para) {
+    this.alertController
+      .create({
+        header: 'Caution',
+        subHeader: 'Non Malaysia Address Detected',
+        message: 'Are you sure?',
+        buttons: [
+          {
+            text: 'Current Location',
+            handler: () => {
+              this.map2.panTo(para);
+              this.myMarker.setPosition(para);
+            },
+          },
+          {
+            text: 'Continue',
+            handler: () => {
+              this.aduanForm.patchValue({
+                address: this.address,
+              });
+              this.getOverlayImage(this.map2.getBounds());
+            },
+          },
+        ],
+      })
+      .then((res) => {
+        res.present();
+      });
   }
 
   getCurrentCoords() {
@@ -608,7 +656,11 @@ export class CreateAduanPage implements OnInit {
         this.map2.setCenter(pos);
         this.myMarker.setPosition(pos);
 
-        this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
+        this.getAddressFromCoords(
+          resp.coords.latitude,
+          resp.coords.longitude,
+          ''
+        );
       })
       .catch((error) => {
         console.log('Error getting location', error);

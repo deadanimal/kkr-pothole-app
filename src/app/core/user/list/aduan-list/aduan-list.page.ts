@@ -11,11 +11,13 @@ import {
   IonInfiniteScroll,
   LoadingController,
   ModalController,
+  Platform,
 } from '@ionic/angular';
 import { AduanDetailPage } from 'src/app/modal/aduan-detail/aduan-detail.page';
 import { Aduan } from '../../../../shared/model/aduan.model';
 import { map, tap } from 'rxjs/operators';
 import { Storage } from '@capacitor/storage';
+import { Router } from '@angular/router';
 const TOKEN_KEY = 'my-token';
 
 @Component({
@@ -36,8 +38,14 @@ export class AduanListPage implements OnInit {
     private aduanService: AduanService,
     private loadingCtrl: LoadingController,
     private userService: UserService,
-    private http: HttpClient
-  ) {}
+    private http: HttpClient,
+    private router: Router,
+    private platform: Platform
+  ) {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/user/dashboard']);
+    });
+  }
 
   async ngOnInit() {
     await this.loadToken();
