@@ -112,8 +112,7 @@ export class RegisterUserPage implements OnInit {
 
   public showPass = true;
 
-  hideShowPassword(){
-    this.showPass = !(this.showPass);
+  hideShowPassword() {
+    this.showPass = !this.showPass;
   }
-  //======== insert photoservice here =====
 }

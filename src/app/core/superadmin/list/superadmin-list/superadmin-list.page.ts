@@ -6,7 +6,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { map, tap } from 'rxjs/operators';
 import { User } from 'src/app/shared/model/user.model';
-import { UserDetailPage } from 'src/app/modal/user-detail/user-detail.page';
 import { RegisterAdminPage } from 'src/app/auth/register/register-admin/register-admin.page';
 import { Router } from '@angular/router';
 
@@ -27,9 +26,8 @@ export class SuperadminListPage implements OnInit {
     private router: Router,
     private platform: Platform
   ) {
-
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['superadmin/admin-management'])
+      this.router.navigate(['superadmin/admin-management']);
     });
   }
 

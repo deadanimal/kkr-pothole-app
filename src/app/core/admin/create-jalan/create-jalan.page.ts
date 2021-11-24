@@ -47,6 +47,7 @@ export class CreateJalanPage implements OnInit {
   isEditMode = false;
   jalanForm: FormGroup;
   images: LocalFile[];
+  image: any;
 
   map2: any;
   address: string;
@@ -98,16 +99,10 @@ export class CreateJalanPage implements OnInit {
     this.negeris = this.jalanService.getNegeris().pipe(
       tap((negeri) => {
         loading.dismiss();
-        console.log('Daerah:', negeri);
+        console.log('Negeri:', negeri);
         return negeri;
       })
     );
-
-    if (this.jalan) {
-      this.isEditMode = true;
-      await this.setFormValues();
-      console.log('SET JALAN DAH');
-    }
   }
 
   async loadUserId() {
@@ -129,6 +124,22 @@ export class CreateJalanPage implements OnInit {
           admin_id: res.id,
         });
         console.log('this user id', res.id, res.role);
+
+        if (this.jalan) {
+          this.isEditMode = true;
+          this.setFormValues();
+          console.log('SET JALAN DAH');
+          if (this.isEditMode) {
+            this.jalanService
+              .getGambarJalan(this.jalan.gambar_id)
+              .pipe(take(1))
+              .subscribe((res) => {
+                this.image = res['url'];
+              });
+
+            console.log(this.image);
+          }
+        }
       },
       (err) => {
         console.log(err);

@@ -46,19 +46,9 @@
                 </ion-select>
               </ion-item>
             </div>
-            <div class="input">
-              <ion-item>
-                <ion-select formControlName="doc_type" placeholder="Jenis Pengenalan" interface="action-sheet">
-                  <ion-select-option value="NRIC">NRIC No</ion-select-option>
-                  <ion-select-option value="PASS">Paspot No</ion-select-option>
-                  <ion-select-option value="COMP">No Syarikat</ion-select-option>
-                  <ion-select-option value="OTH">Lain-lain</ion-select-option>
-                </ion-select>
-              </ion-item>
-            </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number"></ion-input>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number" {{isEditMode ? 'disabled':''}}></ion-input>
               </ion-item>
             </div>
             <div class="input2">
@@ -68,7 +58,7 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="email" placeholder="Alamat Emel" type="text"></ion-input>
+                <ion-input formControlName="email" placeholder="Alamat Emel" type="text" {{isEditMode ? 'disabled':''}}></ion-input>
               </ion-item>
             </div>
           </ion-col>
@@ -90,7 +80,7 @@
             <ion-button (click)="submitAdmin()" mode="ios" [disabled]="regAdminForm.invalid" shape="round">
               {{isEditMode ? 'Kemaskini':'Daftar'}}
             </ion-button>
-            <ion-button *ngIf="isEditMode" color="danger" (click)="onDeleteUser()" mode="ios"
+            <ion-button *ngIf="isEditMode" color="danger" (click)="deleteConfirm()" mode="ios"
               [disabled]="regAdminForm.invalid" shape="round">
               Hapus
             </ion-button>

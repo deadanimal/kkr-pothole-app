@@ -29,10 +29,12 @@
         <ion-row color="primary" justify-content-center>
           <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
             <div padding>
+
               <label>
-                <img [src]="url" alt="">
+                <img [src]="url" alt="" *ngIf="!isEditMode">
+                <img src="{{image}}" alt="" *ngIf="isEditMode">
                 <ion-input style="display:none" formControlName="image" id="image" type="file"
-                  (change)="fileEvent($event)" accept="image/*"></ion-input>
+                  (change)="fileEvent($event)" accept="image/*" *ngIf="!isEditMode"></ion-input>
               </label>
               <ion-label position="floating">Nama Jalan</ion-label>
               <ion-item color="light">

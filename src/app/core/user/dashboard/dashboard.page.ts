@@ -149,10 +149,10 @@ export class DashboardPage implements OnInit {
             this.map.center.lng(),
             latLng
           );
-          this.routeAduan = '/user/create-aduan/';
-          this.routeAduan =
-            this.routeAduan + this.latitude + '-' + this.longitude;
         });
+        this.routeAduan = '/user/create-aduan/';
+        this.routeAduan =
+          this.routeAduan + this.latitude + '-' + this.longitude;
       })
       .catch((error) => {
         console.log('Error getting location', error);

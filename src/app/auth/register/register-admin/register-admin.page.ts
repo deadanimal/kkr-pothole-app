@@ -1,3 +1,4 @@
+import { AlertController } from '@ionic/angular';
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, Input, OnInit } from '@angular/core';
@@ -32,7 +33,8 @@ export class RegisterAdminPage implements OnInit {
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private router: Router,
-    private platform:Platform
+    private platform: Platform,
+    private alertCtrl: AlertController,
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.closeModal();
@@ -52,7 +54,7 @@ export class RegisterAdminPage implements OnInit {
       name: new FormControl(null, [Validators.required]),
       email: new FormControl(null, [Validators.required, Validators.email]),
       telefon: new FormControl(null, [Validators.required]),
-      doc_type: new FormControl(null, [Validators.required]),
+      doc_type: new FormControl('NRIC', [Validators.required]),
       doc_no: new FormControl(null, [Validators.required]),
       organisasi: new FormControl(null, [Validators.required]),
       jawatan: new FormControl(null, [Validators.required]),
@@ -114,5 +116,31 @@ export class RegisterAdminPage implements OnInit {
     this.modalCtrl.dismiss(this.user, role);
   }
 
+  async deleteConfirm() {
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Pengesahan',
+      message: 'Anda pasti untuk buang pengguna?',
+      buttons: [
+        {
+          text: 'Batal',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          },
+        },
+        {
+          text: 'Pasti',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.onDeleteUser();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
   //======== insert photoservice here =====
 }
