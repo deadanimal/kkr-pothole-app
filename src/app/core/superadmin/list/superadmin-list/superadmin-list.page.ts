@@ -3,11 +3,12 @@ import { Observable } from 'rxjs';
 import { UserService } from '../../../../shared/services/user.service';
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, Input, OnInit } from '@angular/core';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { map, tap } from 'rxjs/operators';
 import { User } from 'src/app/shared/model/user.model';
 import { UserDetailPage } from 'src/app/modal/user-detail/user-detail.page';
 import { RegisterAdminPage } from 'src/app/auth/register/register-admin/register-admin.page';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-superadmin-list',
@@ -22,8 +23,15 @@ export class SuperadminListPage implements OnInit {
     private authService: AuthService,
     private modalCtrl: ModalController,
     private userService: UserService,
-    private loadingCtrl: LoadingController
-  ) {}
+    private loadingCtrl: LoadingController,
+    private router: Router,
+    private platform: Platform
+  ) {
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['superadmin/admin-management'])
+    });
+  }
 
   async ngOnInit() {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });

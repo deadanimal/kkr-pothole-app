@@ -1,8 +1,9 @@
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { JalanService } from './../../../shared/services/jalan.service';
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { JalanDetailPage } from 'src/app/modal/jalan-detail/jalan-detail.page';
 import { Jalan } from '../../../shared/model/jalan.model';
 import { map, tap } from 'rxjs/operators';
@@ -22,7 +23,9 @@ export class JalanListPage implements OnInit {
     private modalCtrl: ModalController,
     private jalanService: JalanService,
     private loadingCtrl: LoadingController,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private platform: Platform
   ) {
     const role = this.authService.userRole;
     if (role === 'super_admin') {
@@ -30,6 +33,14 @@ export class JalanListPage implements OnInit {
     } else if (role === 'admin') {
       this.isAdmin = true;
     }
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      if(role === 'super_admin'){
+        this.router.navigate(['/superadmin/dashboard'])
+      }else if (role === 'admin') {
+        this.router.navigate(['/admin/dashboard'])
+      }
+    });
+    
   }
 
   async ngOnInit() {

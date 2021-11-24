@@ -7,7 +7,7 @@ import { UserService } from './../../../shared/services/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Daerah } from './../../../shared/model/daerah.model';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, Platform } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   FormBuilder,
@@ -25,6 +25,7 @@ import { JalanService } from 'src/app/shared/services/jalan.service';
 import { Negeri } from 'src/app/shared/model/negeri.model';
 import { Storage } from '@capacitor/storage';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 interface LocalFile {
   name: string;
@@ -56,7 +57,7 @@ export class CreateJalanPage implements OnInit {
   center: any;
   res_party: any;
   isAdmin = false;
-  isSuperAdmin =  false;
+  isSuperAdmin = false;
 
   apiUrl = environment.baseUrl;
 
@@ -69,7 +70,9 @@ export class CreateJalanPage implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private http: HttpClient,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private router: Router,
+    private platform: Platform
   ) {
     const role = this.authService.userRole;
     if (role === 'super_admin') {
@@ -77,6 +80,10 @@ export class CreateJalanPage implements OnInit {
     } else if (role === 'admin') {
       this.isAdmin = true;
     }
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/admin/dashboard']);
+    });
   }
 
   async ngOnInit() {

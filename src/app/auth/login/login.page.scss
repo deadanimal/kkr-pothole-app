@@ -12,9 +12,9 @@ ion-card {
 .background {
   background: url(../../../assets/img/bg-login.png) no-repeat center/cover fixed;
   z-index: -1;
-  height: 100%;
+  height: 130%;
   width: 100%;
-  position: absolute;
+  //position: absolute;
 }
 
 .login-title {
@@ -68,10 +68,10 @@ ion-item.item-inner {
 }
 
 .no-account {
-  margin: 0 auto;
+  //margin: 0 auto;
   text-align: center;
   width: 100%;
-  bottom: 10px;
+  //bottom: 10px;
   position: absolute;
 }
 
@@ -83,4 +83,8 @@ ion-label{
   color: var(--ion-color-medium);
   margin-left: 10px;
   font-weight: 500;
+}
+
+.scroll-content {
+  padding-bottom: 0 !important;
 }

@@ -1,7 +1,8 @@
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { RegisterAdminPage } from 'src/app/auth/register/register-admin/register-admin.page';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-management',
@@ -11,8 +12,15 @@ import { Component, OnInit } from '@angular/core';
 export class AdminManagementPage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private router: Router,
+    private platform: Platform
+  ) {
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/superadmin/dashboard'])
+    });
+  }
 
   ngOnInit() {}
 

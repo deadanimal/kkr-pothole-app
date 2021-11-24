@@ -27,9 +27,10 @@
                   <ion-col size="12">
                     <ion-label>Kata Laluan</ion-label>
                     <ion-item>
-                      <ion-icon name="lock-open-outline" slot="end"></ion-icon>
-                      <ion-input type="password" placeholder="Kata Laluan" formControlName="password" required>
+                      <!-- <ion-icon name="lock-open-outline" slot="end"></ion-icon> -->
+                      <ion-input id="logpass" type="{{showPass ? 'password' : 'text' }}" placeholder="Kata Laluan" formControlName="password" required>
                       </ion-input>
+                      <ion-icon slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
                     </ion-item>
                     <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
                       <span *ngIf="password.errors?.required">Kata laluan diperlukan</span>
@@ -51,11 +52,17 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+      <!-- <div style="height:280px;">&nbsp;</div> -->
+      <style>
+        .scroll-content {
+          padding-bottom: 0 !important;
+        }
+      </style>
+      <div class="no-account" style="padding-top: 70px;">
+        <span color="medium">Tiada akaun?</span>
+        <ion-router-link color="primary" (click)="openRegister()">&nbsp;Daftar Sekarang
+        </ion-router-link>
+      </div>
     </form>
-    <div class="no-account">
-      <span color="medium">Tiada akaun?</span>
-      <ion-router-link color="primary" (click)="openRegister()">&nbsp;Daftar Sekarang
-      </ion-router-link>
-    </div>
   </div>
 </ion-content>

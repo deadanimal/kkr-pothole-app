@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable quote-props */
 import { Router } from '@angular/router';
 /* eslint-disable prefer-const */
 import { UserService } from 'src/app/shared/services/user.service';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, Platform } from '@ionic/angular';
 import { User } from 'src/app/shared/model/user.model';
 import {
   FormControl,
@@ -38,8 +39,13 @@ export class ProfilePage implements OnInit {
     private loadingCtrl: LoadingController,
     private userService: UserService,
     private router: Router,
-    private alertCtrl: AlertController
-  ) {}
+    private alertCtrl: AlertController,
+    private platform: Platform
+  ) {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/user/dashboard']);
+    });
+  }
 
   async ngOnInit() {
     this.initAddUserForm();
@@ -81,9 +87,8 @@ export class ProfilePage implements OnInit {
         doc_no: new FormControl(null, [Validators.required]),
         organisasi: new FormControl(null, [Validators.required]),
         password: new FormControl(null, [
-          Validators.pattern(
-            '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}'
-          ),
+          Validators.required,
+          Validators.pattern('[a-zA-Z0-9_.+-]*'),
           Validators.minLength(8),
         ]),
         confirmpassword: new FormControl(null),
@@ -163,5 +168,11 @@ export class ProfilePage implements OnInit {
 
   async logout() {
     await this.authService.logout();
+  }
+
+  public showPass = true;
+
+  hideShowPassword() {
+    this.showPass = !this.showPass;
   }
 }

@@ -2,11 +2,12 @@ import { Observable } from 'rxjs';
 import { JalanService } from './../../../../shared/services/jalan.service';
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { JalanDetailPage } from 'src/app/modal/jalan-detail/jalan-detail.page';
 import { Jalan } from '../../../../shared/model/jalan.model';
 import { map, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-jalan-list',
@@ -21,8 +22,15 @@ export class JalanListPage implements OnInit {
     private modalCtrl: ModalController,
     private jalanService: JalanService,
     private loadingCtrl: LoadingController,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private router: Router,
+    private platform: Platform
+  ) {
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/user/dashboard'])
+    });
+  }
 
   async ngOnInit() {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
