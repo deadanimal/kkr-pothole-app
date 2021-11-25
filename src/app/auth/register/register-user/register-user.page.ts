@@ -66,7 +66,11 @@ export class RegisterUserPage implements OnInit {
         telefon: new FormControl(null, [Validators.required]),
         doc_type: new FormControl(null, [Validators.required]),
         doc_no: new FormControl(null, [Validators.required]),
-        password: new FormControl(null),
+        password: new FormControl(null, [
+          Validators.required,
+          Validators.pattern('[a-zA-Z0-9_.+-]*'),
+          Validators.minLength(8),
+        ]),
         confirmpassword: new FormControl(null),
       },
       {
@@ -114,5 +118,11 @@ export class RegisterUserPage implements OnInit {
 
   hideShowPassword() {
     this.showPass = !this.showPass;
+  }
+
+  numericOnly(event): boolean {
+    let pattern = /^([0-9])$/;
+    let result = pattern.test(event.key);
+    return result;
   }
 }

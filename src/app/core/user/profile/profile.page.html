@@ -37,11 +37,6 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="organisasi" placeholder="Nama Organisasi" type="text"></ion-input>
-              </ion-item>
-            </div>
-            <div class="input">
-              <ion-item>
                 <ion-select formControlName="doc_type" placeholder="Jenis Pengenalan" interface="action-sheet" disabled>
                   <ion-select-option value="NRIC">NRIC No</ion-select-option>
                   <ion-select-option value="PASS">Paspot No</ion-select-option>
@@ -57,8 +52,8 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="telefon" placeholder="No Telefon" type="number" pattern="[0-9]*" max="12">
-                </ion-input>
+                <ion-input formControlName="telefon" placeholder="No Telefon" type="text"
+                  (keypress)="numericOnly($event)" maxlength="11"></ion-input>
               </ion-item>
             </div>
             <div class="input">

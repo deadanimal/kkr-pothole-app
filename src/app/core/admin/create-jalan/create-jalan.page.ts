@@ -59,6 +59,7 @@ export class CreateJalanPage implements OnInit {
   res_party: any;
   isAdmin = false;
   isSuperAdmin = false;
+  selectNegeri: any;
 
   apiUrl = environment.baseUrl;
 
@@ -96,13 +97,20 @@ export class CreateJalanPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
     // loading.present();
 
-    this.negeris = this.jalanService.getNegeris().pipe(
+    this.negeris = await this.jalanService.getNegeris().pipe(
       tap((negeri) => {
         loading.dismiss();
         console.log('Negeri:', negeri);
         return negeri;
       })
     );
+    if (this.jalan) {
+      this.isEditMode = true;
+      setTimeout(() => {
+        this.setFormValues();
+      }, 1000);
+      console.log('SET JALAN DAH');
+    }
   }
 
   async loadUserId() {
@@ -125,20 +133,14 @@ export class CreateJalanPage implements OnInit {
         });
         console.log('this user id', res.id, res.role);
 
-        if (this.jalan) {
-          this.isEditMode = true;
-          this.setFormValues();
-          console.log('SET JALAN DAH');
-          if (this.isEditMode) {
-            this.jalanService
-              .getGambarJalan(this.jalan.gambar_id)
-              .pipe(take(1))
-              .subscribe((res) => {
-                this.image = res['url'];
-              });
-
-            console.log(this.image);
-          }
+        if (this.isEditMode) {
+          this.jalanService
+            .getGambarJalan(this.jalan.gambar_id)
+            .pipe(take(1))
+            .subscribe((res) => {
+              this.image = res['url'];
+              // console.log(this.image);
+            });
         }
       },
       (err) => {
@@ -172,9 +174,10 @@ export class CreateJalanPage implements OnInit {
       end_date: this.jalan.end_date,
       negeri: this.jalan.negeri,
       daerah: this.jalan.daerah,
-      response_party: this.jalan.response_party,
+      // response_party: this.jalan.response_party,
       admin_id: this.jalan.admin_id,
     });
+    console.log(this.jalanForm.value);
   }
 
   // Convert the base64 to blob data
@@ -293,9 +296,14 @@ export class CreateJalanPage implements OnInit {
   selectDaerah($event) {
     console.log('NEGERI ID: ', $event.target.value);
     const negeriId = $event.target.value;
+    this.selectNegeri = negeriId;
+    // this.jalanForm.patchValue({
+    //   negeri: negeriId,
+    // });
     this.daerahs = this.jalanService.getDaerahs(negeriId).pipe(
       tap((res) => {
         console.log('Daerah:', res);
+
         return res;
       })
     );
@@ -308,8 +316,10 @@ export class CreateJalanPage implements OnInit {
     };
     console.log($event.target.value);
     this.http.post(url, daerah).subscribe((res) => {
-      this.res_party = res[0].jkr_daerah;
-      console.log('JKR: ', this.res_party);
+      if (res !== null) {
+        this.res_party = res[0].jkr_daerah;
+        console.log('JKR: ', this.res_party);
+      }
       return res;
     });
   }

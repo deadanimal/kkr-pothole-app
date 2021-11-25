@@ -13,10 +13,10 @@ export class InfoPage implements OnInit {
     private authService: AuthService,
     private router: Router,
     private modalCtrl: ModalController,
-    private platform:Platform
+    private platform: Platform
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/user/dashboard'])
+      this.router.navigate(['/user/dashboard']);
     });
   }
 

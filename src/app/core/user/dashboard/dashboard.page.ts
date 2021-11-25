@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 /* eslint-disable no-var */
 import {
   AlertController,
@@ -47,7 +48,8 @@ export class DashboardPage implements OnInit {
     public zone: NgZone,
     private authService: AuthService,
     private alertCtrl: AlertController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private router: Router
   ) {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
@@ -137,22 +139,21 @@ export class DashboardPage implements OnInit {
         this.addMarker();
 
         this.map.addListener('drag', () => {
-          this.latitude = this.map.center.lat();
-          this.longitude = this.map.center.lng();
           this.myMarker.setPosition(this.map.getCenter());
-
           this.infoWindow.close();
         });
         this.map.addListener('dragend', () => {
+          this.latitude = this.map.center.lat();
+          this.longitude = this.map.center.lng();
           this.getAddressFromCoords(
             this.map.center.lat(),
             this.map.center.lng(),
             latLng
           );
+          this.routeAduan = '/user/create-aduan/';
+          this.routeAduan =
+            this.routeAduan + this.latitude + '-' + this.longitude;
         });
-        this.routeAduan = '/user/create-aduan/';
-        this.routeAduan =
-          this.routeAduan + this.latitude + '-' + this.longitude;
       })
       .catch((error) => {
         console.log('Error getting location', error);
@@ -160,6 +161,8 @@ export class DashboardPage implements OnInit {
   }
 
   getAddressFromCoords(lattitude, longitude, lastvalid) {
+    this.routeAduan = '/user/create-aduan/';
+    this.routeAduan = this.routeAduan + lattitude + '-' + longitude;
     console.log('getAddressFromCoords :' + lattitude + ',' + longitude);
     const latlng = new google.maps.LatLng(lattitude, longitude);
     // This is making the Geocode request
@@ -294,6 +297,10 @@ export class DashboardPage implements OnInit {
     return (window.location.href =
       'https://www.google.com/maps/search/?api=1&query=Google&query_place_id=' +
       this.placeid);
+  }
+
+  routeToAduan() {
+    this.router.navigateByUrl(this.routeAduan);
   }
 
   async logoutConfirm() {

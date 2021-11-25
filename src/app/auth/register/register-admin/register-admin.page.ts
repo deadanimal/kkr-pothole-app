@@ -142,5 +142,11 @@ export class RegisterAdminPage implements OnInit {
 
     await alert.present();
   }
+
+  numericOnly(event): boolean {
+    let pattern = /^([0-9])$/;
+    let result = pattern.test(event.key);
+    return result;
+  }
   //======== insert photoservice here =====
 }

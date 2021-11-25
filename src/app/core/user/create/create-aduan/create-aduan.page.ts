@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable no-var */
 import { InfoPage } from './../../../global/info/info.page';
 /* eslint-disable @typescript-eslint/no-shadow */
@@ -673,5 +674,11 @@ export class CreateAduanPage implements OnInit {
       duration: 3000,
     });
     toast.present();
+  }
+
+  numericOnly(event): boolean {
+    let pattern = /^([0-9])$/;
+    let result = pattern.test(event.key);
+    return result;
   }
 }

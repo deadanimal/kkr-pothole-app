@@ -65,9 +65,9 @@
                 </ion-col>
               </ion-row>
               <ion-label position="floating">Negeri</ion-label>
-              <ion-item color="light">
+              <ion-item color="light">{{jalan.negeri}}
                 <ion-select formControlName="negeri" placeholder="Pilih Negeri" interface="action-sheet"
-                  (ionChange)="selectDaerah($event)">
+                  (ionChange)="selectDaerah($event)" value="{{jalan.negeri}}">
                   <ion-select-option *ngFor="let negeri of negeris|async; let i = index" [value]="negeri.id">
                     {{negeri.nama_negeri}}
                   </ion-select-option>

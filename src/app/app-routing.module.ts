@@ -18,7 +18,7 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () =>
       import('./auth/login/login.module').then((m) => m.LoginPageModule),
-    // canLoad: [AutoLoginGuard],
+    canLoad: [AutoLoginGuard],
   },
   {
     path: 'register-user',

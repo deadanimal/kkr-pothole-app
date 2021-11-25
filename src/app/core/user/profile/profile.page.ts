@@ -85,9 +85,7 @@ export class ProfilePage implements OnInit {
         telefon: new FormControl(null, [Validators.required]),
         doc_type: new FormControl(null, [Validators.required]),
         doc_no: new FormControl(null, [Validators.required]),
-        organisasi: new FormControl(null, [Validators.required]),
         password: new FormControl(null, [
-          Validators.required,
           Validators.pattern('[a-zA-Z0-9_.+-]*'),
           Validators.minLength(8),
         ]),
@@ -106,7 +104,6 @@ export class ProfilePage implements OnInit {
       telefon: this.user.telefon,
       doc_type: this.user.doc_type,
       doc_no: this.user.doc_no,
-      organisasi: this.user.organisasi,
     });
   }
 
@@ -174,5 +171,11 @@ export class ProfilePage implements OnInit {
 
   hideShowPassword() {
     this.showPass = !this.showPass;
+  }
+
+  numericOnly(event): boolean {
+    let pattern = /^([0-9])$/;
+    let result = pattern.test(event.key);
+    return result;
   }
 }

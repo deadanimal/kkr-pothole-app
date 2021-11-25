@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable quote-props */
@@ -53,9 +54,8 @@ export class ProfilePage implements OnInit {
     private router: Router,
     private platform: Platform
   ) {
-
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/superadmin/dashboard'])
+      this.router.navigate(['/superadmin/dashboard']);
     });
   }
 
@@ -101,7 +101,6 @@ export class ProfilePage implements OnInit {
         organisasi: new FormControl(null, [Validators.required]),
         jawatan: new FormControl(null, [Validators.required]),
         password: new FormControl(null, [
-          Validators.required,
           Validators.pattern('[a-zA-Z0-9_.+-]*'),
           Validators.minLength(8),
         ]),
@@ -160,7 +159,7 @@ export class ProfilePage implements OnInit {
 
   public showPass = true;
 
-  hideShowPassword(){
-    this.showPass = !(this.showPass);
+  hideShowPassword() {
+    this.showPass = !this.showPass;
   }
 }
