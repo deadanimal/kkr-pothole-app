@@ -37,7 +37,7 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-select formControlName="doc_type" placeholder="Jenis Pengenalan" interface="action-sheet">
+                <ion-select formControlName="doc_type" placeholder="Jenis Pengenalan" interface="action-sheet" (ionChange)="docselect($event)">
                   <ion-select-option value="NRIC">NRIC No</ion-select-option>
                   <ion-select-option value="PASS">Passport No</ion-select-option>
                   <ion-select-option value="OTH">Lain-lain</ion-select-option>
@@ -46,7 +46,7 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number"></ion-input>
+                <ion-input id="ICReg" formControlName="doc_no" placeholder="No Pengenalan" type="text"></ion-input>
               </ion-item>
             </div>
             <div class="input2">
@@ -57,8 +57,9 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplete="off">
+                <ion-input formControlName="password" [(ngModel)]="passwordModel" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplete="off" (ionBlur)="checkpss(this.value)">
                 </ion-input>
+                <ion-icon slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
               </ion-item>
             </div>
             <div class="input">
