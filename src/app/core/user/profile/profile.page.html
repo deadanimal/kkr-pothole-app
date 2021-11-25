@@ -63,7 +63,7 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplte="off">
+                <ion-input formControlName="password" [(ngModel)]="passwordModel" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplte="off" (ionBlur)="checkpss(this.value)">
                 </ion-input>
               </ion-item>
             </div>

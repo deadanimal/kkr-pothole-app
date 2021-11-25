@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable prefer-const */
+import { string } from '@amcharts/amcharts4/core';
 import { Component, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -21,12 +22,13 @@ import { UserService } from 'src/app/shared/services/user.service';
   selector: 'app-register-user',
   templateUrl: './register-user.page.html',
   styleUrls: ['./register-user.page.scss'],
+  
 })
 export class RegisterUserPage implements OnInit {
   @Input() user: User;
   regUserForm: FormGroup;
   email: string;
-
+  passwordModel:string;
   error_messages = {
     password: [
       { type: 'required', message: 'password is required.' },
@@ -65,7 +67,7 @@ export class RegisterUserPage implements OnInit {
         email: new FormControl(null, [Validators.required, Validators.email]),
         telefon: new FormControl(null, [Validators.required]),
         doc_type: new FormControl(null, [Validators.required]),
-        doc_no: new FormControl(null, [Validators.required]),
+        doc_no: new FormControl(null, [Validators.required, Validators.pattern('[a-zA-Z0-9-]*'),]),
         password: new FormControl(null),
         confirmpassword: new FormControl(null),
       },
@@ -114,5 +116,46 @@ export class RegisterUserPage implements OnInit {
 
   hideShowPassword() {
     this.showPass = !this.showPass;
+  }
+  
+  docselect(val){
+    var doctype = val.detail.value;
+    if(doctype == "NRIC"){
+      document.getElementById('ICReg').addEventListener("keyup", function (evt) {
+          var inputValue = (<HTMLInputElement>document.getElementById('ICReg')).value;
+          
+          if(evt.key != "Backspace"){
+            if(inputValue.length == 6 || inputValue.length == 9){
+              (<HTMLInputElement>document.getElementById('ICReg')).value = inputValue+"-";
+            }
+            if((inputValue.length > 6 && inputValue.substring(6,7) != "-") || (inputValue.length > 9 && inputValue.substring(9,10) != "-") || (inputValue.length > 14)){
+              (<HTMLInputElement>document.getElementById('ICReg')).value = "";
+              alert("Not valid IC Number");
+            }
+          }
+          if(evt.key == "Backspace"){
+            if((inputValue.length == 6 && inputValue.substring(5,6) != "-") || (inputValue.length == 9 && inputValue.substring(9,10) != "-")){
+              (<HTMLInputElement>document.getElementById('ICReg')).value = inputValue+"-";
+            }
+          }
+          // console.log(inputValue.substring(6,7));
+          // console.log(evt.key);
+      }, false);
+    }
+  }
+
+  checkpss(){
+    var matches = this.passwordModel.match("^[A-Za-z]+$");
+    var matches2 = this.passwordModel.match("^[0-9]+$");
+    
+    if (matches == null) {
+      this.passwordModel = "";
+      alert("Kata Laluan Tidak Mengandungi Huruf");
+    }else{
+      if(matches2 == null){
+        this.passwordModel = "";
+        alert("Kata Laluan Tidak Mengandungi Nombor");
+      }
+    }
   }
 }

@@ -30,6 +30,7 @@ export class ProfilePage implements OnInit {
   user$: Observable<User>;
   profileForm: FormGroup;
   user: User;
+  passwordModel:string;
 
   token = '';
 
@@ -174,5 +175,20 @@ export class ProfilePage implements OnInit {
 
   hideShowPassword() {
     this.showPass = !this.showPass;
+  }
+
+  checkpss(){
+    var matches = this.passwordModel.match("^[A-Za-z]+$");
+    var matches2 = this.passwordModel.match("^[0-9]+$");
+    
+    if (matches == null) {
+      this.passwordModel = "";
+      alert("Kata Laluan Tidak Mengandungi Huruf");
+    }else{
+      if(matches2 == null){
+        this.passwordModel = "";
+        alert("Kata Laluan Tidak Mengandungi Nombor");
+      }
+    }
   }
 }
