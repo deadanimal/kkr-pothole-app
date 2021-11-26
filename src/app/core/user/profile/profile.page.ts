@@ -181,8 +181,8 @@ export class ProfilePage implements OnInit {
     return result;
   }
   checkpss() {
-    var matches = this.passwordModel.match('^[A-Za-z]+$');
-    var matches2 = this.passwordModel.match('^[0-9]+$');
+    var matches = this.passwordModel.match(".*[A-Za-z].*");
+    var matches2 = this.passwordModel.match(".*\\d.*");
 
     if (matches == null) {
       this.passwordModel = '';
