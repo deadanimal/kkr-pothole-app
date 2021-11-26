@@ -174,7 +174,7 @@ export class CreateJalanPage implements OnInit {
       end_date: this.jalan.end_date,
       negeri: this.jalan.negeri,
       daerah: this.jalan.daerah,
-      // response_party: this.jalan.response_party,
+      response_party: this.jalan.response_party,
       admin_id: this.jalan.admin_id,
     });
     console.log(this.jalanForm.value);

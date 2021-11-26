@@ -48,7 +48,10 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number" {{isEditMode ? 'disabled':''}}></ion-input>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number" *ngIf="isEditMode" disabled>
+                </ion-input>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number" *ngIf="!isEditMode">
+                </ion-input>
               </ion-item>
             </div>
             <div class="input2">
@@ -59,7 +62,8 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="email" placeholder="Alamat Emel" type="text" {{isEditMode ? 'disabled':''}}></ion-input>
+                <ion-input formControlName="email" placeholder="Alamat Emel" type="text" *ngIf="isEditMode" disabled></ion-input>
+                <ion-input formControlName="email" placeholder="Alamat Emel" type="text" *ngIf="!isEditMode"></ion-input>
               </ion-item>
             </div>
           </ion-col>
@@ -81,8 +85,7 @@
             <ion-button (click)="submitAdmin()" mode="ios" [disabled]="regAdminForm.invalid" shape="round">
               {{isEditMode ? 'Kemaskini':'Daftar'}}
             </ion-button>
-            <ion-button *ngIf="isEditMode" color="danger" (click)="deleteConfirm()" mode="ios"
-              [disabled]="regAdminForm.invalid" shape="round">
+            <ion-button *ngIf="isEditMode" color="danger" (click)="deleteConfirm()" mode="ios" shape="round">
               Hapus
             </ion-button>
           </ion-col>
