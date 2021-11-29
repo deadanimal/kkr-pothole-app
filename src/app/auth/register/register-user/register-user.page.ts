@@ -175,14 +175,14 @@ export class RegisterUserPage implements OnInit {
     var matches = this.passwordModel.match('^[A-Za-z]+$');
     var matches2 = this.passwordModel.match('^[0-9]+$');
 
+    // console.log()
+
     if (matches == null) {
       this.passwordModel = '';
       alert('Kata Laluan Tidak Mengandungi Huruf');
-    } else {
-      if (matches2 == null) {
-        this.passwordModel = '';
-        alert('Kata Laluan Tidak Mengandungi Nombor');
-      }
+    } else if (matches2 == null) {
+      this.passwordModel = '';
+      alert('Kata Laluan Tidak Mengandungi Nombor');
     }
   }
 }

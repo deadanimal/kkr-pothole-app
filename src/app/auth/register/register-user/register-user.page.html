@@ -59,7 +59,7 @@
               <ion-item>
                 <ion-input formControlName="password" [(ngModel)]="passwordModel" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplete="off" (ionBlur)="checkpss(this.value)">
                 </ion-input>
-                <ion-icon slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
+                <ion-icon color="primary" slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
               </ion-item>
             </div>
             <div class="input">
