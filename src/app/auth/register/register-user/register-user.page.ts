@@ -172,11 +172,9 @@ export class RegisterUserPage implements OnInit {
   }
 
   checkpss() {
-    var matches = this.passwordModel.match('^[A-Za-z]+$');
-    var matches2 = this.passwordModel.match('^[0-9]+$');
-
-    // console.log()
-
+    var matches = this.passwordModel.match('.*[A-Za-z].*');
+    var matches2 = this.passwordModel.match('.*\\d.*');
+    //console.log(matches2 == null);
     if (matches == null) {
       this.passwordModel = '';
       alert('Kata Laluan Tidak Mengandungi Huruf');
