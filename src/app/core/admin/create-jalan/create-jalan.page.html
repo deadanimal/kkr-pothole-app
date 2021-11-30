@@ -31,10 +31,9 @@
             <div padding>
 
               <label>
-                <img [src]="url" alt="" *ngIf="!isEditMode">
-                <img src="{{image}}" alt="" *ngIf="isEditMode">
+                <img [src]="url" alt="">
                 <ion-input style="display:none" formControlName="image" id="image" type="file"
-                  (change)="fileEvent($event)" accept="image/*" *ngIf="!isEditMode"></ion-input>
+                  (change)="fileEvent($event)" accept="image/*"></ion-input>
               </label>
               <ion-label position="floating">Nama Jalan</ion-label>
               <ion-item color="light">
@@ -68,7 +67,7 @@
               <ion-item color="light">
                 <ion-select formControlName="negeri" placeholder="Pilih Negeri" interface="action-sheet"
                   (ionChange)="selectDaerah($event)">
-                  <ion-select-option *ngFor="let negeri of negeris|async; let i = index" [value]="negeri.id" >
+                  <ion-select-option *ngFor="let negeri of negeris|async; let i = index" [value]="negeri.id" selected="negeri.id === isEditMode ? 'this.jalan.negeri':''">
                     {{negeri.nama_negeri}}
                   </ion-select-option>
                 </ion-select>

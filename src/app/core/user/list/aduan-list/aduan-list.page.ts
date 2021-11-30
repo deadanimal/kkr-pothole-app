@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable prefer-const */
@@ -130,5 +131,16 @@ export class AduanListPage implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  getStatusSISPAA() {
+    const header = new HttpHeaders({
+      Authorization: 'BPA-KKR-API-TEST',
+    });
+    const json = { sispaa_id: ['TRKKR.800115'] };
+    return this.http.get(
+      'https://gateway.spab.gov.my/aduan-api/v1/status',
+      { headers: header }
+    );
   }
 }

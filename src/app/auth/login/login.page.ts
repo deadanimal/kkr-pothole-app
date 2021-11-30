@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { RegisterUserPage } from './../register/register-user/register-user.page';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -65,7 +66,7 @@ export class LoginPage implements OnInit {
         await loading.dismiss();
         const alert = await this.alertCtrl.create({
           header: 'Log Masuk Gagal',
-          message: 'Sila masukkan emel dan kata laluan yang sah.',
+          message: err.error.message,
           buttons: ['Okay'],
         });
 
@@ -160,7 +161,7 @@ export class LoginPage implements OnInit {
 
   public showPass = true;
 
-  hideShowPassword(){
-    this.showPass = !(this.showPass);
+  hideShowPassword() {
+    this.showPass = !this.showPass;
   }
 }

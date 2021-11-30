@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import { ToastController } from '@ionic/angular';
-/* eslint-disable prefer-const */
-import { UserService } from './../../../shared/services/user.service';
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/dot-notation */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/naming-convention */
+import { ToastController } from '@ionic/angular';
+import { UserService } from './../../../shared/services/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Daerah } from './../../../shared/model/daerah.model';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { LoadingController, ModalController, Platform } from '@ionic/angular';
-/* eslint-disable @typescript-eslint/naming-convention */
 import {
   FormBuilder,
   FormControl,
@@ -48,6 +48,8 @@ export class CreateJalanPage implements OnInit {
   jalanForm: FormGroup;
   images: LocalFile[];
   image: any;
+  fileimg: any;
+  url: any;
 
   map2: any;
   address: string;
@@ -95,7 +97,7 @@ export class CreateJalanPage implements OnInit {
     console.log('jalan data', this.jalanForm.value);
 
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
-    // loading.present();
+    loading.present();
 
     this.negeris = await this.jalanService.getNegeris().pipe(
       tap((negeri) => {
@@ -108,9 +110,10 @@ export class CreateJalanPage implements OnInit {
       this.isEditMode = true;
       setTimeout(() => {
         this.setFormValues();
-      }, 1000);
+      }, 500);
       console.log('SET JALAN DAH');
     }
+    loading.dismiss();
   }
 
   async loadUserId() {
@@ -138,9 +141,10 @@ export class CreateJalanPage implements OnInit {
             .getGambarJalan(this.jalan.gambar_id)
             .pipe(take(1))
             .subscribe((res) => {
-              this.image = res['url'];
-              // console.log(this.image);
+              this.url = res['url'];
             });
+        } else {
+          this.url = 'assets/img/no_image.png';
         }
       },
       (err) => {
@@ -153,7 +157,7 @@ export class CreateJalanPage implements OnInit {
     this.jalanForm = this.formBuilder.group({
       name: new FormControl(null, [Validators.required]),
       detail: new FormControl(null, [Validators.required]),
-      status: new FormControl(null, [Validators.required]),
+      status: new FormControl('Ditutup', [Validators.required]),
       start_date: new FormControl(null),
       end_date: new FormControl(null),
       negeri: new FormControl(null, [Validators.required]),
@@ -176,13 +180,13 @@ export class CreateJalanPage implements OnInit {
       daerah: this.jalan.daerah,
       response_party: this.jalan.response_party,
       admin_id: this.jalan.admin_id,
+      gambar_id: this.jalan.gambar_id,
     });
     console.log(this.jalanForm.value);
   }
 
   // Convert the base64 to blob data
   // and create  formData with it
-  url: any = 'assets/img/no_image.png';
   async fileEvent(event) {
     const files = event.target.files;
     const file = files[0];
@@ -234,6 +238,16 @@ export class CreateJalanPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
     loading.present();
 
+    const formData = new FormData();
+    formData.append('img', this.images[0].data);
+    formData.append('filename', this.images[0].name);
+    const url = `${this.apiUrl}/upload_image`;
+    const header = new HttpHeaders({
+      'Content-Type': 'application/form-data; charset=UTF-8, application/json',
+    });
+
+    console.log('Data: ', formData, { headers: header });
+
     let response: Observable<Jalan>;
     console.log('JALAN :', this.jalanForm.value);
     if (this.isEditMode) {
@@ -241,18 +255,8 @@ export class CreateJalanPage implements OnInit {
         this.jalan.id,
         this.jalanForm.value
       );
+      loading.dismiss();
     } else {
-      const formData = new FormData();
-      formData.append('img', this.images[0].data);
-      formData.append('filename', this.images[0].name);
-      const url = `${this.apiUrl}/upload_image`;
-      const header = new HttpHeaders({
-        'Content-Type':
-          'application/form-data; charset=UTF-8, application/json',
-      });
-
-      console.log('Data: ', formData, { headers: header });
-
       this.http
         .post(url, formData)
         .pipe(
@@ -267,33 +271,30 @@ export class CreateJalanPage implements OnInit {
             const img_id = res['gambar_id'];
             this.jalanForm.patchValue({ gambar_id: img_id });
             response = this.jalanService.addJalan(this.jalanForm.value);
-
-            response.pipe(take(1)).subscribe((aduan) => {
-              console.log(aduan);
-              this.jalanForm.reset();
-              loading.dismiss();
-              if (this.isEditMode) {
-                this.closeModal(aduan);
-              }
-              // modal.present();
-            });
           } else {
             this.presentToast('File upload failed.');
           }
+
+          response.pipe(take(1)).subscribe((jalan) => {
+            console.log('SAVED TO DB JALAN', jalan);
+            this.jalanForm.reset();
+            this.url = 'assets/img/no_image.png';
+            loading.dismiss();
+
+            if (this.isEditMode) {
+              this.closeModal(jalan);
+            }
+            // modal.present();
+          });
         });
     }
-    response.pipe(take(1)).subscribe((jalan) => {
-      console.log('SAVED TO DB JALAN', jalan);
-      this.jalanForm.reset();
-      loading.dismiss();
-
-      if (this.isEditMode) {
-        this.closeModal(jalan);
-      }
-    });
   }
 
   selectDaerah($event) {
+    this.jalanForm.patchValue({
+      daerah: '',
+      response_party: '',
+    });
     console.log('NEGERI ID: ', $event.target.value);
     const negeriId = $event.target.value;
     this.selectNegeri = negeriId;
@@ -316,7 +317,7 @@ export class CreateJalanPage implements OnInit {
     };
     console.log($event.target.value);
     this.http.post(url, daerah).subscribe((res) => {
-      if (res !== null) {
+      if (res[0]) {
         this.res_party = res[0].jkr_daerah;
         console.log('JKR: ', this.res_party);
       }

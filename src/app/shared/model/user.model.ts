@@ -10,5 +10,6 @@ export interface User {
   jawatan: string;
   password: string;
   organisasi: string;
+  gambar_id: number;
   email_verified_at: string;
 }

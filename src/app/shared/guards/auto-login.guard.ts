@@ -71,6 +71,7 @@ export class AutoLoginGuard implements CanLoad {
       },
       (err) => {
         console.log(err);
+        this.authService.logout();
       }
     );
   }

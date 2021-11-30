@@ -60,6 +60,10 @@ export class CreateAduanPage implements OnInit {
   address: string;
   /* Variabe to store file data */
   images: LocalFile[];
+  imgfile: any;
+  load: any;
+  resp: any;
+
   latitude: number;
   longitude: number;
   myMarker: any;
@@ -171,6 +175,7 @@ export class CreateAduanPage implements OnInit {
   async fileEvent(event) {
     const files = event.target.files;
     const file = files[0];
+    this.imgfile = file;
     const filePath = files[0].size;
     const base64Data = await this.readAsBase64(file);
 
@@ -239,6 +244,8 @@ export class CreateAduanPage implements OnInit {
       const formData = new FormData();
       formData.append('img', this.images[0].data);
       formData.append('filename', this.images[0].name);
+      // formData.append('file', this.imgfile);
+      console.log(formData);
       const url = `${this.aduanService.apiUrl}/upload_image`;
       const header = new HttpHeaders({
         'Content-Type':
@@ -375,7 +382,11 @@ export class CreateAduanPage implements OnInit {
       });
   }
 
-  getOverlayImage(bounds) {
+  async getOverlayImage(bounds) {
+    this.clearMyGosData();
+    this.load = await this.loadingCtrl.create({ message: 'Loading ...' });
+    this.load.present();
+
     const mygosBaseURL = 'https://mygos.mygeoportal.gov.my';
     const mygosMapServer =
       '/gisserver/rest/services/Fundamental_GDC/Transportation_SemenanjungMsia/MapServer';
@@ -434,7 +445,6 @@ export class CreateAduanPage implements OnInit {
     const metersPerPx =
       (156543.03392 * Math.cos((sw.lat() * Math.PI) / 180)) /
       Math.pow(2, this.map2.getZoom());
-    console.log('NI LAT', this.map2.center.lat());
     const queryURL = new URL(mygosFeatureServiceURL.toString());
     const queryURL1 = new URL(mygosFeatureServiceURL1.toString());
     const queryURL2 = new URL(mygosFeatureServiceURL2.toString());
@@ -469,47 +479,59 @@ export class CreateAduanPage implements OnInit {
     fetch(queryURL.toString())
       .then((r) => r.json())
       .then((r) => {
-        if (r.features && r.features.length > 0) {
+        if (r.features[0]) {
           this.addIW(this.map2.getCenter(), r);
-          console.log('masuk');
-        }
-      });
-    fetch(queryURL1.toString())
-      .then((r) => r.json())
-      .then((r) => {
-        if (r.features && r.features.length > 0) {
-          this.addIW(this.map2.getCenter(), r);
-          console.log('masuk1');
-        }
-      });
-    fetch(queryURL2.toString())
-      .then((r) => r.json())
-      .then((r) => {
-        if (r.features && r.features.length > 0) {
-          this.addIW(this.map2.getCenter(), r);
-          console.log('masuk2');
-        }
-      });
-    fetch(queryURL3.toString())
-      .then((r) => r.json())
-      .then((r) => {
-        if (r.features && r.features.length > 0) {
-          this.addIW(this.map2.getCenter(), r);
-          console.log('masuk3');
-        }
-      });
-    fetch(queryURL4.toString())
-      .then((r) => r.json())
-      .then((r) => {
-        if (r.features && r.features.length > 0) {
-          this.addIW(this.map2.getCenter(), r);
-          console.log('masuk4');
+          console.log('masuk1', r);
+        } else {
+          fetch(queryURL1.toString())
+            .then((r) => r.json())
+            .then((r) => {
+              if (r.features[0]) {
+                this.addIW(this.map2.getCenter(), r);
+                console.log('masuk2', r);
+              } else {
+                fetch(queryURL2.toString())
+                  .then((r) => r.json())
+                  .then((r) => {
+                    if (r.features[0]) {
+                      this.addIW(this.map2.getCenter(), r);
+                      console.log('masuk3', r);
+                    } else {
+                      fetch(queryURL3.toString())
+                        .then((r) => r.json())
+                        .then((r) => {
+                          if (r.features[0]) {
+                            this.addIW(this.map2.getCenter(), r);
+                            console.log('masuk4', r);
+                          } else {
+                            fetch(queryURL4.toString())
+                              .then((r) => r.json())
+                              .then((r) => {
+                                if (r.features[0]) {
+                                  this.addIW(this.map2.getCenter(), r);
+                                  console.log('masuk5', r);
+                                } else {
+                                  console.log('maklumat tiada', r);
+                                  this.presentToast(
+                                    'Maklumat lokasi tiada dalam rekod KKR'
+                                  );
+
+                                  this.load.dismiss();
+                                }
+                              });
+                          }
+                        });
+                    }
+                  });
+              }
+            });
         }
       });
   }
 
-  addIW(loc, d) {
-    if (d) {
+  async addIW(loc, d) {
+    if (d.features[0] && d.features[0].attributes.length !== 0) {
+      console.log('masuk sini pulakkk');
       const val = d.features[0].attributes;
       const roadname = val['NAM'] === null ? '' : val['NAM'];
       const authority =
@@ -541,6 +563,7 @@ export class CreateAduanPage implements OnInit {
             response_party: 'Lembaga Lebuhraya',
             pbt_code: kod,
           });
+          console.log('dah patch');
         } else {
           this.aduanForm.patchValue({
             complaint_category: roadcat,
@@ -548,39 +571,25 @@ export class CreateAduanPage implements OnInit {
             response_party: authority,
             pbt_code: kod,
           });
+          console.log('dah patch');
         }
+        this.load.dismiss();
         console.log(this.aduanForm.value);
         return res;
       });
-
-      if (!this.iw) {
-        this.iw = new google.maps.InfoWindow();
-      }
-      this.iw.setPosition(loc);
-      if (d.features && d.features.length > 0) {
-        console.log(d.features[0].attributes);
-        this.iw.setContent(
-          '<b>' +
-            d.fieldAliases['NAM'] +
-            ':</b>' +
-            (val['NAM'] === null ? '' : val['NAM']) +
-            '<br>' +
-            '<b>' +
-            d.fieldAliases['AUT'] +
-            ':</b>' +
-            (val['AUT'] === null ? 'KKR SISPAA' : val['AUT']) +
-            '<br>' +
-            '<b>' +
-            d.fieldAliases['RDC'] +
-            ':</b>' +
-            (val['RDC'] === null ? '' : val['RDC']) +
-            '<br>'
-        );
-        // this.iw.open({ map: this.map2 });
-      } else {
-        this.iw.close();
-      }
     }
+
+    this.load.dismiss();
+  }
+
+  clearMyGosData() {
+    this.aduanForm.patchValue({
+      complaint_category: '',
+      nama_jalan: '',
+      response_party: '',
+      pbt_code: '',
+    });
+    console.log('clear data');
   }
 
   getAddressFromCoords(lattitude, longitude, lastvalid) {
@@ -671,7 +680,7 @@ export class CreateAduanPage implements OnInit {
   async presentToast(text) {
     const toast = await this.toastCtrl.create({
       message: text,
-      duration: 3000,
+      duration: 2000,
     });
     toast.present();
   }

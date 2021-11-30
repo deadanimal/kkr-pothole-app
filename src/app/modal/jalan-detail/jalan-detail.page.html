@@ -20,12 +20,15 @@
         <ion-card-content>
           <ion-card-title>{{jalan.name}}</ion-card-title>
           <br>
-          <ion-label>Status: </ion-label><span>{{jalan.status}}</span>
+          <ion-label>Status: </ion-label><ion-badge color="danger" mode="ios">{{jalan.status}}</ion-badge>
           <br><br>
           <ion-label>Keterangan: </ion-label><span style="color: lightslategray">{{jalan.detail}}</span>
           <br><br>
           <ion-label>Pihak Bertanggungjawab: </ion-label><span style="color: lightslategray"
             align="justify">{{jalan.response_party}}</span>
+            <br>
+            <ion-label>Tarikh Mula: </ion-label><span>{{jalan.start_date | date : 'dd MMM yyyy'}}</span><br>
+            <ion-label>Tarikh Akhir: </ion-label><span>{{jalan.end_date | date : 'dd MMM yyyy'}}</span><br>
         </ion-card-content>
       </ion-card>
       <div class="ion-text-center">

@@ -48,9 +48,11 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number" *ngIf="isEditMode" disabled>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number" *ngIf="isEditMode"
+                  disabled>
                 </ion-input>
-                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number" *ngIf="!isEditMode">
+                <ion-input id="ICReg" formControlName="doc_no" placeholder="No Pengenalan" type="tel"
+                  *ngIf="!isEditMode" (ionChange)="InputNRIC()" maxLength="14">
                 </ion-input>
               </ion-item>
             </div>
@@ -62,14 +64,20 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="email" placeholder="Alamat Emel" type="text" *ngIf="isEditMode" disabled></ion-input>
-                <ion-input formControlName="email" placeholder="Alamat Emel" type="text" *ngIf="!isEditMode"></ion-input>
+                <ion-input formControlName="email" placeholder="Alamat Emel" type="text" *ngIf="isEditMode" disabled>
+                </ion-input>
+                <ion-input formControlName="email" placeholder="Alamat Emel" type="text" *ngIf="!isEditMode">
+                </ion-input>
               </ion-item>
             </div>
           </ion-col>
           <ion-col size="3">
             <div class="avatar">
-              <img src="../../assets/img/default_icon.jpeg" alt="">
+              <label>
+                <img [src]="url" alt="">
+                <ion-input style="display:none" formControlName="image" id="image" type="file"
+                  (change)="fileEvent($event)" accept="image/*"></ion-input>
+              </label>
             </div>
           </ion-col>
         </ion-row>
@@ -85,7 +93,8 @@
             <ion-button (click)="submitAdmin()" mode="ios" [disabled]="regAdminForm.invalid" shape="round">
               {{isEditMode ? 'Kemaskini':'Daftar'}}
             </ion-button>
-            <ion-button *ngIf="isEditMode" color="danger" (click)="deleteConfirm()" mode="ios" shape="round">
+            <ion-button *ngIf="isEditMode" color="danger" (click)="deleteConfirm()" mode="ios" shape="round"
+              [disabled]="this.user.id === 1 || this.user.id === 2">
               Hapus
             </ion-button>
           </ion-col>
