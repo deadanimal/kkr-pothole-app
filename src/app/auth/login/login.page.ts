@@ -63,13 +63,24 @@ export class LoginPage implements OnInit {
       },
       async (err) => {
         await loading.dismiss();
+        console.log('naqib', err);
+        console.log('naqib', err.status);
         const alert = await this.alertCtrl.create({
           header: 'Log Masuk Gagal',
           message: 'Sila masukkan emel dan kata laluan yang sah.',
           buttons: ['Okay'],
         });
-
-        await alert.present();
+        const alert2 = await this.alertCtrl.create({
+          header: 'Log Masuk Gagal',
+          message: 'Sila aktifkan akaun anda di email yang didaftarkan',
+          buttons: ['Okay'],
+        });
+        
+        if(err.status == 405){
+          await alert2.present();
+        }else{
+          await alert.present();
+        }
       }
     );
   }
