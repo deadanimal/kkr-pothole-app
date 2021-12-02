@@ -34,6 +34,10 @@ export class AduanService {
     return this.http.get(`${this.apiUrl}/gambar/${gambarId}`);
   }
 
+  updateGambarAduan(gambarId: number, body) {
+    return this.http.put(`${this.apiUrl}/gambar/${gambarId}`, body);
+  }
+
   getPBTCode(body) {
     return this.http.post(`${this.apiUrl}/get_pbt`, body);
   }

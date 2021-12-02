@@ -149,6 +149,7 @@ export class CreateJalanPage implements OnInit {
       },
       (err) => {
         console.log(err);
+        this.url = 'assets/img/no_image.png';
       }
     );
   }
@@ -238,16 +239,6 @@ export class CreateJalanPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
     loading.present();
 
-    const formData = new FormData();
-    formData.append('img', this.images[0].data);
-    formData.append('filename', this.images[0].name);
-    const url = `${this.apiUrl}/upload_image`;
-    const header = new HttpHeaders({
-      'Content-Type': 'application/form-data; charset=UTF-8, application/json',
-    });
-
-    console.log('Data: ', formData, { headers: header });
-
     let response: Observable<Jalan>;
     console.log('JALAN :', this.jalanForm.value);
     if (this.isEditMode) {
@@ -255,8 +246,40 @@ export class CreateJalanPage implements OnInit {
         this.jalan.id,
         this.jalanForm.value
       );
+      if (this.images[0] && this.images[0].data.length > 0) {
+        const body = {
+          id: this.jalan.gambar_id,
+          img: this.images[0].data,
+          filename: this.images[0].name,
+        };
+        this.jalanService
+          .updateGambarJalan(this.jalan.gambar_id, body)
+          .subscribe((res) => {
+            console.log(res);
+            if (res['success']) {
+              this.presentToast('Gambar jalan berjaya dikemaskini.');
+            }
+          });
+      }
+
+      this.closeModal();
       loading.dismiss();
     } else {
+      const formData = new FormData();
+      if (this.images[0] && this.images[0].data.length > 0) {
+        formData.append('img', this.images[0].data);
+        formData.append('filename', this.images[0].name);
+      } else {
+        formData.append('img', this.url);
+        formData.append('filename', 'default_pic.jpeg');
+      }
+
+      const url = `${this.apiUrl}/upload_image`;
+      const header = new HttpHeaders({
+        'Content-Type':
+          'application/form-data; charset=UTF-8, application/json',
+      });
+
       this.http
         .post(url, formData)
         .pipe(

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/dot-notation */
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -18,8 +20,15 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { Storage } from '@capacitor/storage';
+import { environment } from 'src/environments/environment';
 
 const TOKEN_KEY = 'my-token';
+
+interface LocalFile {
+  name: string;
+  path: string;
+  data: string;
+}
 
 @Component({
   selector: 'app-profile',
@@ -30,6 +39,9 @@ export class ProfilePage implements OnInit {
   user$: Observable<User>;
   profileForm: FormGroup;
   user: User;
+  url: any;
+  images: LocalFile[];
+  apiUrl = environment.baseUrl;
 
   token = '';
 
@@ -60,8 +72,8 @@ export class ProfilePage implements OnInit {
   }
 
   async ngOnInit() {
+    this.images = [];
     this.initAddUserForm();
-
     this.loadToken();
   }
 
@@ -83,9 +95,16 @@ export class ProfilePage implements OnInit {
         this.user = res;
         this.setFormValues();
         console.log('this user', this.user);
-      },
-      (err) => {
-        console.log(err);
+        this.userService
+            .getGambarUser(this.user.gambar_id)
+            .pipe(take(1))
+            .subscribe((res) => {
+              this.url = res['url'];
+            },
+            (err) => {
+              console.log(err);
+              this.url = '../../assets/img/default_icon.jpeg';
+            });
       }
     );
   }
@@ -100,6 +119,8 @@ export class ProfilePage implements OnInit {
         doc_no: new FormControl(null, [Validators.required]),
         organisasi: new FormControl(null, [Validators.required]),
         jawatan: new FormControl(null, [Validators.required]),
+        image: new FormControl(null),
+        gambar_id: new FormControl(null),
         password: new FormControl(null, [
           Validators.pattern('[a-zA-Z0-9_.+-]*'),
           Validators.minLength(8),
@@ -121,8 +142,58 @@ export class ProfilePage implements OnInit {
       doc_no: this.user.doc_no,
       organisasi: this.user.organisasi,
       jawatan: this.user.jawatan,
+      gambar_id: this.user.gambar_id,
     });
   }
+
+    // Convert the base64 to blob data
+  // and create  formData with it
+  async fileEvent(event) {
+    const files = event.target.files;
+    const file = files[0];
+    const filePath = files[0].size;
+    const base64Data = await this.readAsBase64(file);
+
+    const fileName = new Date().getTime() + '.jpeg';
+
+    if (files && files[0]) {
+      const reader = new FileReader();
+
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+      reader.onload = (event) => {
+        // called once readAsDataURL is completed
+        this.url = event.target.result;
+      };
+    }
+
+    this.images.push({
+      name: fileName,
+      path: filePath,
+      data: `${base64Data}`,
+    });
+
+    console.log(this.images);
+  }
+
+  // https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
+  private async readAsBase64(blob) {
+    // Fetch the photo, read as a blob, then convert to base64 format
+    // const response = await fetch(photo.webPath);
+    // const blob = await response.blob();
+
+    return (await this.convertBlobToBase64(blob)) as string;
+  }
+
+  convertBlobToBase64 = (blob: Blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    });
 
   async updateProfile() {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });

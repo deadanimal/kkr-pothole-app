@@ -1,3 +1,4 @@
+import { AlertController } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/dot-notation */
 import { take } from 'rxjs/operators';
 import { JalanService } from 'src/app/shared/services/jalan.service';
@@ -21,7 +22,8 @@ export class JalanDetailPage implements OnInit {
     private jalanService: JalanService,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertCtrl: AlertController
   ) {
     const role = this.authService.userRole;
     console.log(role);
@@ -69,5 +71,30 @@ export class JalanDetailPage implements OnInit {
       });
   }
 
-  // 3.0738, 101.5183
+  async deleteConfirm() {
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Pengesahan',
+      message: 'Anda pasti untuk buang maklumat jalan ini?',
+      buttons: [
+        {
+          text: 'Batal',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          },
+        },
+        {
+          text: 'Pasti',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.onDeleteJalan();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
 }

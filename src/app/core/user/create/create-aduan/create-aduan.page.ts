@@ -244,7 +244,7 @@ export class CreateAduanPage implements OnInit {
       const formData = new FormData();
       formData.append('img', this.images[0].data);
       formData.append('filename', this.images[0].name);
-      // formData.append('file', this.imgfile);
+      formData.append('file', this.imgfile);
       console.log(formData);
       const url = `${this.aduanService.apiUrl}/upload_image`;
       const header = new HttpHeaders({
@@ -271,16 +271,20 @@ export class CreateAduanPage implements OnInit {
             response = this.aduanService.addAduan(this.aduanForm.value);
 
             response.pipe(take(1)).subscribe((aduan) => {
-              console.log(aduan);
-              this.aduanForm.reset();
+              if (aduan['success']) {
+                console.log(aduan);
+                this.aduanForm.reset();
+                this.router.navigateByUrl('/user/dashboard', {
+                  replaceUrl: true,
+                });
+                modal.present();
+              } else {
+                this.presentToast('Aduan tidak berjaya dihantar');
+              }
               loading.dismiss();
               if (this.isEditMode) {
                 this.closeModal(aduan);
               }
-              this.router.navigateByUrl('/user/dashboard', {
-                replaceUrl: true,
-              });
-              modal.present();
             });
           } else {
             this.presentToast('Gambar gagal dimuat naik.');
@@ -511,9 +515,16 @@ export class CreateAduanPage implements OnInit {
                                   this.addIW(this.map2.getCenter(), r);
                                   console.log('masuk5', r);
                                 } else {
-                                  console.log('maklumat tiada', r);
-                                  this.presentToast(
-                                    'Maklumat lokasi tiada dalam rekod KKR'
+                                  this.aduanForm.patchValue({
+                                    complaint_category: '99',
+                                    nama_jalan: 'KKR',
+                                    response_party: 'Kementerian Kerja Raya',
+                                    pbt_code: 'KKR',
+                                  });
+
+                                  console.log(
+                                    'maklumat tiada',
+                                    this.aduanForm.value
                                   );
 
                                   this.load.dismiss();
@@ -563,7 +574,6 @@ export class CreateAduanPage implements OnInit {
             response_party: 'Lembaga Lebuhraya',
             pbt_code: kod,
           });
-          console.log('dah patch');
         } else {
           this.aduanForm.patchValue({
             complaint_category: roadcat,
@@ -571,7 +581,6 @@ export class CreateAduanPage implements OnInit {
             response_party: authority,
             pbt_code: kod,
           });
-          console.log('dah patch');
         }
         this.load.dismiss();
         console.log(this.aduanForm.value);
@@ -593,13 +602,13 @@ export class CreateAduanPage implements OnInit {
   }
 
   getAddressFromCoords(lattitude, longitude, lastvalid) {
-    console.log('getAddressFromCoords :' + lattitude + ',' + longitude);
+    console.log('get AddressFromCoords :' + lattitude + ',' + longitude);
     const latlng = new google.maps.LatLng(lattitude, longitude);
     // This is making the Geocode request
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ latLng: latlng }, (results, status) => {
       if (status !== google.maps.GeocoderStatus.OK) {
-        alert(status);
+        console.log(status);
       }
       // This is checking to see if the Geoeode Status is OK before proceeding
       if (status === google.maps.GeocoderStatus.OK) {

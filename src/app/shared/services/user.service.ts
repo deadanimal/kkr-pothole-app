@@ -53,4 +53,8 @@ export class UserService {
   ForgotUsers(user:User): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/user/forgot`, user);
   }
+  
+  updateGambarUser(gambarId: number, body) {
+    return this.http.put(`${this.apiUrl}/gambar/${gambarId}`, body);
+  }
 }
