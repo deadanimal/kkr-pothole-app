@@ -7,7 +7,7 @@
 import { Router } from '@angular/router';
 /* eslint-disable prefer-const */
 import { UserService } from 'src/app/shared/services/user.service';
-import { LoadingController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, Platform } from '@ionic/angular';
 import { User } from 'src/app/shared/model/user.model';
 import {
   FormControl,
@@ -64,7 +64,8 @@ export class ProfilePage implements OnInit {
     private loadingCtrl: LoadingController,
     private userService: UserService,
     private router: Router,
-    private platform: Platform
+    private platform: Platform,
+    private alertCtrl: AlertController
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['/superadmin/dashboard']);
@@ -210,8 +211,18 @@ export class ProfilePage implements OnInit {
       this.profileForm.reset();
       loading.dismiss();
       this.loadToken();
+      this.presentAlert();
       // this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
     });
+  }
+
+  async presentAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Berjaya',
+      message: 'Kemaskini Anda Berjaya',
+      buttons: ['Okay']
+    });
+    await alert.present(); 
   }
 
   get password() {

@@ -10,7 +10,7 @@
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title mode="ios">{{isEditMode ? 'Kemaskini':'Daftar'}} Admin</ion-title>
+    <ion-title mode="ios">{{isEditMode ? 'Kemas Kini':'Daftar'}} Admin</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -91,7 +91,7 @@
               <p>Sila pastikan maklumat peribadi anda telah diisi dengan lengkap</p>
             </ion-text>
             <ion-button (click)="submitAdmin()" mode="ios" [disabled]="regAdminForm.invalid" shape="round">
-              {{isEditMode ? 'Kemaskini':'Daftar'}}
+              {{isEditMode ? 'Kemas Kini':'Daftar'}}
             </ion-button>
             <ion-button *ngIf="isEditMode" color="danger" (click)="deleteConfirm()" mode="ios" shape="round"
               [disabled]="this.user.id === 1 || this.user.id === 2">

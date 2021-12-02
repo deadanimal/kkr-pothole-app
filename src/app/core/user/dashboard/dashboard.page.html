@@ -40,6 +40,11 @@
         <ion-label>Hebahan</ion-label>
       </ion-tab-button>
 
+      <ion-tab-button (click)="getInfo()">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-label>Info</ion-label>
+      </ion-tab-button>
+
       <ion-tab-button (click)="logoutConfirm()">
         <ion-icon name="log-out-outline"></ion-icon>
         <ion-label>Keluar</ion-label>
@@ -48,17 +53,17 @@
   </ion-tabs>
 
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-    <ion-fab-button color="tertiary">
+    <!-- <ion-fab-button color="tertiary">
       <ion-icon icon="caret-up"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
+    </ion-fab-button> -->
+    <!-- <ion-fab-list side="top">
       <ion-fab-button color="medium" data-desc="Info" (click)="getInfo()">
         <ion-icon name="information-circle-outline"></ion-icon>
-      </ion-fab-button>
+      </ion-fab-button> -->
       <ion-fab-button class="custom-fab" color="warning" data-desc="Daftar Aduan" (click)="routeToAduan()">
         <ion-icon name="receipt-outline"></ion-icon>
       </ion-fab-button>
-    </ion-fab-list>
+    <!-- </ion-fab-list> -->
   </ion-fab>
 
 </ion-content>
