@@ -22,7 +22,7 @@
 
       <ion-list>
         <div *ngFor="let aduan of aduans$|async" (click)="openDetailModal(aduan)">
-          <ion-badge color="secondary" mode="ios">Dalam Perhatian</ion-badge>
+          <ion-badge color="secondary" mode="ios">{{aduan.status_desc === null ? 'Dalam Perhatian': aduan.status_desc}}</ion-badge>
           <ion-card>
             <ion-card-content>
               <ion-card-title>{{aduan.title}}</ion-card-title>
@@ -35,4 +35,3 @@
     </ion-content>
   </div>
 </ion-content>
-

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { HttpHeaders } from '@angular/common/http';
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -71,8 +72,21 @@ export class AduanListPage implements OnInit {
         console.log('this user', this.user_id);
         this.aduans$ = this.aduanService.getAduansByUser(this.user_id).pipe(
           tap((aduans) => {
+            aduans.forEach((e) => {
+              let body = {
+                sispaa_id: e.sispaa_id
+              };
+
+              this.http
+                .post(
+                  'https://kkr-pothole-stg.prototype.com.my/api/get_status_sispaa',
+                  body
+                )
+                .subscribe((res) => {
+                  console.log('Aduan test:', res);
+                });
+            });
             loading.dismiss();
-            console.log('Aduans:', aduans);
             return aduans;
           })
         );
@@ -133,14 +147,16 @@ export class AduanListPage implements OnInit {
     this.authService.logout();
   }
 
-  getStatusSISPAA() {
-    const header = new HttpHeaders({
-      Authorization: 'BPA-KKR-API-TEST',
-    });
-    const json = { sispaa_id: ['TRKKR.800115'] };
-    return this.http.get(
-      'https://gateway.spab.gov.my/aduan-api/v1/status',
-      { headers: header }
-    );
+  getStatusSISPAA(sispaaid) {
+    const body = {
+      sispaa_id: sispaaid,
+    };
+
+    this.http
+      .post(
+        'https://kkr-pothole-stg.prototype.com.my/api/get_status_sispaa',
+        body
+      )
+      .subscribe((res) => {});
   }
 }

@@ -144,7 +144,7 @@ export class CreateAduanPage implements OnInit {
       gambar_id: new FormControl(null),
       pengadu_id: new FormControl(null, [Validators.required]),
       latitud: new FormControl(this.latitude),
-      langitud: new FormControl(this.latitude),
+      langitud: new FormControl(this.longitude),
       image: new FormControl(null, [Validators.required]),
       pbt_code: new FormControl(null, [Validators.required]),
       complaint_category: new FormControl(null),
@@ -164,8 +164,8 @@ export class CreateAduanPage implements OnInit {
 
   setLatLng() {
     this.aduanForm.patchValue({
-      latitud: this.latitude,
-      langitud: this.longitude,
+      latitud: this.map2.center.lat(),
+      langitud: this.map2.center.lng(),
     });
   }
 

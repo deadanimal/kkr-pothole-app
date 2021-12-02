@@ -148,7 +148,7 @@ export class DashboardPage implements OnInit {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ latLng: latlng }, (results, status) => {
       if (status !== google.maps.GeocoderStatus.OK) {
-        alert(status);
+        console.log(status);
       }
       // This is checking to see if the Geoeode Status is OK before proceeding
       if (status === google.maps.GeocoderStatus.OK) {
