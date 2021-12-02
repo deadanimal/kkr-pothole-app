@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://127.0.0.1:8000/api',
-  // baseUrl: 'https://kkr-pothole-stg.prototype.com.my/api',
+  // baseUrl: 'http://127.0.0.1:8000/api',
+  baseUrl: 'https://kkr-pothole-stg.prototype.com.my/api',
 };
 
 /*

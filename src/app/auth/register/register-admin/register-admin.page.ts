@@ -1,3 +1,4 @@
+import { ToastController } from '@ionic/angular';
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 /* eslint-disable eqeqeq */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
@@ -22,10 +23,12 @@ import {
 import { Router } from '@angular/router';
 import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { User } from 'src/app/shared/model/user.model';
 import { PhotoService } from 'src/app/shared/services/photo/photo.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 interface LocalFile {
   name: string;
@@ -44,6 +47,7 @@ export class RegisterAdminPage implements OnInit {
   regAdminForm: FormGroup;
   url: any;
   images: LocalFile[];
+  apiUrl = environment.baseUrl;
 
   constructor(
     public photoService: PhotoService,
@@ -52,6 +56,8 @@ export class RegisterAdminPage implements OnInit {
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private router: Router,
+    private http: HttpClient,
+    private toastCtrl: ToastController,
     private platform: Platform,
     private alertCtrl: AlertController
   ) {
@@ -61,21 +67,26 @@ export class RegisterAdminPage implements OnInit {
   }
 
   ngOnInit() {
+    this.images = [];
     this.initAddUserForm();
+    this.url = '../../assets/img/default_icon.jpeg';
     if (this.user) {
       this.isEditMode = true;
       this.setFormValues();
-      this.userService
-        .getGambarUser(this.user.gambar_id)
-        .pipe(take(1))
-        .subscribe(
-          (res) => {
-            this.url = res['url'];
-          },
-          (err) => {
-            this.url = '../../assets/img/default_icon.jpeg';
-          }
-        );
+      if (this.user.gambar_id !== null) {
+        this.userService
+          .getGambarUser(this.user.gambar_id)
+          .pipe(take(1))
+          .subscribe(
+            (res) => {
+              this.url = res['url'];
+              // console.log(this.url);
+            },
+            (err) => {
+              this.url = '../../assets/img/default_icon.jpeg';
+            }
+          );
+      }
     } else {
       this.url = '../../assets/img/default_icon.jpeg';
     }
@@ -92,6 +103,7 @@ export class RegisterAdminPage implements OnInit {
       jawatan: new FormControl(null, [Validators.required]),
       role: new FormControl(null, [Validators.required]),
       image: new FormControl(null),
+      gambar_id: new FormControl(null),
     });
   }
 
@@ -105,6 +117,7 @@ export class RegisterAdminPage implements OnInit {
       organisasi: this.user.organisasi,
       jawatan: this.user.jawatan,
       role: this.user.role,
+      gambar_id: this.user.gambar_id,
     });
     console.log(this.user);
   }
@@ -169,17 +182,66 @@ export class RegisterAdminPage implements OnInit {
         this.user.id,
         this.regAdminForm.value
       );
-    } else {
-      response = this.userService.registerAdmin(this.regAdminForm.value);
-    }
-    response.pipe(take(1)).subscribe((user) => {
-      console.log(user);
-      this.regAdminForm.reset();
-      loading.dismiss();
-      if (this.isEditMode) {
-        this.closeModal('edit');
+      if (this.images[0] && this.images[0].data.length > 0) {
+        const body = {
+          id: this.user.gambar_id,
+          img: this.images[0].data,
+          filename: this.images[0].name,
+        };
+        this.userService
+          .updateGambarUser(this.user.gambar_id, body)
+          .subscribe((res) => {
+            console.log(res);
+            if (res['success']) {
+              this.presentToast('Gambar profil berjaya dikemaskini.');
+            }
+          });
       }
-    });
+      loading.dismiss();
+    } else {
+      const formData = new FormData();
+      if (this.images[0] && this.images[0].data.length > 0) {
+        formData.append('img', this.images[0].data);
+        formData.append('filename', this.images[0].name);
+      } else {
+        formData.append('img', this.url);
+        formData.append('filename', 'default_pic.jpeg');
+      }
+
+      const url = `${this.apiUrl}/upload_image`;
+      const header = new HttpHeaders({
+        'Content-Type':
+          'application/form-data; charset=UTF-8, application/json',
+      });
+
+      this.http
+        .post(url, formData)
+        .pipe(
+          finalize(() => {
+            loading.dismiss();
+          })
+        )
+        .subscribe((res) => {
+          console.log(res);
+          if (res['success']) {
+            this.presentToast('File upload complete.');
+            const img_id = res['gambar_id'];
+            this.regAdminForm.patchValue({ gambar_id: img_id });
+            response = this.userService.registerAdmin(this.regAdminForm.value);
+            this.url = '../../assets/img/default_icon.jpeg';
+          } else {
+            this.presentToast('File upload failed.');
+          }
+          response.pipe(take(1)).subscribe((user) => {
+            console.log(user);
+            this.regAdminForm.reset();
+            loading.dismiss();
+            if (this.isEditMode) {
+              this.closeModal('edit');
+            }
+          });
+        });
+    }
   }
 
   async onDeleteUser() {
@@ -266,6 +328,14 @@ export class RegisterAdminPage implements OnInit {
     let pattern = /^([0-9])$/;
     let result = pattern.test(event.key);
     return result;
+  }
+
+  async presentToast(text) {
+    const toast = await this.toastCtrl.create({
+      message: text,
+      duration: 3000,
+    });
+    toast.present();
   }
   //======== insert photoservice here =====
 }

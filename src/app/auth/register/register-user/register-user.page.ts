@@ -103,7 +103,6 @@ export class RegisterUserPage implements OnInit {
       console.log(user);
       this.regUserForm.reset();
       loading.dismiss();
-      this.router.navigateByUrl('/login', { replaceUrl: true });
       modal.present();
       this.closeModal();
     });

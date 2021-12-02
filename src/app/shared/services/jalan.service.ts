@@ -39,4 +39,8 @@ export class JalanService {
   getGambarJalan(gambarId: number) {
     return this.http.get(`${this.apiUrl}/gambar/${gambarId}`);
   }
+
+  updateGambarJalan(gambarId: number, body) {
+    return this.http.put(`${this.apiUrl}/gambar/${gambarId}`, body);
+  }
 }

@@ -49,4 +49,8 @@ export class UserService {
   getGambarUser(gambarId: number) {
     return this.http.get(`${this.apiUrl}/gambar/${gambarId}`);
   }
+
+  updateGambarUser(gambarId: number, body) {
+    return this.http.put(`${this.apiUrl}/gambar/${gambarId}`, body);
+  }
 }
