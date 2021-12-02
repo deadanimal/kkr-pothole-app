@@ -271,16 +271,20 @@ export class CreateAduanPage implements OnInit {
             response = this.aduanService.addAduan(this.aduanForm.value);
 
             response.pipe(take(1)).subscribe((aduan) => {
-              console.log(aduan);
-              this.aduanForm.reset();
+              if (aduan['success']) {
+                console.log(aduan);
+                this.aduanForm.reset();
+                this.router.navigateByUrl('/user/dashboard', {
+                  replaceUrl: true,
+                });
+                modal.present();
+              } else {
+                this.presentToast('Aduan tidak berjaya dihantar');
+              }
               loading.dismiss();
               if (this.isEditMode) {
                 this.closeModal(aduan);
               }
-              this.router.navigateByUrl('/user/dashboard', {
-                replaceUrl: true,
-              });
-              modal.present();
             });
           } else {
             this.presentToast('Gambar gagal dimuat naik.');
@@ -511,14 +515,17 @@ export class CreateAduanPage implements OnInit {
                                   this.addIW(this.map2.getCenter(), r);
                                   console.log('masuk5', r);
                                 } else {
-                                  console.log('maklumat tiada', r);
-
                                   this.aduanForm.patchValue({
                                     complaint_category: '99',
-                                    nama_jalan: '-',
+                                    nama_jalan: 'KKR',
                                     response_party: 'Kementerian Kerja Raya',
                                     pbt_code: 'KKR',
                                   });
+
+                                  console.log(
+                                    'maklumat tiada',
+                                    this.aduanForm.value
+                                  );
 
                                   this.load.dismiss();
                                 }
