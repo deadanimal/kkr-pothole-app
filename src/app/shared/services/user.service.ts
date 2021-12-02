@@ -49,4 +49,8 @@ export class UserService {
   getGambarUser(gambarId: number) {
     return this.http.get(`${this.apiUrl}/gambar/${gambarId}`);
   }
+
+  ForgotUsers(user:User): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/user/forgot`, user);
+  }
 }
