@@ -90,7 +90,7 @@ export class RegisterUserPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: SuccessPage,
       componentProps: {
-        title: 'Daftar Aduan',
+        title: 'Pengesahan Email',
         message: `Sila semak emel anda di ${this.email} untuk pengesahan dan meneruskan proses.`,
       },
     });

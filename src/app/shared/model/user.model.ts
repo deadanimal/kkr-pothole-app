@@ -12,4 +12,5 @@ export interface User {
   organisasi: string;
   gambar_id: number;
   email_verified_at: string;
+  message: any;
 }
