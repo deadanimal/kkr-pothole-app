@@ -124,8 +124,18 @@ export class ProfilePage implements OnInit {
       this.profileForm.reset();
       loading.dismiss();
       this.loadToken();
+      this.presentAlert();
       // this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
     });
+  }
+
+  async presentAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Berjaya',
+      message: 'Kemaskini Anda Berjaya',
+      buttons: ['Okay']
+    });
+    await alert.present(); 
   }
 
   get password() {

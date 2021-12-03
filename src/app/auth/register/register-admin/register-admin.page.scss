@@ -22,26 +22,27 @@ ion-item {
   margin-left: 10px;
 }
 
-.header {
-  margin-top: 70px;
+.container {
+  width: 100%;
+  .header {
+    margin-top: 70px;
 
-  .avatar {
-    width: 120px; //40vw
-    height: 120px;
-    border-radius: 50%;
-    margin: 30px 0 10px  0;
-    padding: 1rem;
-    position: absolute;
-    background: linear-gradient(#429AE0, white);
-    padding: 1px;
-
-    img {
-      display: block;
+    .avatar {
+      width: 160px; //40vw
+      height: 160px;
       border-radius: 50%;
-      background-color: #fff;
-      padding: 3px;
-      height: 100%;
-      width: 100%;
+      justify-content: center !important;
+      text-align: center;
+      margin: 0 auto;
+      background: linear-gradient(#429AE0, white);
+      padding: 1px;
+      margin-bottom: 20px;
+
+      img {
+        border-radius: 50%;
+        background-color: #fff;
+        padding: 3px;
+      }
     }
   }
 }
@@ -51,7 +52,7 @@ ion-item {
   padding: 10px 50px 10px;
   width: 100%;
   overflow: hidden;
-  bottom: 0;
+  // bottom: 0;
   position: absolute;
   border-top-left-radius: 2.5rem;
   border-top-right-radius: 2.5rem;

@@ -8,7 +8,7 @@
         <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title mode="ios">{{isEditMode ? 'Kemaskini':'Daftar'}} Jalan</ion-title>
+    <ion-title mode="ios">{{isEditMode ? 'Kemas Kini':'Daftar'}} Jalan</ion-title>
     <ion-buttons slot="end" *ngIf="!isEditMode">
       <ion-button (click)="logout()">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
@@ -45,7 +45,7 @@
               </ion-item>
               <ion-label position="floating">Status</ion-label>
               <ion-item color="light">
-                <ion-input formControlName="status" type="text" placeholder="Nyatakan Status Jalan" disabled></ion-input>
+                <ion-input formControlName="status" type="text" placeholder="ditutup" disabled="true"></ion-input>
               </ion-item>
               <ion-row>
                 <ion-col size="6">
@@ -84,13 +84,13 @@
               <ion-label position="floating">Pihak Bertanggungjawab</ion-label>
               <ion-item color="light">
                 <ion-input formControlName="response_party" type="text" placeholder="Nyatakan Pihak"
-                  [value]="res_party"></ion-input>
+                  [value]="res_party" disabled="true"></ion-input>
               </ion-item>
             </div>
             <div padding class="btn-custom">
               <ion-button size="medium" (click)="submitJalan()" [disabled]="jalanForm.invalid" expand="block"
                 shape="round" mode="ios">
-                {{isEditMode ? 'Kemaskini':'Daftar'}}</ion-button>
+                {{isEditMode ? 'Kemas Kini':'Daftar'}}</ion-button>
             </div>
           </ion-col>
         </ion-row>
