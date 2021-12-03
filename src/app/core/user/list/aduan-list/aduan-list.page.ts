@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import { HttpHeaders } from '@angular/common/http';
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -72,20 +71,6 @@ export class AduanListPage implements OnInit {
         console.log('this user', this.user_id);
         this.aduans$ = this.aduanService.getAduansByUser(this.user_id).pipe(
           tap((aduans) => {
-            aduans.forEach((e) => {
-              let body = {
-                sispaa_id: e.sispaa_id
-              };
-
-              this.http
-                .post(
-                  'https://kkr-pothole-stg.prototype.com.my/api/get_status_sispaa',
-                  body
-                )
-                .subscribe((res) => {
-                  console.log('Aduan test:', res);
-                });
-            });
             loading.dismiss();
             return aduans;
           })
