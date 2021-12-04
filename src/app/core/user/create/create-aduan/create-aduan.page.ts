@@ -272,12 +272,31 @@ export class CreateAduanPage implements OnInit {
 
             response.pipe(take(1)).subscribe((aduan) => {
               if (aduan['success']) {
-                console.log(aduan);
+                console.log('ADUAN SAVED',aduan);
                 this.aduanForm.reset();
                 this.router.navigateByUrl('/user/dashboard', {
                   replaceUrl: true,
                 });
                 modal.present();
+                if (this.imgfile !== null) {
+                  const header = new HttpHeaders({
+                    // 'Content-Type': 'multipart/form-data',
+                    Authorization: 'BPA-KKR-API-TEST',
+                  });
+                  const formData = new FormData();
+                  formData.append('sispaa_id', aduan[0]['sispaa_id']);
+                  formData.append('attachment', this.imgfile);
+
+                  this.http
+                    .post(
+                      'https://gateway.spab.gov.my/aduan-api/v1/attach/',
+                      formData,
+                      { headers: header }
+                    )
+                    .subscribe((res) => {
+                      console.log('ATTACH SISPAA', res, formData);
+                    });
+                }
               } else {
                 this.presentToast('Aduan tidak berjaya dihantar');
               }

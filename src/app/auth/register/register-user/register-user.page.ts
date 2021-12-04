@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable @typescript-eslint/dot-notation */
+import { ToastController } from '@ionic/angular';
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 /* eslint-disable space-before-function-paren */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
@@ -16,11 +19,19 @@ import {
 import { Router } from '@angular/router';
 import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { SuccessPage } from 'src/app/core/global/alert/success/success.page';
 import { User } from 'src/app/shared/model/user.model';
 import { PhotoService } from 'src/app/shared/services/photo/photo.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+interface LocalFile {
+  name: string;
+  path: string;
+  data: string;
+}
 
 @Component({
   selector: 'app-register-user',
@@ -30,8 +41,12 @@ import { UserService } from 'src/app/shared/services/user.service';
 export class RegisterUserPage implements OnInit {
   @Input() user: User;
   regUserForm: FormGroup;
-  email: string;
+  emel: string;
   passwordModel: string;
+  url: any = '../../assets/img/default_icon.jpeg';
+  images: LocalFile[];
+  apiUrl = environment.baseUrl;
+
   error_messages = {
     password: [
       { type: 'required', message: 'password is required.' },
@@ -52,7 +67,9 @@ export class RegisterUserPage implements OnInit {
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
     private router: Router,
-    private platform: Platform
+    private platform: Platform,
+    private http: HttpClient,
+    private toastCtrl: ToastController
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.closeModal();
@@ -60,6 +77,7 @@ export class RegisterUserPage implements OnInit {
   }
 
   ngOnInit() {
+    this.images = [];
     this.initAddUserForm();
   }
 
@@ -77,38 +95,138 @@ export class RegisterUserPage implements OnInit {
           Validators.minLength(8),
         ]),
         confirmpassword: new FormControl(null),
+        image: new FormControl(null),
+        gambar_id: new FormControl(null),
       },
       {
-        validators: this.password.bind(this),
+        validators: this.passwords.bind(this),
       }
     );
   }
 
+  // Convert the base64 to blob data
+  // and create  formData with it
+  async fileEvent(event) {
+    const files = event.target.files;
+    const file = files[0];
+    const filePath = files[0].size;
+    const base64Data = await this.readAsBase64(file);
+
+    const fileName = new Date().getTime() + '.jpeg';
+
+    if (files && files[0]) {
+      const reader = new FileReader();
+
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+      reader.onload = (event) => {
+        // called once readAsDataURL is completed
+        this.url = event.target.result;
+      };
+    }
+
+    this.images.push({
+      name: fileName,
+      path: filePath,
+      data: `${base64Data}`,
+    });
+
+    console.log(this.images);
+  }
+
+  // https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
+  private async readAsBase64(blob) {
+    // Fetch the photo, read as a blob, then convert to base64 format
+    // const response = await fetch(photo.webPath);
+    // const blob = await response.blob();
+
+    return (await this.convertBlobToBase64(blob)) as string;
+  }
+
+  convertBlobToBase64 = (blob: Blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    });
+
   async submitUser() {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
-    this.email = this.regUserForm.get('email').value;
+    this.emel = this.regUserForm.get('email').value;
     const modal = await this.modalCtrl.create({
       component: SuccessPage,
       componentProps: {
         title: 'Pengesahan Email',
-        message: `Sila semak emel anda di ${this.email} untuk pengesahan dan meneruskan proses.`,
+        message: `Sila semak emel anda di ${this.emel} untuk pengesahan dan meneruskan proses.`,
       },
     });
     loading.present();
 
     let response: Observable<User>;
     console.log('Daftar User :', this.regUserForm.value);
-    response = this.userService.registerUser(this.regUserForm.value);
-    response.pipe(take(1)).subscribe((user) => {
-      console.log(user);
-      this.regUserForm.reset();
-      loading.dismiss();
-      modal.present();
-      this.closeModal();
+    const formData = new FormData();
+    if (this.images[0] && this.images[0].data.length > 0) {
+      formData.append('img', this.images[0].data);
+      formData.append('filename', this.images[0].name);
+    } else {
+      formData.append('img', this.url);
+      formData.append('filename', 'default_pic.jpeg');
+    }
+
+    const url = `${this.apiUrl}/upload_image`;
+    const header = new HttpHeaders({
+      'Content-Type': 'application/form-data; charset=UTF-8, application/json',
     });
+
+    this.http
+      .post(url, formData)
+      .pipe(
+        finalize(() => {
+          loading.dismiss();
+        })
+      )
+      .subscribe((res) => {
+        console.log(res);
+        if (res['success']) {
+          this.presentToast('File upload complete.');
+          const img_id = res['gambar_id'];
+          this.regUserForm.patchValue({ gambar_id: img_id });
+          response = this.userService.registerUser(this.regUserForm.value);
+          this.url = '../../assets/img/default_icon.jpeg';
+        } else {
+          this.presentToast('File upload failed.');
+        }
+
+        response.pipe(take(1)).subscribe((user) => {
+          console.log(user);
+          this.regUserForm.reset();
+          loading.dismiss();
+          modal.present();
+          this.closeModal();
+        });
+      });
   }
 
-  password(formGroup: FormGroup) {
+  get name() {
+    return this.regUserForm.get('name');
+  }
+  get email() {
+    return this.regUserForm.get('email');
+  }
+  get doc_no() {
+    return this.regUserForm.get('doc_no');
+  }
+  get telefon() {
+    return this.regUserForm.get('telefon');
+  }
+  get password() {
+    return this.regUserForm.get('password');
+  }
+
+  passwords(formGroup: FormGroup) {
     const { value: password } = formGroup.get('password');
     const { value: confirmPassword } = formGroup.get('confirmpassword');
     return password === confirmPassword ? null : { passwordNotMatch: true };
@@ -181,5 +299,13 @@ export class RegisterUserPage implements OnInit {
       this.passwordModel = '';
       alert('Kata Laluan Tidak Mengandungi Nombor');
     }
+  }
+
+  async presentToast(text) {
+    const toast = await this.toastCtrl.create({
+      message: text,
+      duration: 3000,
+    });
+    toast.present();
   }
 }

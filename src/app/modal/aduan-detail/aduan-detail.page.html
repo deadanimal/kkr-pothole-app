@@ -17,18 +17,23 @@
   <div class="card-body">
     <ion-content class="content">
       <div style="margin: 10px 30px;">
-        <ion-text class="ion-text-center" color="light">
-          <h4>{{aduan.address}}</h4>
-        </ion-text>
-        <ion-item>
-          <ion-label position="stacked" color="primary">Keterangan Aduan :</ion-label>
-          <ion-textarea readonly value="{{aduan.detail}}" rows="4">
-          </ion-textarea>
-        </ion-item>
+        <ion-badge color="primary" mode="ios">{{aduan.status_desc}}</ion-badge>
+        <br><br>
+        <ion-label>Tarikh Aduan: </ion-label><span style="color: lightslategray">{{aduan.created_at | date : 'dd MMM
+          yyyy'}}</span>
+        <br><br>
+        <ion-label>Tarikh Tindakan Semasa: </ion-label><span style="color: lightslategray">{{aduan.modified_at | date : 'dd MMM
+          yyyy'}}</span>
+        <br><br>
+        <ion-label>Catatan: </ion-label><span style="color: lightslategray"
+          align="justify">{{ aduan.nota }}</span>
+        <br>
         <ion-thumbnail>
           <img src="{{image}}" />
         </ion-thumbnail>
         <br>
+        <ion-label>Keterangan Aduan: </ion-label><span style="color: lightslategray">{{aduan.detail}}</span>
+        <br><br>
         <!-- <ion-button (click)="openEditModal()" expand="block" color="primary" shape="round">
           Kemaskini
         </ion-button> -->

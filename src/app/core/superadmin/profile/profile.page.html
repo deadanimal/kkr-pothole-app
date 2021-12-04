@@ -21,7 +21,11 @@
         <ion-row>
           <ion-col size="12">
             <div class="avatar">
-              <img [src]="url" alt="">
+              <label>
+                <img [src]="url" alt="">
+                <ion-input style="display:none" formControlName="image" id="image" type="file"
+                  (change)="fileEvent($event)" accept="image/*"></ion-input>
+              </label>
             </div>
           </ion-col>
           <ion-col size="12">

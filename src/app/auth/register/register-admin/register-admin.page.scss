@@ -14,18 +14,17 @@ ion-item {
   background: linear-gradient(#429AE0, white);
   padding: 1px;
   margin-bottom: .7rem;
-  margin-left: 10px;
 }
 
 .input2 {
   margin-bottom: .7rem;
-  margin-left: 10px;
 }
 
 .container {
   width: 100%;
+
   .header {
-    margin-top: 70px;
+    margin: 70px 50px 10px;
 
     .avatar {
       width: 160px; //40vw
@@ -42,20 +41,28 @@ ion-item {
         border-radius: 50%;
         background-color: #fff;
         padding: 3px;
+        height: 100%;
+        width: 100%;
       }
     }
   }
+
+  .card-body {
+    background: var(--ion-color-light);
+    padding: 10px 50px 10px;
+    width: 100%;
+    overflow: hidden;
+    // bottom: 0;
+    position: absolute;
+    border-top-left-radius: 2.5rem;
+    border-top-right-radius: 2.5rem;
+    box-shadow: 2px -3px 9px -6px black;
+
+  }
 }
 
-.card-body {
-  background: var(--ion-color-light);
-  padding: 10px 50px 10px;
-  width: 100%;
-  overflow: hidden;
-  // bottom: 0;
-  position: absolute;
-  border-top-left-radius: 2.5rem;
-  border-top-right-radius: 2.5rem;
-  box-shadow: 2px -3px 9px -6px black;
-
+.error {
+  color: orangered;
+  font-size: 10px;
+  margin: 1px auto;
 }

@@ -1,3 +1,4 @@
+import { ToastController } from '@ionic/angular';
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/member-ordering */
@@ -18,9 +19,10 @@ import {
 import { AuthService } from './../../../shared/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { finalize, take, tap } from 'rxjs/operators';
 import { Storage } from '@capacitor/storage';
 import { environment } from 'src/environments/environment';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 
 const TOKEN_KEY = 'my-token';
 
@@ -39,7 +41,7 @@ export class ProfilePage implements OnInit {
   user$: Observable<User>;
   profileForm: FormGroup;
   user: User;
-  url: any;
+  url: any = '../../assets/img/default_icon.jpeg';
   images: LocalFile[];
   apiUrl = environment.baseUrl;
 
@@ -65,7 +67,9 @@ export class ProfilePage implements OnInit {
     private userService: UserService,
     private router: Router,
     private platform: Platform,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private http: HttpClient
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['/superadmin/dashboard']);
@@ -89,25 +93,61 @@ export class ProfilePage implements OnInit {
       bearer_token: token.value,
     };
 
-    this.userService.getAuthUser(body).subscribe(
-      (res) => {
-        console.log(res);
-        loading.dismiss();
-        this.user = res;
-        this.setFormValues();
-        console.log('this user', this.user);
+    this.userService.getAuthUser(body).subscribe((res) => {
+      console.log(res);
+      loading.dismiss();
+      this.user = res;
+      this.setFormValues();
+      console.log('this user', this.user);
+      if (this.user.gambar_id !== null) {
         this.userService
-            .getGambarUser(this.user.gambar_id)
-            .pipe(take(1))
-            .subscribe((res) => {
+          .getGambarUser(this.user.gambar_id)
+          .pipe(take(1))
+          .subscribe(
+            (res) => {
               this.url = res['url'];
+              // console.log(this.url);
             },
             (err) => {
-              console.log(err);
               this.url = '../../assets/img/default_icon.jpeg';
+            }
+          );
+      } else {
+        let response: Observable<User>;
+        const formData = new FormData();
+        formData.append('img', this.url);
+        formData.append('filename', 'default_pic.jpeg');
+
+        const url = `${this.apiUrl}/upload_image`;
+        const header = new HttpHeaders({
+          'Content-Type':
+            'application/form-data; charset=UTF-8, application/json',
+        });
+
+        this.http
+          .post(url, formData)
+          .pipe(finalize(() => {}))
+          .subscribe((res) => {
+            console.log(res);
+            if (res['success']) {
+              // this.presentToast('File upload complete.');
+              const img_id = res['gambar_id'];
+              this.profileForm.patchValue({ gambar_id: img_id });
+              console.log(this.profileForm.value);
+              response = this.userService.updateUser(
+                this.user.id,
+                this.profileForm.value
+              );
+              this.url = '../../assets/img/default_icon.jpeg';
+            } else {
+              // this.presentToast('File upload failed.');
+            }
+            response.pipe(take(1)).subscribe((user) => {
+              console.log(user);
             });
+          });
       }
-    );
+    });
   }
 
   initAddUserForm() {
@@ -147,7 +187,7 @@ export class ProfilePage implements OnInit {
     });
   }
 
-    // Convert the base64 to blob data
+  // Convert the base64 to blob data
   // and create  formData with it
   async fileEvent(event) {
     const files = event.target.files;
@@ -206,6 +246,21 @@ export class ProfilePage implements OnInit {
       this.user.id,
       this.profileForm.value
     );
+    if (this.images[0] && this.images[0].data.length > 0) {
+      const body = {
+        id: this.user.gambar_id,
+        img: this.images[0].data,
+        filename: this.images[0].name,
+      };
+      this.userService
+        .updateGambarUser(this.user.gambar_id, body)
+        .subscribe((res) => {
+          console.log(res);
+          if (res['success']) {
+            this.presentToast('Gambar profil berjaya dikemaskini.');
+          }
+        });
+    }
     response.pipe(take(1)).subscribe((user) => {
       console.log(user);
       this.profileForm.reset();
@@ -220,9 +275,9 @@ export class ProfilePage implements OnInit {
     const alert = await this.alertCtrl.create({
       header: 'Berjaya',
       message: 'Kemaskini Anda Berjaya',
-      buttons: ['Okay']
+      buttons: ['Okay'],
     });
-    await alert.present(); 
+    alert.present();
   }
 
   get password() {
@@ -243,5 +298,13 @@ export class ProfilePage implements OnInit {
 
   hideShowPassword() {
     this.showPass = !this.showPass;
+  }
+
+  async presentToast(text) {
+    const toast = await this.toastCtrl.create({
+      message: text,
+      duration: 3000,
+    });
+    toast.present();
   }
 }

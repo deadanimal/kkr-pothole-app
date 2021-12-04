@@ -1,3 +1,6 @@
+import { HttpClient } from '@angular/common/http';
+/* eslint-disable @typescript-eslint/dot-notation */
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -16,10 +19,18 @@ import {
 import { AuthService } from './../../../shared/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { finalize, take, tap } from 'rxjs/operators';
 import { Storage } from '@capacitor/storage';
+import { environment } from 'src/environments/environment';
+import { HttpHeaders } from '@angular/common/http';
 
 const TOKEN_KEY = 'my-token';
+
+interface LocalFile {
+  name: string;
+  path: string;
+  data: string;
+}
 
 @Component({
   selector: 'app-profile',
@@ -30,6 +41,9 @@ export class ProfilePage implements OnInit {
   user$: Observable<User>;
   profileForm: FormGroup;
   user: User;
+  url: any = '../../assets/img/default_icon.jpeg';
+  images: LocalFile[];
+  apiUrl = environment.baseUrl;
 
   token = '';
 
@@ -53,16 +67,17 @@ export class ProfilePage implements OnInit {
     private userService: UserService,
     private router: Router,
     private platform: Platform,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private http: HttpClient
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/admin/dashboard']);
+      this.router.navigate(['/superadmin/dashboard']);
     });
   }
 
   async ngOnInit() {
+    this.images = [];
     this.initAddUserForm();
-
     this.loadToken();
   }
 
@@ -77,18 +92,61 @@ export class ProfilePage implements OnInit {
       bearer_token: token.value,
     };
 
-    this.userService.getAuthUser(body).subscribe(
-      (res) => {
-        console.log(res);
-        loading.dismiss();
-        this.user = res;
-        this.setFormValues();
-        console.log('this user', this.user);
-      },
-      (err) => {
-        console.log(err);
+    this.userService.getAuthUser(body).subscribe((res) => {
+      console.log(res);
+      loading.dismiss();
+      this.user = res;
+      this.setFormValues();
+      console.log('this user', this.user);
+      if (this.user.gambar_id !== null) {
+        this.userService
+          .getGambarUser(this.user.gambar_id)
+          .pipe(take(1))
+          .subscribe(
+            (res) => {
+              this.url = res['url'];
+              // console.log(this.url);
+            },
+            (err) => {
+              this.url = '../../assets/img/default_icon.jpeg';
+            }
+          );
+      } else {
+        let response: Observable<User>;
+        const formData = new FormData();
+        formData.append('img', this.url);
+        formData.append('filename', 'default_pic.jpeg');
+
+        const url = `${this.apiUrl}/upload_image`;
+        const header = new HttpHeaders({
+          'Content-Type':
+            'application/form-data; charset=UTF-8, application/json',
+        });
+
+        this.http
+          .post(url, formData)
+          .pipe(finalize(() => {}))
+          .subscribe((res) => {
+            console.log(res);
+            if (res['success']) {
+              // this.presentToast('File upload complete.');
+              const img_id = res['gambar_id'];
+              this.profileForm.patchValue({ gambar_id: img_id });
+              console.log(this.profileForm.value);
+              response = this.userService.updateUser(
+                this.user.id,
+                this.profileForm.value
+              );
+              this.url = '../../assets/img/default_icon.jpeg';
+            } else {
+              // this.presentToast('File upload failed.');
+            }
+            response.pipe(take(1)).subscribe((user) => {
+              console.log(user);
+            });
+          });
       }
-    );
+    });
   }
 
   initAddUserForm() {
@@ -97,10 +155,12 @@ export class ProfilePage implements OnInit {
         name: new FormControl(null, [Validators.required]),
         email: new FormControl(null, [Validators.required]),
         telefon: new FormControl(null, [Validators.required]),
-        // doc_type: new FormControl(null, [Validators.required]),
+        doc_type: new FormControl(null, [Validators.required]),
         doc_no: new FormControl(null, [Validators.required]),
         organisasi: new FormControl(null, [Validators.required]),
         jawatan: new FormControl(null, [Validators.required]),
+        image: new FormControl(null),
+        gambar_id: new FormControl(null),
         password: new FormControl(null, [
           Validators.pattern('[a-zA-Z0-9_.+-]*'),
           Validators.minLength(8),
@@ -118,11 +178,62 @@ export class ProfilePage implements OnInit {
       name: this.user.name,
       email: this.user.email,
       telefon: this.user.telefon,
+      doc_type: this.user.doc_type,
       doc_no: this.user.doc_no,
       organisasi: this.user.organisasi,
       jawatan: this.user.jawatan,
+      gambar_id: this.user.gambar_id,
     });
   }
+
+  // Convert the base64 to blob data
+  // and create  formData with it
+  async fileEvent(event) {
+    const files = event.target.files;
+    const file = files[0];
+    const filePath = files[0].size;
+    const base64Data = await this.readAsBase64(file);
+
+    const fileName = new Date().getTime() + '.jpeg';
+
+    if (files && files[0]) {
+      const reader = new FileReader();
+
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+      reader.onload = (event) => {
+        // called once readAsDataURL is completed
+        this.url = event.target.result;
+      };
+    }
+
+    this.images.push({
+      name: fileName,
+      path: filePath,
+      data: `${base64Data}`,
+    });
+
+    console.log(this.images);
+  }
+
+  // https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
+  private async readAsBase64(blob) {
+    // Fetch the photo, read as a blob, then convert to base64 format
+    // const response = await fetch(photo.webPath);
+    // const blob = await response.blob();
+
+    return (await this.convertBlobToBase64(blob)) as string;
+  }
+
+  convertBlobToBase64 = (blob: Blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    });
 
   async updateProfile() {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
@@ -148,9 +259,9 @@ export class ProfilePage implements OnInit {
     const alert = await this.alertCtrl.create({
       header: 'Berjaya',
       message: 'Kemaskini Anda Berjaya',
-      buttons: ['Okay']
+      buttons: ['Okay'],
     });
-    await alert.present(); 
+    alert.present();
   }
 
   get password() {
@@ -171,11 +282,5 @@ export class ProfilePage implements OnInit {
 
   hideShowPassword() {
     this.showPass = !this.showPass;
-  }
-
-  numericOnly(event): boolean {
-    let pattern = /^([0-9])$/;
-    let result = pattern.test(event.key);
-    return result;
   }
 }

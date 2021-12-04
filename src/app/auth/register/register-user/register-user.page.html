@@ -30,24 +30,37 @@
                 <ion-input formControlName="name" placeholder="Nama Penuh" type="text"></ion-input>
               </ion-item>
             </div>
+            <div *ngIf="(name.dirty || name.touched) && name.errors" class="error">
+              <span *ngIf="name.errors?.required">Nama penuh diperlukan</span>
+            </div>
             <div class="input">
               <ion-item>
                 <ion-input formControlName="email" placeholder="Alamat Emel" type="text"></ion-input>
               </ion-item>
             </div>
+            <div *ngIf="(email.dirty || email.touched) && email.errors" class="error">
+              <span *ngIf="email.errors?.required">Emel diperlukan</span>
+            </div>
             <div class="input">
               <ion-item>
                 <ion-select formControlName="doc_type" placeholder="Jenis Pengenalan" interface="action-sheet" (ionChange)="docselect($event)">
                   <ion-select-option value="NRIC">NRIC No</ion-select-option>
-                  <ion-select-option value="PASS">Passport No</ion-select-option>
+                  <ion-select-option value="PASS">Paspot No</ion-select-option>
+                  <ion-select-option value="COMP">No Syarikat</ion-select-option>
                   <ion-select-option value="OTH">Lain-lain</ion-select-option>
                 </ion-select>
               </ion-item>
             </div>
+            <div *ngIf="(doc_type.dirty || doc_type.touched) && doc_type.errors" class="error">
+              <span *ngIf="doc_type.errors?.required">Pilih ruang ini</span>
+            </div>
             <div class="input2">
               <ion-item>
-                <ion-input id="ICReg" formControlName="doc_no" placeholder="No Pengenalan" type="text"></ion-input>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number"></ion-input>
               </ion-item>
+            </div>
+            <div *ngIf="(doc_no.dirty || doc_no.touched) && doc_no.errors" class="error">
+              <span *ngIf="doc_no.errors?.required">No pengenalan diperlukan</span>
             </div>
             <div class="input2">
               <ion-item>
@@ -55,12 +68,20 @@
                   (keypress)="numericOnly($event)" maxlength="11"></ion-input>
               </ion-item>
             </div>
+            <div *ngIf="(telefon.dirty || telefon.touched) && telefon.errors" class="error">
+              <span *ngIf="telefon.errors?.required">Telefon diperlukan</span>
+            </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="password" [(ngModel)]="passwordModel" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplete="off" (ionBlur)="checkpss(this.value)">
+                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="password" autocomplete="off">
                 </ion-input>
-                <ion-icon color="primary" slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
+                <ion-icon slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
               </ion-item>
+            </div>
+            <div *ngIf="(password.dirty || password.touched) && password.errors" class="error">
+              <span *ngIf="password.errors?.required">Kata laluan diperlukan</span>
+              <span *ngIf="password.errors?.minlength">Kata laluan mestilah lebih 8 patah perkataan <br></span>
+              <span *ngIf="password.errors?.pattern">Kata laluan mestilah dalam aksara</span>
             </div>
             <div class="input">
               <ion-item>

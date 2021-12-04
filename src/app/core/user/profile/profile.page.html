@@ -21,7 +21,11 @@
         <ion-row>
           <ion-col size="12">
             <div class="avatar">
-              <img src="../../assets/img/default_icon.jpeg" alt="">
+              <label>
+                <img [src]="url" alt="">
+                <ion-input style="display:none" formControlName="image" id="image" type="file"
+                  (change)="fileEvent($event)" accept="image/*"></ion-input>
+              </label>
             </div>
           </ion-col>
           <ion-col size="12">
@@ -60,6 +64,7 @@
               <ion-item>
                 <ion-input formControlName="password" [(ngModel)]="passwordModel" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplte="off" (ionBlur)="checkpss(this.value)">
                 </ion-input>
+                <ion-icon slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
               </ion-item>
             </div>
             <div *ngIf="(password.dirty || password.touched) && password.errors" class="error">

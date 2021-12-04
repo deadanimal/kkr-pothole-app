@@ -132,16 +132,4 @@ export class AduanListPage implements OnInit {
     this.authService.logout();
   }
 
-  getStatusSISPAA(sispaaid) {
-    const body = {
-      sispaa_id: sispaaid,
-    };
-
-    this.http
-      .post(
-        'https://kkr-pothole-stg.prototype.com.my/api/get_status_sispaa',
-        body
-      )
-      .subscribe((res) => {});
-  }
 }

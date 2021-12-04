@@ -21,7 +21,11 @@
         <ion-row>
           <ion-col size="12">
             <div class="avatar">
-              <img [src]="url" alt="">
+              <label>
+                <img [src]="url" alt="">
+                <ion-input style="display:none" formControlName="image" id="image" type="file"
+                  (change)="fileEvent($event)" accept="image/*"></ion-input>
+              </label>
             </div>
           </ion-col>
           <ion-col size="12">
@@ -29,6 +33,9 @@
               <ion-item>
                 <ion-input formControlName="name" placeholder="Nama Penuh" type="text"></ion-input>
               </ion-item>
+            </div>
+            <div *ngIf="(name.dirty || name.touched) && name.errors" class="error">
+              <span *ngIf="name.errors?.required">Nama penuh diperlukan</span>
             </div>
             <div class="input">
               <ion-item>
@@ -38,10 +45,16 @@
                 </ion-select>
               </ion-item>
             </div>
+            <div *ngIf="(organisasi.dirty || organisasi.touched) && organisasi.errors" class="error">
+              <span *ngIf="organisasi.errors?.required">Organisasi diperlukan</span>
+            </div>
             <div class="input">
               <ion-item>
                 <ion-input formControlName="jawatan" placeholder="Jawatan" type="text"></ion-input>
               </ion-item>
+            </div>
+            <div *ngIf="(jawatan.dirty || jawatan.touched) && jawatan.errors" class="error">
+              <span *ngIf="jawatan.errors?.required">Jawatan diperlukan</span>
             </div>
             <div class="input">
               <ion-item>
@@ -61,11 +74,17 @@
                 </ion-input>
               </ion-item>
             </div>
+            <div *ngIf="(doc_no.dirty || doc_no.touched) && doc_no.errors" class="error">
+              <span *ngIf="doc_no.errors?.required">No pengenalan diperlukan</span>
+            </div>
             <div class="input2">
               <ion-item>
                 <ion-input formControlName="telefon" placeholder="No Telefon" type="text"
                   (keypress)="numericOnly($event)" maxlength="11"></ion-input>
               </ion-item>
+            </div>
+            <div *ngIf="(telefon.dirty || telefon.touched) && telefon.errors" class="error">
+              <span *ngIf="telefon.errors?.required">No telefon diperlukan</span>
             </div>
             <div class="input">
               <ion-item>
@@ -74,6 +93,9 @@
                 <ion-input formControlName="email" placeholder="Alamat Emel" type="text" *ngIf="!isEditMode">
                 </ion-input>
               </ion-item>
+            </div>
+            <div *ngIf="(email.dirty || email.touched) && email.errors" class="error">
+              <span *ngIf="email.errors?.required">Emel diperlukan</span>
             </div>
           </ion-col>
           <!-- <ion-col size="3">

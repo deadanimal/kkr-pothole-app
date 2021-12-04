@@ -262,7 +262,6 @@ export class CreateJalanPage implements OnInit {
           });
       }
 
-      this.closeModal();
       loading.dismiss();
     } else {
       const formData = new FormData();
@@ -297,20 +296,20 @@ export class CreateJalanPage implements OnInit {
           } else {
             this.presentToast('File upload failed.');
           }
-
-          response.pipe(take(1)).subscribe((jalan) => {
-            console.log('SAVED TO DB JALAN', jalan);
-            this.jalanForm.reset();
-            this.url = 'assets/img/no_image.png';
-            loading.dismiss();
-
-            if (this.isEditMode) {
-              this.closeModal(jalan);
-            }
-            // modal.present();
-          });
         });
     }
+
+    response.pipe(take(1)).subscribe((jalan) => {
+      console.log('SAVED TO DB JALAN', jalan);
+      this.jalanForm.reset();
+      this.url = 'assets/img/no_image.png';
+      loading.dismiss();
+
+      if (this.isEditMode) {
+        this.closeModal(jalan);
+      }
+      // modal.present();
+    });
   }
 
   selectDaerah($event) {

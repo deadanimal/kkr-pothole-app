@@ -69,6 +69,10 @@ export class RegisterAdminPage implements OnInit {
   ngOnInit() {
     this.images = [];
     this.initAddUserForm();
+    this.checkLoadImage();
+  }
+
+  checkLoadImage() {
     this.url = '../../assets/img/default_icon.jpeg';
     if (this.user) {
       this.isEditMode = true;
@@ -86,9 +90,41 @@ export class RegisterAdminPage implements OnInit {
               this.url = '../../assets/img/default_icon.jpeg';
             }
           );
+      } else {
+        let response: Observable<User>;
+        const formData = new FormData();
+        formData.append('img', this.url);
+        formData.append('filename', 'default_pic.jpeg');
+
+        const url = `${this.apiUrl}/upload_image`;
+        const header = new HttpHeaders({
+          'Content-Type':
+            'application/form-data; charset=UTF-8, application/json',
+        });
+
+        this.http
+          .post(url, formData)
+          .pipe(finalize(() => {}))
+          .subscribe((res) => {
+            console.log(res);
+            if (res['success']) {
+              // this.presentToast('File upload complete.');
+              const img_id = res['gambar_id'];
+              this.regAdminForm.patchValue({ gambar_id: img_id });
+              console.log(this.regAdminForm.value);
+              response = this.userService.updateUser(
+                this.user.id,
+                this.regAdminForm.value
+              );
+              this.url = '../../assets/img/default_icon.jpeg';
+            } else {
+              // this.presentToast('File upload failed.');
+            }
+            response.pipe(take(1)).subscribe((user) => {
+              console.log(user);
+            });
+          });
       }
-    } else {
-      this.url = '../../assets/img/default_icon.jpeg';
     }
   }
 
@@ -232,16 +268,16 @@ export class RegisterAdminPage implements OnInit {
           } else {
             this.presentToast('File upload failed.');
           }
-          response.pipe(take(1)).subscribe((user) => {
-            console.log(user);
-            this.regAdminForm.reset();
-            loading.dismiss();
-            if (this.isEditMode) {
-              this.closeModal('edit');
-            }
-          });
         });
     }
+    response.pipe(take(1)).subscribe((user) => {
+      console.log(user);
+      this.regAdminForm.reset();
+      loading.dismiss();
+      if (this.isEditMode) {
+        this.closeModal('edit');
+      }
+    });
   }
 
   async onDeleteUser() {
@@ -322,6 +358,25 @@ export class RegisterAdminPage implements OnInit {
       },
       false
     );
+  }
+
+  get name() {
+    return this.regAdminForm.get('name');
+  }
+  get email() {
+    return this.regAdminForm.get('email');
+  }
+  get doc_no() {
+    return this.regAdminForm.get('doc_no');
+  }
+  get organisasi() {
+    return this.regAdminForm.get('organisasi');
+  }
+  get jawatan() {
+    return this.regAdminForm.get('jawatan');
+  }
+  get telefon() {
+    return this.regAdminForm.get('telefon');
   }
 
   numericOnly(event): boolean {
