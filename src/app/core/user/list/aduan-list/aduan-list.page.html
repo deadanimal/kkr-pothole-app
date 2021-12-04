@@ -8,11 +8,6 @@
 
     <ion-title mode="ios">Status Aduan</ion-title>
 
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -28,10 +23,11 @@
               <ion-card-title>{{aduan.title}}</ion-card-title>
               <span class="text-limit">{{aduan.detail}}</span>
             </ion-card-content>
+            <span style="font-size: 10px; float: right;">Lihat Butiran ></span>
           </ion-card>
         </div>
       </ion-list>
-
+      
     </ion-content>
   </div>
 </ion-content>

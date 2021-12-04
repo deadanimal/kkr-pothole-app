@@ -73,7 +73,7 @@ export class RegisterUserPage implements OnInit {
         doc_no: new FormControl(null, [Validators.required]),
         password: new FormControl(null, [
           Validators.required,
-          Validators.pattern('[a-zA-Z0-9_.+-]*'),
+          Validators.pattern('[a-zA-Z0-9_+-@$!%*?&:]*'),
           Validators.minLength(8),
         ]),
         confirmpassword: new FormControl(null),
@@ -85,6 +85,7 @@ export class RegisterUserPage implements OnInit {
   }
 
   async submitUser() {
+    this.closeModal();
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
     this.email = this.regUserForm.get('email').value;
     const modal = await this.modalCtrl.create({
@@ -104,7 +105,6 @@ export class RegisterUserPage implements OnInit {
       this.regUserForm.reset();
       loading.dismiss();
       modal.present();
-      this.closeModal();
     });
   }
 
