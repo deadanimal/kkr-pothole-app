@@ -46,7 +46,7 @@
                 <ion-select formControlName="doc_type" placeholder="Jenis Pengenalan" interface="action-sheet" (ionChange)="docselect($event)">
                   <ion-select-option value="NRIC">NRIC No</ion-select-option>
                   <ion-select-option value="PASS">Paspot No</ion-select-option>
-                  <ion-select-option value="COMP">No Syarikat</ion-select-option>
+                  <!-- <ion-select-option value="COMP">No Syarikat</ion-select-option> -->
                   <ion-select-option value="OTH">Lain-lain</ion-select-option>
                 </ion-select>
               </ion-item>
@@ -56,7 +56,7 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="number"></ion-input>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="text" id="ICReg"></ion-input>
               </ion-item>
             </div>
             <div *ngIf="(doc_no.dirty || doc_no.touched) && doc_no.errors" class="error">

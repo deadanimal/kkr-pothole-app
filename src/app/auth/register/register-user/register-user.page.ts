@@ -17,7 +17,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
 import { SuccessPage } from 'src/app/core/global/alert/success/success.page';
@@ -69,7 +69,8 @@ export class RegisterUserPage implements OnInit {
     private router: Router,
     private platform: Platform,
     private http: HttpClient,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private alertCtrl: AlertController
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.closeModal();
@@ -154,7 +155,6 @@ export class RegisterUserPage implements OnInit {
     });
 
   async submitUser() {
-    this.closeModal();
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
     this.emel = this.regUserForm.get('email').value;
     const modal = await this.modalCtrl.create({
@@ -164,6 +164,8 @@ export class RegisterUserPage implements OnInit {
         message: `Sila semak emel anda di ${this.emel} untuk pengesahan dan meneruskan proses.`,
       },
     });
+    
+    this.closeModal();
     loading.present();
 
     let response: Observable<User>;
@@ -189,8 +191,9 @@ export class RegisterUserPage implements OnInit {
           loading.dismiss();
         })
       )
-      .subscribe((res) => {
-        console.log(res);
+      .subscribe(
+      (res) => {
+        console.log("babi2",res);
         if (res['success']) {
           this.presentToast('File upload complete.');
           const img_id = res['gambar_id'];
@@ -200,15 +203,39 @@ export class RegisterUserPage implements OnInit {
         } else {
           this.presentToast('File upload failed.');
         }
-
-        response.pipe(take(1)).subscribe((user) => {
-          console.log(user);
-          this.regUserForm.reset();
-          loading.dismiss();
-          modal.present();
-          this.closeModal();
-        });
-      });
+          response.pipe(take(1)).subscribe(
+            async (user) => {
+              console.error("babi1", user);
+              if(user.message == "success"){
+                this.regUserForm.reset();
+                loading.dismiss();
+                modal.present();
+              }else{
+                if(user.message == "failemail"){
+                  var messview = "Your email is already exist in our database";
+                }
+                if(user.message == "faildoc"){
+                  var messview = "Your Doc Number is already exist in our database";
+                }
+                const alert = await this.alertCtrl.create({
+                  header: 'Log Masuk Gagal',
+                  message: messview,
+                  buttons: ['Okay'],
+                });
+                await alert.present();
+              }
+            },
+            (err) => {
+              console.error("babi1", err);
+            }
+            
+          );
+      },
+      (err) => {
+        console.error("babi2", err);
+      }
+      
+      );
   }
 
   get name() {
@@ -286,6 +313,17 @@ export class RegisterUserPage implements OnInit {
           }
           // console.log(inputValue.substring(6,7));
           // console.log(evt.key);
+        },
+        false
+      );
+      document.getElementById('ICReg').addEventListener(
+        'focusout',
+        function (evt) {
+          var inputValue = (<HTMLInputElement>document.getElementById('ICReg')).value;
+          if(inputValue.length != 14){
+            (<HTMLInputElement>document.getElementById('ICReg')).value = '';
+            alert('IC Number not enought character');
+          }
         },
         false
       );
