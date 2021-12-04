@@ -41,12 +41,17 @@ export class JalanListPage implements OnInit {
         loading.dismiss();
         console.log('jalans:', jalans);
         if (jalans) {
+          var array = [];
           for (let item of jalans) {
+            this.haveInfo = true;
             var today = new Date();
             var enddate = new Date(item.end_date);
-            console.log("naqib", today+"====="+enddate)
-            if(enddate >= today){
-              this.haveInfo = true;
+            // console.log(enddate.toDateString());
+            var index = jalans.indexOf(item);
+            if(today.getTime() > enddate.getTime()){
+              // console.log(today.getTime());
+              // console.log(enddate.getTime());
+              jalans.splice(index, 1);
             }
           }
         }
