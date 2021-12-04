@@ -18,6 +18,7 @@ export class JalanListPage implements OnInit {
   jalans$: Observable<Jalan[]>;
   isAdmin = false;
   isSuperAdmin = false;
+  haveInfo = false;
 
   constructor(
     private modalCtrl: ModalController,
@@ -51,6 +52,17 @@ export class JalanListPage implements OnInit {
       tap((jalans) => {
         loading.dismiss();
         console.log('jalans:', jalans);
+        if (jalans) {
+          for (let item of jalans) {
+            this.haveInfo = true;
+            var today = new Date();
+            var enddate = new Date(item.end_date);
+            var index = jalans.indexOf(item);
+            if(today.getTime() > enddate.getTime()){
+              jalans.splice(index, 1);
+            }
+          }
+        }
         return jalans;
       })
     );
