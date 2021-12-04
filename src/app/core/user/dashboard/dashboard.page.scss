@@ -48,7 +48,14 @@ ion-toolbar {
 }
 
 ion-fab {
-  bottom: 15%;
+  bottom: 16%;
+
+  .buttondaftar{
+    height: 45px;
+    width: 90px;
+    // white-space: normal;
+    font-size: 10px;
+  }
 
   ion-fab-button[data-desc] {
     position: relative;

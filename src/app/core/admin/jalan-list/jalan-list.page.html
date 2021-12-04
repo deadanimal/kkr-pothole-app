@@ -11,11 +11,6 @@
 
     <ion-title mode="ios">Hebahan Jalan</ion-title>
 
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -24,6 +19,7 @@
     <ion-content class="transparent">
 
       <ion-list>
+        <p *ngIf="!haveInfo" class="ion-text-center" style="color:rgb(206, 206, 206)">Tiada maklumat hebahan</p>
         <ion-card *ngFor="let jalan of jalans$|async" (click)="openDetailModal(jalan)" color="light">
           <ion-grid fixed>
             <ion-row>

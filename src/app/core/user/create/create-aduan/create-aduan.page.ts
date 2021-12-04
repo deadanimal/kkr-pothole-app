@@ -274,7 +274,7 @@ export class CreateAduanPage implements OnInit {
               if (aduan['success']) {
                 console.log('ADUAN SAVED',aduan);
                 this.aduanForm.reset();
-                this.router.navigateByUrl('/user/dashboard', {
+                this.router.navigateByUrl('/user/aduan-list', {
                   replaceUrl: true,
                 });
                 modal.present();
