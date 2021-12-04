@@ -72,6 +72,7 @@ export class AduanListPage implements OnInit {
         this.aduans$ = this.aduanService.getAduansByUser(this.user_id).pipe(
           tap((aduans) => {
             loading.dismiss();
+            console.log(aduans);
             return aduans;
           })
         );
@@ -131,5 +132,4 @@ export class AduanListPage implements OnInit {
   logout() {
     this.authService.logout();
   }
-
 }

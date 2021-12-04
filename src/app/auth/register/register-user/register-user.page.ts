@@ -217,6 +217,9 @@ export class RegisterUserPage implements OnInit {
   get email() {
     return this.regUserForm.get('email');
   }
+  get doc_type() {
+    return this.regUserForm.get('doc_type');
+  }
   get doc_no() {
     return this.regUserForm.get('doc_no');
   }

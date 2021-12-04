@@ -16,24 +16,27 @@
 
   <div class="card-body">
     <ion-content class="content">
+      <br>
       <div style="margin: 10px 30px;">
-        <ion-badge color="primary" mode="ios">{{aduan.status_desc}}</ion-badge>
+        <ion-badge color="tertiary" mode="ios">{{aduan.status_desc}}</ion-badge>
         <br><br>
-        <ion-label>Tarikh Aduan: </ion-label><span style="color: lightslategray">{{aduan.created_at | date : 'dd MMM
+        <ion-label color="light">Tarikh Aduan: </ion-label><span style="color: rgb(141, 161, 180)">{{aduan.created_at | date : 'dd MMM
           yyyy'}}</span>
         <br><br>
-        <ion-label>Tarikh Tindakan Semasa: </ion-label><span style="color: lightslategray">{{aduan.modified_at | date : 'dd MMM
+        <ion-label color="light">Tarikh Tindakan Semasa: </ion-label><span style="color: lightslategray">{{aduan.updated_at | date :
+          'dd MMM
           yyyy'}}</span>
         <br><br>
-        <ion-label>Catatan: </ion-label><span style="color: lightslategray"
-          align="justify">{{ aduan.nota }}</span>
+        <ion-label color="light">Catatan: </ion-label><span style="color: lightslategray" align="justify">{{ aduan.nota === null ? '':
+          aduan.nota }}</span>
         <br>
+        <br>
+        <ion-label color="light">Keterangan Aduan: </ion-label><span style="color: lightslategray">{{aduan.detail}}</span>
+        <br><br>
         <ion-thumbnail>
           <img src="{{image}}" />
         </ion-thumbnail>
         <br>
-        <ion-label>Keterangan Aduan: </ion-label><span style="color: lightslategray">{{aduan.detail}}</span>
-        <br><br>
         <!-- <ion-button (click)="openEditModal()" expand="block" color="primary" shape="round">
           Kemaskini
         </ion-button> -->
