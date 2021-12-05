@@ -13,4 +13,5 @@ export interface User {
   gambar_id: number;
   email_verified_at: string;
   message: any;
+  title: any;
 }

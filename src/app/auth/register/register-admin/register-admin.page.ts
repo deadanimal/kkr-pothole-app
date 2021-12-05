@@ -292,30 +292,30 @@ export class RegisterAdminPage implements OnInit {
           'application/form-data; charset=UTF-8, application/json',
       });
 
-      this.http
-        .post(url, formData)
-        .pipe(
-          finalize(() => {
-            loading.dismiss();
-          })
-        )
-        .subscribe((res) => {
-          console.log(res);
-          if (res['success']) {
-            console.log('File upload complete.');
-            const img_id = res['gambar_id'];
-            this.regAdminForm.patchValue({ gambar_id: img_id });
-            response = this.userService.registerAdmin(this.regAdminForm.value);
-            response.pipe(take(1)).subscribe((user) => {
+      this.http.post(url, formData).subscribe((res) => {
+        console.log(res);
+        if (res['success']) {
+          console.log('File upload complete.');
+          const img_id = res['gambar_id'];
+          this.regAdminForm.patchValue({ gambar_id: img_id });
+          response = this.userService.registerAdmin(this.regAdminForm.value);
+          response
+            .pipe(take(1))
+            .pipe(
+              finalize(() => {
+                loading.dismiss();
+              })
+            )
+            .subscribe((user) => {
               console.log(user);
               this.regAdminForm.reset();
               this.closeModal();
             });
-            this.url = '../../assets/img/default_icon.jpeg';
-          } else {
-            console.log('File upload failed.');
-          }
-        });
+          this.url = '../../assets/img/default_icon.jpeg';
+        } else {
+          console.log('File upload failed.');
+        }
+      });
     }
   }
 

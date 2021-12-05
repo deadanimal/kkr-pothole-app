@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController,Platform,AlertController } from '@ionic/angular';
+import { LoadingController, Platform, AlertController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/shared/services/user.service';
 import { Observable } from 'rxjs';
@@ -27,15 +27,15 @@ export class ForgotPage implements OnInit {
     private userService: UserService,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController
-  ) { 
+  ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/login'])
+      this.router.navigate(['/login']);
     });
   }
 
   async ngOnInit() {
     this.forgot = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -43,17 +43,19 @@ export class ForgotPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
     loading.present();
     // console.log(this.forgot.value);
-    
+
     this.userService.ForgotUsers(this.forgot.value).subscribe(
       async (res) => {
         await loading.dismiss();
         const alert = await this.alertCtrl.create({
-          header: 'Berjaya',
+          header: res.title,
           message: res.message,
           buttons: ['Okay'],
         });
-        if(res.message == 'Sila periksa email anda untuk mendapatkan kata laluan'){
-          this.router.navigate(["/login"]);
+        if (
+          res.message === 'Sila periksa email anda untuk mendapatkan kata laluan'
+        ) {
+          this.router.navigate(['/login']);
         }
         alert.present();
       },
@@ -62,5 +64,4 @@ export class ForgotPage implements OnInit {
       }
     );
   }
-
 }

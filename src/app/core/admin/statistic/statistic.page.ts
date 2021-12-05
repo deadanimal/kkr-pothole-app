@@ -41,9 +41,9 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.platform.backButton.subscribeWithPriority(10, () => {
       if (role === 'admin') {
-        this.router.navigate(['/admin/dashboard'])
+        this.router.navigate(['/admin/dashboard']);
       } else if (role === 'super_admin') {
-        this.router.navigate(['/superadmin/dashboard'])
+        this.router.navigate(['/superadmin/dashboard']);
       }
     });
 

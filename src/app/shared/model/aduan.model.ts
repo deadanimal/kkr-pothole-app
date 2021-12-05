@@ -20,6 +20,4 @@ export interface Aduan {
   status_code: number;
   sispaa_id: number;
   nota: string;
-  created_at: string;
-  modified_at: string;
 }
