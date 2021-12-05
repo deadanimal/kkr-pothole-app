@@ -193,7 +193,7 @@ export class RegisterUserPage implements OnInit {
       )
       .subscribe(
       (res) => {
-        console.log("babi2",res);
+        console.log("test2",res);
         if (res['success']) {
           this.presentToast('File upload complete.');
           const img_id = res['gambar_id'];
@@ -205,7 +205,7 @@ export class RegisterUserPage implements OnInit {
         }
           response.pipe(take(1)).subscribe(
             async (user) => {
-              console.error("babi1", user);
+              console.error("test1", user);
               if(user.message == "success"){
                 this.regUserForm.reset();
                 loading.dismiss();
@@ -226,13 +226,13 @@ export class RegisterUserPage implements OnInit {
               }
             },
             (err) => {
-              console.error("babi1", err);
+              console.error("test1", err);
             }
             
           );
       },
       (err) => {
-        console.error("babi2", err);
+        console.error("test2", err);
       }
       
       );
@@ -281,52 +281,50 @@ export class RegisterUserPage implements OnInit {
 
   docselect(val) {
     var doctype = val.detail.value;
+    console.log(doctype);
     if (doctype == 'NRIC') {
-      document.getElementById('ICReg').addEventListener(
-        'keyup',
-        function (evt) {
-          var inputValue = (<HTMLInputElement>document.getElementById('ICReg'))
-            .value;
+      document.getElementById('ICReg').addEventListener('keyup',this.ICRegkeyup,false);
+      document.getElementById('ICReg').addEventListener('focusout', this.ICRegfocout ,false);
 
-          if (evt.key != 'Backspace') {
-            if (inputValue.length == 6 || inputValue.length == 9) {
-              (<HTMLInputElement>document.getElementById('ICReg')).value =
-                inputValue + '-';
-            }
-            if (
-              (inputValue.length > 6 && inputValue.substring(6, 7) != '-') ||
-              (inputValue.length > 9 && inputValue.substring(9, 10) != '-') ||
-              inputValue.length > 14
-            ) {
-              (<HTMLInputElement>document.getElementById('ICReg')).value = '';
-              alert('Not valid IC Number');
-            }
-          }
-          if (evt.key == 'Backspace') {
-            if (
-              (inputValue.length == 6 && inputValue.substring(5, 6) != '-') ||
-              (inputValue.length == 9 && inputValue.substring(9, 10) != '-')
-            ) {
-              (<HTMLInputElement>document.getElementById('ICReg')).value =
-                inputValue + '-';
-            }
-          }
-          // console.log(inputValue.substring(6,7));
-          // console.log(evt.key);
-        },
-        false
-      );
-      document.getElementById('ICReg').addEventListener(
-        'focusout',
-        function (evt) {
-          var inputValue = (<HTMLInputElement>document.getElementById('ICReg')).value;
-          if(inputValue.length != 14){
-            (<HTMLInputElement>document.getElementById('ICReg')).value = '';
-            alert('IC Number not enought character');
-          }
-        },
-        false
-      );
+    }else{
+        document.getElementById("ICReg").removeEventListener("keyup", this.ICRegkeyup, false);
+        document.getElementById("ICReg").removeEventListener("focusout", this.ICRegfocout, false);
+    }
+  }
+
+  ICRegkeyup(evt){
+    var inputValue = (<HTMLInputElement>document.getElementById('ICReg')).value;
+
+    if (evt.key != 'Backspace') {
+      if (inputValue.length == 6 || inputValue.length == 9) {
+        (<HTMLInputElement>document.getElementById('ICReg')).value =
+          inputValue + '-';
+      }
+      if (
+        (inputValue.length > 6 && inputValue.substring(6, 7) != '-') ||
+        (inputValue.length > 9 && inputValue.substring(9, 10) != '-') ||
+        inputValue.length > 14
+      ) {
+        (<HTMLInputElement>document.getElementById('ICReg')).value = '';
+        alert('Not valid IC Number');
+      }
+    }
+    if (evt.key == 'Backspace') {
+      if (
+        (inputValue.length == 6 && inputValue.substring(5, 6) != '-') ||
+        (inputValue.length == 9 && inputValue.substring(9, 10) != '-')
+      ) {
+        (<HTMLInputElement>document.getElementById('ICReg')).value =
+          inputValue + '-';
+      }
+    }
+  }
+
+  ICRegfocout(){
+    var inputValue = (<HTMLInputElement>document.getElementById('ICReg')).value;
+    if(inputValue.length != 14){
+      (<HTMLInputElement>document.getElementById('ICReg')).value = '';
+      alert('IC Number not enought character');
     }
   }
 
