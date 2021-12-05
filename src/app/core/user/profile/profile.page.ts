@@ -161,6 +161,8 @@ export class ProfilePage implements OnInit {
         telefon: new FormControl(null, [Validators.required]),
         doc_type: new FormControl(null, [Validators.required]),
         doc_no: new FormControl(null, [Validators.required]),
+        image: new FormControl(null),
+        gambar_id: new FormControl(null),
         password: new FormControl(null, [
           Validators.pattern('[a-zA-Z0-9_.+-]*'),
           Validators.minLength(8),
@@ -180,6 +182,7 @@ export class ProfilePage implements OnInit {
       telefon: this.user.telefon,
       doc_type: this.user.doc_type,
       doc_no: this.user.doc_no,
+      gambar_id: this.user.gambar_id
     });
   }
 

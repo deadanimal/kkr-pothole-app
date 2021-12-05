@@ -42,3 +42,25 @@ ion-toolbar {
 
   }
 }
+
+ion-item {
+  --background: #3880ff;
+  --background-activated: #3880ff;
+  --background-activated-opacity: 1;
+  --background-focused: #3880ff;
+  --background-focused-opacity: 1;
+  --background-hover: #3880ff;
+  --background-hover-opacity: 1;
+  --border-color: #3880ff;
+  --border-radius: 10px;
+  --border-style: solid;
+  --border-width: 8px;
+  --color: #ffffff;
+  --color-activated: #3880ff;
+  --color-focused: #3880ff;
+  --inner-border-width: 8px;
+  --inner-box-shadow: 4px 4px;
+  margin: 60px;
+  --ripple-color: #1e1e1e;
+  --transition: background-color 15ms linear;
+}

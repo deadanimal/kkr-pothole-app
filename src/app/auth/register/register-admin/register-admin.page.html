@@ -50,7 +50,11 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="jawatan" placeholder="Jawatan" type="text"></ion-input>
+                <ion-select formControlName="jawatan" placeholder="Jawatan" interface="action-sheet">
+                  <ion-select-option *ngFor="let pos of position; let i = index" [value]="pos.jawatan">
+                    {{pos.jawatan}}
+                  </ion-select-option>
+                </ion-select>
               </ion-item>
             </div>
             <div *ngIf="(jawatan.dirty || jawatan.touched) && jawatan.errors" class="error">
@@ -66,8 +70,7 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="text" *ngIf="isEditMode"
-                  disabled>
+                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="text" *ngIf="isEditMode" disabled>
                 </ion-input>
                 <ion-input id="ICReg" formControlName="doc_no" placeholder="No Pengenalan" type="tel"
                   *ngIf="!isEditMode" (ionChange)="InputNRIC()" maxLength="14">

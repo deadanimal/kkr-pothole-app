@@ -49,6 +49,42 @@ export class RegisterAdminPage implements OnInit {
   images: LocalFile[];
   apiUrl = environment.baseUrl;
 
+  position = [
+    { jawatan: 'Menteri' },
+    { jawatan: 'Timbalan Menteri' },
+    { jawatan: 'Ketua Setiausaha' },
+    { jawatan: 'Timbalan Ketua Setiausaha' },
+    { jawatan: 'Setiausaha Bahagian' },
+    { jawatan: 'Timbalan Setiausaha Bahagian' },
+    { jawatan: 'Ketua Penolong Setiausaha Kanan' },
+    { jawatan: 'Ketua Penolong Setiausaha' },
+    { jawatan: 'Penolong Setiausaha' },
+    { jawatan: 'Ketua Pengarah' },
+    { jawatan: 'Timbalan Ketua Pengarah' },
+    { jawatan: 'Pengarah Kanan' },
+    { jawatan: 'Pengarah' },
+    { jawatan: 'Jurutera Awam Penguasa Kanan' },
+    { jawatan: 'Jurutera Awam Penguasa' },
+    { jawatan: 'Jurutera Awam' },
+    { jawatan: 'Jurutera Elektrik Penguasa Kanan' },
+    { jawatan: 'Jurutera Elektrik Penguasa' },
+    { jawatan: 'Jurutera Elektrik' },
+    { jawatan: 'Jurutera Mekanikal Penguasa Kanan' },
+    { jawatan: 'Jurutera Mekanikal Penguasa' },
+    { jawatan: 'Jurutera Mekanikal' },
+    { jawatan: 'Arkitek Penguasa Kanan' },
+    { jawatan: 'Arkitek Penguasa' },
+    { jawatan: 'Arkitek' },
+    { jawatan: 'Juruukur Bahan Penguasa Kanan' },
+    { jawatan: 'Juruukur Bahan Penguasa' },
+    { jawatan: 'Juruukur Bahan' },
+    { jawatan: 'Penolong Jurutera Awam' },
+    { jawatan: 'Penolong Jurutera Elektrik' },
+    { jawatan: 'Penolong Jurutera Mekanikal' },
+    { jawatan: 'Penolong Jurutera Senibina' },
+    { jawatan: 'Penolong Juruukur Bahan' },
+  ];
+
   constructor(
     public photoService: PhotoService,
     private formBuilder: FormBuilder,
@@ -218,6 +254,12 @@ export class RegisterAdminPage implements OnInit {
         this.user.id,
         this.regAdminForm.value
       );
+      response.pipe(take(1)).subscribe((user) => {
+        console.log(user);
+        this.regAdminForm.reset();
+        loading.dismiss();
+        this.closeModal('edit');
+      });
       if (this.images[0] && this.images[0].data.length > 0) {
         const body = {
           id: this.user.gambar_id,
@@ -260,24 +302,21 @@ export class RegisterAdminPage implements OnInit {
         .subscribe((res) => {
           console.log(res);
           if (res['success']) {
-            this.presentToast('File upload complete.');
+            console.log('File upload complete.');
             const img_id = res['gambar_id'];
             this.regAdminForm.patchValue({ gambar_id: img_id });
             response = this.userService.registerAdmin(this.regAdminForm.value);
+            response.pipe(take(1)).subscribe((user) => {
+              console.log(user);
+              this.regAdminForm.reset();
+              this.closeModal();
+            });
             this.url = '../../assets/img/default_icon.jpeg';
           } else {
-            this.presentToast('File upload failed.');
+            console.log('File upload failed.');
           }
         });
     }
-    response.pipe(take(1)).subscribe((user) => {
-      console.log(user);
-      this.regAdminForm.reset();
-      loading.dismiss();
-      if (this.isEditMode) {
-        this.closeModal('edit');
-      }
-    });
   }
 
   async onDeleteUser() {
@@ -392,5 +431,4 @@ export class RegisterAdminPage implements OnInit {
     });
     toast.present();
   }
-  //======== insert photoservice here =====
 }

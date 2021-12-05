@@ -159,8 +159,8 @@ export class CreateJalanPage implements OnInit {
       name: new FormControl(null, [Validators.required]),
       detail: new FormControl(null, [Validators.required]),
       status: new FormControl('Ditutup', [Validators.required]),
-      start_date: new FormControl(null),
-      end_date: new FormControl(null),
+      start_date: new FormControl(null, [Validators.required]),
+      end_date: new FormControl(null, [Validators.required]),
       negeri: new FormControl(null, [Validators.required]),
       daerah: new FormControl(null, [Validators.required]),
       response_party: new FormControl(null, [Validators.required]),
@@ -246,6 +246,13 @@ export class CreateJalanPage implements OnInit {
         this.jalan.id,
         this.jalanForm.value
       );
+      response.pipe(take(1)).subscribe((jalan) => {
+        console.log('UPDATED JALAN', jalan);
+        loading.dismiss();
+        this.closeModal(jalan);
+
+        // modal.present();
+      });
       if (this.images[0] && this.images[0].data.length > 0) {
         const body = {
           id: this.jalan.gambar_id,
@@ -289,27 +296,22 @@ export class CreateJalanPage implements OnInit {
         .subscribe((res) => {
           console.log(res);
           if (res['success']) {
-            this.presentToast('File upload complete.');
+            console.log('File upload complete.');
             const img_id = res['gambar_id'];
             this.jalanForm.patchValue({ gambar_id: img_id });
             response = this.jalanService.addJalan(this.jalanForm.value);
+            response.pipe(take(1)).subscribe((jalan) => {
+              console.log('NEW JALAN ADDED', jalan);
+              this.jalanForm.reset();
+              this.url = 'assets/img/no_image.png';
+              loading.dismiss();
+              this.closeModal();
+            });
           } else {
-            this.presentToast('File upload failed.');
+            console.log('File upload failed.');
           }
         });
     }
-
-    response.pipe(take(1)).subscribe((jalan) => {
-      console.log('SAVED TO DB JALAN', jalan);
-      this.jalanForm.reset();
-      this.url = 'assets/img/no_image.png';
-      loading.dismiss();
-
-      if (this.isEditMode) {
-        this.closeModal(jalan);
-      }
-      // modal.present();
-    });
   }
 
   selectDaerah($event) {
