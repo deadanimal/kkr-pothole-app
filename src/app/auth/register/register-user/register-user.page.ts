@@ -157,6 +157,8 @@ export class RegisterUserPage implements OnInit {
   async submitUser() {
     const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
     this.emel = this.regUserForm.get('email').value;
+    this.closeModal();
+    loading.present();
     const modal = await this.modalCtrl.create({
       component: SuccessPage,
       componentProps: {
@@ -164,10 +166,7 @@ export class RegisterUserPage implements OnInit {
         message: `Sila semak emel anda di ${this.emel} untuk pengesahan dan meneruskan proses.`,
       },
     });
-    
-    this.closeModal();
-    loading.present();
-
+  
     let response: Observable<User>;
     console.log('Daftar User :', this.regUserForm.value);
     const formData = new FormData();
@@ -208,8 +207,9 @@ export class RegisterUserPage implements OnInit {
               console.error("test1", user);
               if(user.message == "success"){
                 this.regUserForm.reset();
-                loading.dismiss();
+                this.modalCtrl.dismiss();
                 modal.present();
+                loading.dismiss();
               }else{
                 if(user.message == "failemail"){
                   var messview = "Your email is already exist in our database";
