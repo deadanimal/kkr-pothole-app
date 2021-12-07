@@ -20,18 +20,18 @@
       <div style="margin: 10px 30px;">
         <ion-badge color="tertiary" mode="ios">{{aduan.status_desc}}</ion-badge>
         <br><br>
-        <ion-label >Tarikh Aduan: </ion-label><span style="color: white">{{aduan.created_at | date : 'dd MMM
+        <ion-label>Tarikh Aduan: </ion-label><span style="color: white">{{aduan.created_at | date : 'dd MMM
           yyyy'}}</span>
         <br><br>
-        <ion-label >Tarikh Tindakan Semasa: </ion-label><span style="color: white">{{aduan.updated_at | date :
+        <ion-label>Tarikh Tindakan Semasa: </ion-label><span style="color: white">{{aduan.updated_at | date :
           'dd MMM
           yyyy'}}</span>
         <br><br>
-        <ion-label >Catatan: </ion-label><span style="color: white" align="justify">{{ aduan.nota === '' ? '-':
-          aduan.nota }}</span>
+        <ion-label>Catatan: </ion-label><span style="color: white" align="justify" innerHtml="{{ aduan.nota === '' ? '-':
+        aduan.nota }}"></span>
         <br>
         <br>
-        <ion-label >Keterangan Aduan: </ion-label><span style="color: white">{{aduan.detail}}</span>
+        <ion-label>Keterangan Aduan: </ion-label><span style="color: white">{{aduan.detail}}</span>
         <br><br>
         <ion-thumbnail>
           <img src="{{image}}" />

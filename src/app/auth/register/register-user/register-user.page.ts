@@ -17,7 +17,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
+import {
+  AlertController,
+  LoadingController,
+  ModalController,
+  Platform,
+} from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
 import { SuccessPage } from 'src/app/core/global/alert/success/success.page';
@@ -166,7 +171,7 @@ export class RegisterUserPage implements OnInit {
         message: `Sila semak emel anda di ${this.emel} untuk pengesahan dan meneruskan proses.`,
       },
     });
-  
+
     let response: Observable<User>;
     console.log('Daftar User :', this.regUserForm.value);
     const formData = new FormData();
@@ -191,31 +196,32 @@ export class RegisterUserPage implements OnInit {
         })
       )
       .subscribe(
-      (res) => {
-        console.log("test2",res);
-        if (res['success']) {
-          this.presentToast('File upload complete.');
-          const img_id = res['gambar_id'];
-          this.regUserForm.patchValue({ gambar_id: img_id });
-          response = this.userService.registerUser(this.regUserForm.value);
-          this.url = '../../assets/img/default_icon.jpeg';
-        } else {
-          this.presentToast('File upload failed.');
-        }
+        (res) => {
+          console.log('test2', res);
+          if (res['success']) {
+            this.presentToast('File upload complete.');
+            const img_id = res['gambar_id'];
+            this.regUserForm.patchValue({ gambar_id: img_id });
+            response = this.userService.registerUser(this.regUserForm.value);
+            this.url = '../../assets/img/default_icon.jpeg';
+          } else {
+            this.presentToast('File upload failed.');
+          }
           response.pipe(take(1)).subscribe(
             async (user) => {
-              console.error("test1", user);
-              if(user.message == "success"){
+              console.error('test1', user);
+              if (user.message == 'success') {
                 this.regUserForm.reset();
                 this.modalCtrl.dismiss();
                 modal.present();
                 loading.dismiss();
-              }else{
-                if(user.message == "failemail"){
-                  var messview = "Your email is already exist in our database";
+              } else {
+                if (user.message == 'failemail') {
+                  var messview = 'Emel tersebut telah wujud dan didaftarkan';
                 }
-                if(user.message == "faildoc"){
-                  var messview = "Your Doc Number is already exist in our database";
+                if (user.message == 'faildoc') {
+                  var messview =
+                    'No Pengenalan tersebut telah wujud dan didaftarkan';
                 }
                 const alert = await this.alertCtrl.create({
                   header: 'Log Masuk Gagal',
@@ -226,15 +232,13 @@ export class RegisterUserPage implements OnInit {
               }
             },
             (err) => {
-              console.error("test1", err);
+              console.error('test1', err);
             }
-            
           );
-      },
-      (err) => {
-        console.error("test2", err);
-      }
-      
+        },
+        (err) => {
+          console.error('test2', err);
+        }
       );
   }
 
@@ -283,16 +287,23 @@ export class RegisterUserPage implements OnInit {
     var doctype = val.detail.value;
     console.log(doctype);
     if (doctype == 'NRIC') {
-      document.getElementById('ICReg').addEventListener('keyup',this.ICRegkeyup,false);
-      document.getElementById('ICReg').addEventListener('focusout', this.ICRegfocout ,false);
-
-    }else{
-        document.getElementById("ICReg").removeEventListener("keyup", this.ICRegkeyup, false);
-        document.getElementById("ICReg").removeEventListener("focusout", this.ICRegfocout, false);
+      document
+        .getElementById('ICReg')
+        .addEventListener('keyup', this.ICRegkeyup, false);
+      document
+        .getElementById('ICReg')
+        .addEventListener('focusout', this.ICRegfocout, false);
+    } else {
+      document
+        .getElementById('ICReg')
+        .removeEventListener('keyup', this.ICRegkeyup, false);
+      document
+        .getElementById('ICReg')
+        .removeEventListener('focusout', this.ICRegfocout, false);
     }
   }
 
-  ICRegkeyup(evt){
+  ICRegkeyup(evt) {
     var inputValue = (<HTMLInputElement>document.getElementById('ICReg')).value;
 
     if (evt.key != 'Backspace') {
@@ -320,9 +331,9 @@ export class RegisterUserPage implements OnInit {
     }
   }
 
-  ICRegfocout(){
+  ICRegfocout() {
     var inputValue = (<HTMLInputElement>document.getElementById('ICReg')).value;
-    if(inputValue.length != 14){
+    if (inputValue.length != 14) {
       (<HTMLInputElement>document.getElementById('ICReg')).value = '';
       alert('IC Number not enought character');
     }

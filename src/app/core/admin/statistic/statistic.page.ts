@@ -1,3 +1,5 @@
+import { AduanService } from './../../../shared/services/aduan.service';
+import { Aduan } from './../../../shared/model/aduan.model';
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable max-len */
 import { Router } from '@angular/router';
@@ -25,9 +27,13 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
   templateUrl: './statistic.page.html',
   styleUrls: ['./statistic.page.scss'],
 })
-export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
+export class StatisticPage implements OnInit, OnDestroy {
   isAdmin = false;
   isSuperAdmin = false;
+  aduanSelesai: Aduan[] = [];
+  aduanDitolak: Aduan[] = [];
+  aduanPerhatian: Aduan[] = [];
+  aduanTotal: any;
   private chart: am4charts.XYChart;
 
   constructor(
@@ -35,7 +41,8 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
     private zone: NgZone,
     private authService: AuthService,
     private router: Router,
-    private platform: Platform
+    private platform: Platform,
+    private aduanService: AduanService
   ) {
     const role = this.authService.userRole;
 
@@ -54,7 +61,9 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getAduanStats();
+  }
 
   // Run the function only in the browser
   browserOnly(f: () => void) {
@@ -64,13 +73,14 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   }
-  ngAfterViewInit() {
+  getChart() {
     // Chart code goes in here
     this.browserOnly(() => {
       /* Chart code */
       // Themes begin
       am4core.useTheme(am4themes_material);
       am4core.useTheme(am4themes_animated);
+      am4core.addLicense('ch-custom-attribution');
       // Themes end
 
       // Create chart instance
@@ -78,8 +88,8 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
 
       // Add and configure Series
       const pieSeries = chart.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = 'litres';
-      pieSeries.dataFields.category = 'country';
+      pieSeries.dataFields.value = 'jumlah';
+      pieSeries.dataFields.category = 'status';
 
       // Let's cut a hole in our Pie chart the size of 30% the radius
       chart.innerRadius = am4core.percent(30);
@@ -128,13 +138,18 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
 
       chart.data = [
         {
-          country: 'Selesai',
-          litres: 201.9,
+          status: 'Dalam Perhatian',
+          jumlah: this.aduanPerhatian.length,
+          color: am4core.color('#3880ff'),
+        },
+        {
+          status: 'Selesai',
+          jumlah: this.aduanSelesai.length,
           color: am4core.color('#28EE00'),
         },
         {
-          country: 'Ditolak',
-          litres: 165.8,
+          status: 'Ditolak',
+          jumlah: this.aduanDitolak.length,
           color: am4core.color('#FF3333'),
         },
       ];
@@ -147,6 +162,26 @@ export class StatisticPage implements OnInit, AfterViewInit, OnDestroy {
       if (this.chart) {
         this.chart.dispose();
       }
+    });
+  }
+
+  getAduanStats() {
+    this.aduanService.getAduans().subscribe((res) => {
+      console.log(res.length);
+      this.aduanTotal = res.length;
+      res.forEach((e) => {
+        // console.log(e.status_code);
+        if (e.status_code === 'P') {
+          this.aduanPerhatian.push(e);
+        } else if (e.status_code === 'S') {
+          this.aduanSelesai.push(e);
+        } else if (e.status_code === 'R') {
+          this.aduanDitolak.push(e);
+        }
+      });
+      this.getChart();
+
+      console.log(this.aduanSelesai.length, this.aduanDitolak.length);
     });
   }
 }

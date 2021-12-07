@@ -17,7 +17,8 @@ export interface Aduan {
   gambar_id: number;
   pengadu_id: number;
   response_code: number;
-  status_code: number;
+  status_code: any;
+  status_desc: any;
   sispaa_id: number;
   nota: string;
 }
