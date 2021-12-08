@@ -164,9 +164,9 @@ export class ProfilePage implements OnInit {
         image: new FormControl(null),
         gambar_id: new FormControl(null),
         password: new FormControl(null, [
-          Validators.pattern('[a-zA-Z0-9_.+-]*'),
+          // Validators.pattern('[a-zA-Z0-9_.+-]*'),
           Validators.minLength(8),
-          Validators.required
+          // Validators.required
         ]),
         confirmpassword: new FormControl(null),
       },
