@@ -3,7 +3,7 @@ import { Aduan } from './../../../shared/model/aduan.model';
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable max-len */
 import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 import {
   Component,
   Inject,
@@ -21,6 +21,7 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_material from '@amcharts/amcharts4/themes/material';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { AduanListPage } from '../../superadmin/list/aduan-list/aduan-list.page';
 
 @Component({
   selector: 'app-statistic',
@@ -30,10 +31,16 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 export class StatisticPage implements OnInit, OnDestroy {
   isAdmin = false;
   isSuperAdmin = false;
+  aduans: Aduan[];
   aduanSelesai: Aduan[] = [];
   aduanDitolak: Aduan[] = [];
   aduanPerhatian: Aduan[] = [];
+  aduanKKR: Aduan[] = [];
+  aduanPBT: Aduan[] = [];
+  aduanLLM: Aduan[] = [];
   aduanTotal: any;
+  isJumlahAduan = true;
+  isAduanAgensi = false;
   private chart: am4charts.XYChart;
 
   constructor(
@@ -42,7 +49,8 @@ export class StatisticPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private platform: Platform,
-    private aduanService: AduanService
+    private aduanService: AduanService,
+    private modalCtrl: ModalController
   ) {
     const role = this.authService.userRole;
 
@@ -76,20 +84,29 @@ export class StatisticPage implements OnInit, OnDestroy {
   getChart() {
     // Chart code goes in here
     this.browserOnly(() => {
-      /* Chart code */
+      if (this.chart) {
+        this.chart.dispose();
+      }
       // Themes begin
       am4core.useTheme(am4themes_material);
       am4core.useTheme(am4themes_animated);
       am4core.addLicense('ch-custom-attribution');
+      am4core.options.autoDispose = true;
       // Themes end
 
       // Create chart instance
       const chart = am4core.create('chartdiv', am4charts.PieChart);
 
       // Add and configure Series
+
       const pieSeries = chart.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = 'jumlah';
-      pieSeries.dataFields.category = 'status';
+      if (this.isJumlahAduan) {
+        pieSeries.dataFields.value = 'jumlah';
+        pieSeries.dataFields.category = 'status';
+      } else if (this.isAduanAgensi) {
+        pieSeries.dataFields.value = 'jumlah';
+        pieSeries.dataFields.category = 'agensi';
+      }
 
       // Let's cut a hole in our Pie chart the size of 30% the radius
       chart.innerRadius = am4core.percent(30);
@@ -136,23 +153,43 @@ export class StatisticPage implements OnInit, OnDestroy {
       chart.legend.labels.template.fill = am4core.color('#fff');
       chart.legend.valueLabels.template.disabled = true;
 
-      chart.data = [
-        {
-          status: 'Dalam Perhatian',
-          jumlah: this.aduanPerhatian.length,
-          color: am4core.color('#3880ff'),
-        },
-        {
-          status: 'Selesai',
-          jumlah: this.aduanSelesai.length,
-          color: am4core.color('#28EE00'),
-        },
-        {
-          status: 'Ditolak',
-          jumlah: this.aduanDitolak.length,
-          color: am4core.color('#FF3333'),
-        },
-      ];
+      if (this.isJumlahAduan) {
+        chart.data = [
+          {
+            status: 'Dalam Perhatian',
+            jumlah: this.aduanPerhatian.length,
+            color: am4core.color('#3880ff'),
+          },
+          {
+            status: 'Selesai',
+            jumlah: this.aduanSelesai.length,
+            color: am4core.color('#28EE00'),
+          },
+          {
+            status: 'Ditolak',
+            jumlah: this.aduanDitolak.length,
+            color: am4core.color('#FF3333'),
+          },
+        ];
+      } else if (this.isAduanAgensi) {
+        chart.data = [
+          {
+            agensi: 'LLM',
+            jumlah: this.aduanLLM.length,
+            color: am4core.color('#34c0eb'),
+          },
+          {
+            agensi: 'KKR/JKR',
+            jumlah: this.aduanKKR.length,
+            color: am4core.color('#28EE00'),
+          },
+          {
+            agensi: 'PBT',
+            jumlah: this.aduanPBT.length,
+            color: am4core.color('#eb8634'),
+          },
+        ];
+      }
     });
   }
 
@@ -165,10 +202,40 @@ export class StatisticPage implements OnInit, OnDestroy {
     });
   }
 
+  async openAduanList() {
+    const modal = await this.modalCtrl.create({
+      component: AduanListPage,
+      componentProps: { isModal: true },
+    });
+
+    modal.present();
+  }
+
+  selectAduan($event) {
+    console.log($event.target.value);
+    const sel = $event.target.value;
+
+    if (sel === 'jumlah_aduan') {
+      this.isJumlahAduan = true;
+      this.isAduanAgensi = false;
+      this.getAduanStats();
+    } else if (sel === 'jumlah_aduan_bulan') {
+    } else if (sel === 'jumlah_aduan_agensi') {
+      this.isJumlahAduan = false;
+      this.isAduanAgensi = true;
+      this.getAduanByAgency();
+    } else if (sel === 'jumlah_aduan_pengguna') {
+    }
+  }
+
   getAduanStats() {
+    this.aduanSelesai = [];
+    this.aduanDitolak = [];
+    this.aduanPerhatian = [];
     this.aduanService.getAduans().subscribe((res) => {
       console.log(res.length);
       this.aduanTotal = res.length;
+      this.aduans = res;
       res.forEach((e) => {
         // console.log(e.status_code);
         if (e.status_code === 'P') {
@@ -182,6 +249,34 @@ export class StatisticPage implements OnInit, OnDestroy {
       this.getChart();
 
       console.log(this.aduanSelesai.length, this.aduanDitolak.length);
+    });
+  }
+
+  getAduanByAgency() {
+    this.aduanKKR = [];
+    this.aduanPBT = [];
+    this.aduanLLM = [];
+    this.aduanService.getAduans().subscribe((res) => {
+      console.log(res.length);
+      this.aduanTotal = res.length;
+      this.aduans = res;
+      res.forEach((e) => {
+        // console.log(e.complaint_category);
+        if (e.complaint_category === '1') {
+          this.aduanLLM.push(e);
+        } else if (
+          e.complaint_category === '2' ||
+          e.complaint_category === '3' ||
+          e.complaint_category === '99'
+        ) {
+          this.aduanKKR.push(e);
+        } else if (e.complaint_category === '4') {
+          this.aduanPBT.push(e);
+        }
+      });
+      this.getChart();
+
+      console.log(this.aduanLLM.length, this.aduanPBT.length);
     });
   }
 }

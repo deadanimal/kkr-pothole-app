@@ -70,10 +70,17 @@ ion-item {
   margin: 50px 80px;
   --ripple-color: #1e1e1e;
   --transition: background-color 15ms linear;
+
+  ion-select {
+    padding: 0;
+  }
 }
 
-h1.aduantotal{
+h1.aduantotal {
+  color: #bad3ff;
   margin-top: 140px;
   font-weight: bold;
   font-size: 60px;
+  text-shadow:2px 3px 3px black;
+  // text-shadow: 2px 3px #FF0000;
 }

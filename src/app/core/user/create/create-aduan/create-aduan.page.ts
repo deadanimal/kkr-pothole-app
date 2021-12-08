@@ -406,7 +406,7 @@ export class CreateAduanPage implements OnInit {
   }
 
   async getOverlayImage(bounds) {
-    this.clearMyGosData();
+    // this.clearMyGosData();
     this.load = await this.loadingCtrl.create({ message: 'Loading ...' });
     this.load.present();
 
@@ -503,35 +503,35 @@ export class CreateAduanPage implements OnInit {
       .then((r) => r.json())
       .then((r) => {
         if (r.features[0]) {
-          this.addIW(this.map2.getCenter(), r);
+          this.addInfo(this.map2.getCenter(), r);
           console.log('masuk1', r);
         } else {
           fetch(queryURL1.toString())
             .then((r) => r.json())
             .then((r) => {
               if (r.features[0]) {
-                this.addIW(this.map2.getCenter(), r);
+                this.addInfo(this.map2.getCenter(), r);
                 console.log('masuk2', r);
               } else {
                 fetch(queryURL2.toString())
                   .then((r) => r.json())
                   .then((r) => {
                     if (r.features[0]) {
-                      this.addIW(this.map2.getCenter(), r);
+                      this.addInfo(this.map2.getCenter(), r);
                       console.log('masuk3', r);
                     } else {
                       fetch(queryURL3.toString())
                         .then((r) => r.json())
                         .then((r) => {
                           if (r.features[0]) {
-                            this.addIW(this.map2.getCenter(), r);
+                            this.addInfo(this.map2.getCenter(), r);
                             console.log('masuk4', r);
                           } else {
                             fetch(queryURL4.toString())
                               .then((r) => r.json())
                               .then((r) => {
                                 if (r.features[0]) {
-                                  this.addIW(this.map2.getCenter(), r);
+                                  this.addInfo(this.map2.getCenter(), r);
                                   console.log('masuk5', r);
                                 } else {
                                   this.aduanForm.patchValue({
@@ -559,7 +559,7 @@ export class CreateAduanPage implements OnInit {
       });
   }
 
-  async addIW(loc, d) {
+  async addInfo(loc, d) {
     if (d.features[0] && d.features[0].attributes.length !== 0) {
       console.log('masuk sini pulakkk');
       const val = d.features[0].attributes;

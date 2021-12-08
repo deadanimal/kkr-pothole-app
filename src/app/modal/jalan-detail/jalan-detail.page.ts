@@ -75,7 +75,7 @@ export class JalanDetailPage implements OnInit {
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Pengesahan',
-      message: 'Anda pasti untuk buang maklumat jalan ini?',
+      message: 'Anda pasti untuk hapus maklumat jalan ini?',
       buttons: [
         {
           text: 'Batal',

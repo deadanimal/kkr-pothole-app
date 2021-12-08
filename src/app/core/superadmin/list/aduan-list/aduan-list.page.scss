@@ -9,6 +9,8 @@
 ion-card {
   border-radius: 20px;
   background: linear-gradient(var(--ion-color-primary), #cad3dcfc);
+  margin-top: 0;
+  padding: 10px;
 
   ion-card-title {
     color: white;
@@ -18,8 +20,8 @@ ion-card {
 
 ion-list {
   background-color: transparent;
-  margin-top: 80px;
-  margin: 80px 30px 10px;
+  margin: 10px 40px 10px;
+  margin-bottom: 90px;
 }
 
 .text-limit {
@@ -36,4 +38,18 @@ ion-toolbar {
   --color: var(--ion-color-primary);
   position: absolute;
   top: 5px;
+}
+
+ion-content.transparent {
+  --background: transparent;
+  top: 60px;
+}
+
+ion-badge {
+  color: rgb(63, 63, 63);
+  font-weight: 400;
+  display: inline;
+  margin-left: 170px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }

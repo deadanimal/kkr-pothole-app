@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { Observable } from 'rxjs';
 import { AduanService } from '../../../../shared/services/aduan.service';
 /* eslint-disable @typescript-eslint/no-shadow */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { AduanDetailPage } from 'src/app/modal/aduan-detail/aduan-detail.page';
 import { Aduan } from '../../../../shared/model/aduan.model';
@@ -16,6 +17,7 @@ import { Router } from '@angular/router';
 })
 export class AduanListPage implements OnInit {
   aduans$: Observable<Aduan[]>;
+  @Input() isModal = false;
 
   constructor(
     private authService: AuthService,
@@ -25,9 +27,8 @@ export class AduanListPage implements OnInit {
     private router: Router,
     private platform: Platform
   ) {
-
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/superadmin/dashboard'])
+      this.router.navigate(['/superadmin/dashboard']);
     });
   }
 
@@ -78,5 +79,9 @@ export class AduanListPage implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  closeModal() {
+    this.modalCtrl.dismiss();
   }
 }

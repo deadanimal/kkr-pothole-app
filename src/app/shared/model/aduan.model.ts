@@ -12,7 +12,7 @@ export interface Aduan {
   reference_id: string;
   pbt_code: string;
   complaint_type: string;
-  complaint_category: string;
+  complaint_category: any;
   complaint_category_code: string;
   gambar_id: number;
   pengadu_id: number;
