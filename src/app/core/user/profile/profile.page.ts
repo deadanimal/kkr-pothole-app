@@ -166,6 +166,7 @@ export class ProfilePage implements OnInit {
         password: new FormControl(null, [
           Validators.pattern('[a-zA-Z0-9_.+-]*'),
           Validators.minLength(8),
+          Validators.required
         ]),
         confirmpassword: new FormControl(null),
       },
@@ -266,6 +267,7 @@ export class ProfilePage implements OnInit {
       loading.dismiss();
       this.loadToken();
       this.presentAlert();
+      // this.profileForm.invalid = INVALID;
       // this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
     });
   }
