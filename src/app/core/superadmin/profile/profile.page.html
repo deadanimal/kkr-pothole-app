@@ -57,7 +57,7 @@
             </div>
             <div class="input">
               <ion-item>
-                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplete="off">
+                <ion-input formControlName="password" placeholder="Kata Laluan Baru" type="{{showPass ? 'password' : 'text' }}" autocomplte="off" (ionBlur)="checkpss(this.value)">
                 </ion-input>
                 <ion-icon slot="end" name="{{showPass ? 'eye-outline' : 'eye-off-outline' }}" (click)='hideShowPassword()'></ion-icon>
               </ion-item>

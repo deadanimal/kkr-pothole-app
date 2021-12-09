@@ -68,6 +68,9 @@
                 </ion-select>
               </ion-item>
             </div>
+            <div *ngIf="(role.dirty || role.touched) && role.errors" class="error">
+              <span *ngIf="role.errors?.required">Peranan diperlukan</span>
+            </div>
             <div class="input2">
               <ion-item>
                 <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="text" *ngIf="isEditMode" disabled>
@@ -120,7 +123,7 @@
             <ion-text color="primary">
               <p>Sila pastikan maklumat peribadi anda telah diisi dengan lengkap</p>
             </ion-text>
-            <ion-button (click)="submitAdmin()" mode="ios" [disabled]="regAdminForm.invalid" shape="round">
+            <ion-button (click)="submitAdmin()" mode="ios" shape="round">
               {{isEditMode ? 'Kemas Kini':'Daftar'}}
             </ion-button>
             <ion-button *ngIf="isEditMode" color="danger" (click)="deleteConfirm()" mode="ios" shape="round"

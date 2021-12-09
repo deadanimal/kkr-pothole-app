@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 import { HttpClient } from '@angular/common/http';
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/no-shadow */
@@ -8,7 +9,12 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 /* eslint-disable prefer-const */
 import { UserService } from 'src/app/shared/services/user.service';
-import { AlertController, LoadingController, Platform } from '@ionic/angular';
+import {
+  AlertController,
+  LoadingController,
+  Platform,
+  ToastController,
+} from '@ionic/angular';
 import { User } from 'src/app/shared/model/user.model';
 import {
   FormControl,
@@ -41,6 +47,7 @@ export class ProfilePage implements OnInit {
   user$: Observable<User>;
   profileForm: FormGroup;
   user: User;
+  passwordModel: string;
   url: any = '../../assets/img/default_icon.jpeg';
   images: LocalFile[];
   apiUrl = environment.baseUrl;
@@ -68,7 +75,8 @@ export class ProfilePage implements OnInit {
     private router: Router,
     private platform: Platform,
     private alertCtrl: AlertController,
-    private http: HttpClient
+    private http: HttpClient,
+    private toastCtrl: ToastController
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['/superadmin/dashboard']);
@@ -162,7 +170,7 @@ export class ProfilePage implements OnInit {
         image: new FormControl(null),
         gambar_id: new FormControl(null),
         password: new FormControl(null, [
-          Validators.pattern('[a-zA-Z0-9_.+-]*'),
+          Validators.pattern('[a-zA-Z0-9_+-@$!%*?&:]*'),
           Validators.minLength(8),
         ]),
         confirmpassword: new FormControl(null),
@@ -236,22 +244,63 @@ export class ProfilePage implements OnInit {
     });
 
   async updateProfile() {
-    const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
-    loading.present();
+    if (this.profileForm.valid) {
+      const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
+      loading.present();
 
-    let response: Observable<User>;
-    console.log('Profile :', this.profileForm.value);
-    response = this.userService.updateUser(
-      this.user.id,
-      this.profileForm.value
-    );
-    response.pipe(take(1)).subscribe((user) => {
-      console.log(user);
-      this.profileForm.reset();
-      loading.dismiss();
-      this.loadToken();
-      this.presentAlert();
-      // this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
+      let response: Observable<User>;
+      console.log('Profile :', this.profileForm.value);
+      response = this.userService.updateUser(
+        this.user.id,
+        this.profileForm.value
+      );
+      if (this.images[0] && this.images[0].data.length > 0) {
+        const body = {
+          id: this.user.gambar_id,
+          img: this.images[0].data,
+          filename: this.images[0].name,
+        };
+        this.userService
+          .updateGambarUser(this.user.gambar_id, body)
+          .subscribe((res) => {
+            console.log(res);
+            if (res['success']) {
+              this.presentToast('Gambar profil berjaya dikemaskini.');
+            }
+          });
+      }
+      response.pipe(take(1)).subscribe((user) => {
+        console.log(user);
+        this.profileForm.reset();
+        loading.dismiss();
+        this.loadToken();
+        this.presentAlert();
+        // this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
+      });
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Makluman',
+        message: 'Sila lengkapkan medan yang diperlukan',
+        buttons: ['Okay'],
+      });
+      alert.present();
+      this.validateAllFormFields(this.profileForm);
+      this.setFormValues();
+    }
+  }
+
+  validateAllFormFields(formGroup: FormGroup) {
+    //{1}
+    Object.keys(formGroup.controls).forEach((field) => {
+      //{2}
+      const control = formGroup.get(field); //{3}
+      if (control instanceof FormControl) {
+        //{4}
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        //{5}
+        this.validateAllFormFields(control); //{6}
+      }
     });
   }
 
@@ -282,5 +331,31 @@ export class ProfilePage implements OnInit {
 
   hideShowPassword() {
     this.showPass = !this.showPass;
+  }
+
+  checkpss() {
+    this.passwordModel = this.profileForm.get('password').value;
+    if (this.passwordModel) {
+      var matches = this.passwordModel.match('.*[A-Za-z].*');
+      var matches2 = this.passwordModel.match('.*\\d.*');
+
+      if (matches == null) {
+        this.passwordModel = '';
+        alert('Kata Laluan Tidak Mengandungi Huruf');
+      } else {
+        if (matches2 == null) {
+          this.passwordModel = '';
+          alert('Kata Laluan Tidak Mengandungi Nombor');
+        }
+      }
+    }
+  }
+
+  async presentToast(text) {
+    const toast = await this.toastCtrl.create({
+      message: text,
+      duration: 3000,
+    });
+    toast.present();
   }
 }

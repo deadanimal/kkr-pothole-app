@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { ToastController } from '@ionic/angular';
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 /* eslint-disable eqeqeq */
@@ -48,6 +49,7 @@ export class RegisterAdminPage implements OnInit {
   url: any;
   images: LocalFile[];
   apiUrl = environment.baseUrl;
+  emel: any;
 
   position = [
     { jawatan: 'Menteri' },
@@ -244,79 +246,124 @@ export class RegisterAdminPage implements OnInit {
     });
 
   async submitAdmin() {
-    const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
-    loading.present();
+    if (this.regAdminForm.valid) {
+      this.emel = this.regAdminForm.get('email').value;
+      const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
+      loading.present();
 
-    let response: Observable<User>;
-    console.log('ADMIN JALAN :', this.regAdminForm.value);
-    if (this.isEditMode) {
-      response = this.userService.updateUser(
-        this.user.id,
-        this.regAdminForm.value
-      );
-      response.pipe(take(1)).subscribe((user) => {
-        console.log(user);
-        this.regAdminForm.reset();
-        loading.dismiss();
-        this.closeModal('edit');
-      });
-      if (this.images[0] && this.images[0].data.length > 0) {
-        const body = {
-          id: this.user.gambar_id,
-          img: this.images[0].data,
-          filename: this.images[0].name,
-        };
-        this.userService
-          .updateGambarUser(this.user.gambar_id, body)
-          .subscribe((res) => {
-            console.log(res);
-            if (res['success']) {
-              this.presentToast('Gambar profil berjaya dikemaskini.');
-            }
-          });
-      }
-      loading.dismiss();
-    } else {
-      const formData = new FormData();
-      if (this.images[0] && this.images[0].data.length > 0) {
-        formData.append('img', this.images[0].data);
-        formData.append('filename', this.images[0].name);
-      } else {
-        formData.append('img', this.url);
-        formData.append('filename', 'default_pic.jpeg');
-      }
-
-      const url = `${this.apiUrl}/upload_image`;
-      const header = new HttpHeaders({
-        'Content-Type':
-          'application/form-data; charset=UTF-8, application/json',
-      });
-
-      this.http.post(url, formData).subscribe((res) => {
-        console.log(res);
-        if (res['success']) {
-          console.log('File upload complete.');
-          const img_id = res['gambar_id'];
-          this.regAdminForm.patchValue({ gambar_id: img_id });
-          response = this.userService.registerAdmin(this.regAdminForm.value);
-          response
-            .pipe(take(1))
-            .pipe(
-              finalize(() => {
-                loading.dismiss();
-              })
-            )
-            .subscribe((user) => {
-              console.log(user);
-              this.regAdminForm.reset();
-              this.closeModal();
+      let response: Observable<User>;
+      console.log('Daftar Admin :', this.regAdminForm.value);
+      if (this.isEditMode) {
+        response = this.userService.updateUser(
+          this.user.id,
+          this.regAdminForm.value
+        );
+        response.pipe(take(1)).subscribe((user) => {
+          console.log(user);
+          this.regAdminForm.reset();
+          loading.dismiss();
+          this.closeModal('edit');
+        });
+        if (this.images[0] && this.images[0].data.length > 0) {
+          const body = {
+            id: this.user.gambar_id,
+            img: this.images[0].data,
+            filename: this.images[0].name,
+          };
+          this.userService
+            .updateGambarUser(this.user.gambar_id, body)
+            .subscribe((res) => {
+              console.log(res);
+              if (res['success']) {
+                this.presentToast('Gambar profil berjaya dikemaskini.');
+              }
             });
-          this.url = '../../assets/img/default_icon.jpeg';
-        } else {
-          console.log('File upload failed.');
         }
+        loading.dismiss();
+      } else {
+        const formData = new FormData();
+        if (this.images[0] && this.images[0].data.length > 0) {
+          formData.append('img', this.images[0].data);
+          formData.append('filename', this.images[0].name);
+        } else {
+          formData.append('img', this.url);
+          formData.append('filename', 'default_pic.jpeg');
+        }
+
+        const url = `${this.apiUrl}/upload_image`;
+        const header = new HttpHeaders({
+          'Content-Type':
+            'application/form-data; charset=UTF-8, application/json',
+        });
+
+        this.http.post(url, formData).subscribe((res) => {
+          console.log(res);
+          if (res['success']) {
+            console.log('File upload complete.');
+            const img_id = res['gambar_id'];
+            this.regAdminForm.patchValue({ gambar_id: img_id });
+            response = this.userService.registerAdmin(this.regAdminForm.value);
+            response
+              .pipe(take(1))
+              .pipe(
+                finalize(() => {
+                  loading.dismiss();
+                })
+              )
+              .subscribe(async (user) => {
+                console.log('test1', user);
+                if (user.message == 'success') {
+                  var title = 'Berjaya!';
+                  var messview = `Kata laluan sementara telah dihantar ke e-mel <i>${this.emel}</i>. Sila semak e-mel anda dan bagi tujuan keselamatan, sila kemas kini kepada kata laluan yang baharu `;
+                  this.regAdminForm.reset();
+                  this.closeModal();
+                  console.log('Daftar User :', this.regAdminForm.value);
+                } else {
+                  var title = 'PENDAFTARAN AKAUN TIDAK BERJAYA';
+                  if (
+                    user.message == 'failemail' ||
+                    user.message == 'faildoc'
+                  ) {
+                    var messview = `Akaun pengguna menggunakan e-mel <i>${this.emel}</i> GAGAL dicipta. E-mel / No. Kad Pengenalan / No. Passport telah didaftarkan sebelum ini`;
+                  }
+                }
+                const alert = await this.alertCtrl.create({
+                  header: title,
+                  message: messview,
+                  buttons: ['Okay'],
+                });
+                alert.present();
+              });
+            this.url = '../../assets/img/default_icon.jpeg';
+          } else {
+            console.log('Gambar profil gagal dimuatnaik.');
+          }
+        });
+      }
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Makluman',
+        message: 'Sila lengkapkan medan yang diperlukan',
+        buttons: ['Okay'],
       });
+      alert.present();
+      this.validateAllFormFields(this.regAdminForm);
     }
+  }
+
+  validateAllFormFields(formGroup: FormGroup) {
+    //{1}
+    Object.keys(formGroup.controls).forEach((field) => {
+      //{2}
+      const control = formGroup.get(field); //{3}
+      if (control instanceof FormControl) {
+        //{4}
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        //{5}
+        this.validateAllFormFields(control); //{6}
+      }
+    });
   }
 
   async onDeleteUser() {
@@ -413,6 +460,9 @@ export class RegisterAdminPage implements OnInit {
   }
   get jawatan() {
     return this.regAdminForm.get('jawatan');
+  }
+  get role() {
+    return this.regAdminForm.get('role');
   }
   get telefon() {
     return this.regAdminForm.get('telefon');

@@ -164,9 +164,8 @@ export class ProfilePage implements OnInit {
         image: new FormControl(null),
         gambar_id: new FormControl(null),
         password: new FormControl(null, [
-          Validators.pattern('[a-zA-Z0-9_.+-]*'),
+          Validators.pattern('[a-zA-Z0-9_+-@$!%*?&:]*'),
           Validators.minLength(8),
-          Validators.required
         ]),
         confirmpassword: new FormControl(null),
       },
@@ -183,7 +182,7 @@ export class ProfilePage implements OnInit {
       telefon: this.user.telefon,
       doc_type: this.user.doc_type,
       doc_no: this.user.doc_no,
-      gambar_id: this.user.gambar_id
+      gambar_id: this.user.gambar_id,
     });
   }
 
@@ -237,38 +236,64 @@ export class ProfilePage implements OnInit {
     });
 
   async updateProfile() {
-    const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
-    loading.present();
+    console.log(this.profileForm.valid);
+    if (this.profileForm.valid) {
+      const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
+      loading.present();
 
-    let response: Observable<User>;
-    console.log('Profile :', this.profileForm.value);
-    response = this.userService.updateUser(
-      this.user.id,
-      this.profileForm.value
-    );
-    if (this.images[0] && this.images[0].data.length > 0) {
-      const body = {
-        id: this.user.gambar_id,
-        img: this.images[0].data,
-        filename: this.images[0].name,
-      };
-      this.userService
-        .updateGambarUser(this.user.gambar_id, body)
-        .subscribe((res) => {
-          console.log(res);
-          if (res['success']) {
-            this.presentToast('Gambar profil berjaya dikemaskini.');
-          }
-        });
+      let response: Observable<User>;
+      console.log('Profile :', this.profileForm.value);
+      response = this.userService.updateUser(
+        this.user.id,
+        this.profileForm.value
+      );
+      if (this.images[0] && this.images[0].data.length > 0) {
+        const body = {
+          id: this.user.gambar_id,
+          img: this.images[0].data,
+          filename: this.images[0].name,
+        };
+        this.userService
+          .updateGambarUser(this.user.gambar_id, body)
+          .subscribe((res) => {
+            console.log(res);
+            if (res['success']) {
+              this.presentToast('Gambar profil berjaya dikemaskini.');
+            }
+          });
+      }
+      response.pipe(take(1)).subscribe((user) => {
+        console.log(user);
+        this.profileForm.reset();
+        loading.dismiss();
+        this.loadToken();
+        this.presentAlert();
+        // this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
+      });
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Makluman',
+        message: 'Sila lengkapkan medan yang diperlukan',
+        buttons: ['Okay'],
+      });
+      alert.present();
+      this.validateAllFormFields(this.profileForm);
+      this.setFormValues();
     }
-    response.pipe(take(1)).subscribe((user) => {
-      console.log(user);
-      this.profileForm.reset();
-      loading.dismiss();
-      this.loadToken();
-      this.presentAlert();
-      // this.profileForm.invalid = INVALID;
-      // this.router.navigateByUrl('/user/dashboard', { replaceUrl: true });
+  }
+
+  validateAllFormFields(formGroup: FormGroup) {
+    //{1}
+    Object.keys(formGroup.controls).forEach((field) => {
+      //{2}
+      const control = formGroup.get(field); //{3}
+      if (control instanceof FormControl) {
+        //{4}
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        //{5}
+        this.validateAllFormFields(control); //{6}
+      }
     });
   }
 
@@ -341,17 +366,21 @@ export class ProfilePage implements OnInit {
     let result = pattern.test(event.key);
     return result;
   }
-  checkpss() {
-    var matches = this.passwordModel.match('.*[A-Za-z].*');
-    var matches2 = this.passwordModel.match('.*\\d.*');
 
-    if (matches == null) {
-      this.passwordModel = '';
-      alert('Kata Laluan Tidak Mengandungi Huruf');
-    } else {
-      if (matches2 == null) {
+  checkpss() {
+    this.passwordModel = this.profileForm.get('password').value;
+    if (this.passwordModel) {
+      var matches = this.passwordModel.match('.*[A-Za-z].*');
+      var matches2 = this.passwordModel.match('.*\\d.*');
+
+      if (matches == null) {
         this.passwordModel = '';
-        alert('Kata Laluan Tidak Mengandungi Nombor');
+        alert('Kata Laluan Tidak Mengandungi Huruf');
+      } else {
+        if (matches2 == null) {
+          this.passwordModel = '';
+          alert('Kata Laluan Tidak Mengandungi Nombor');
+        }
       }
     }
   }

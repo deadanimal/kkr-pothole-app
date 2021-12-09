@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { ToastController } from '@ionic/angular';
@@ -160,86 +161,108 @@ export class RegisterUserPage implements OnInit {
     });
 
   async submitUser() {
-    const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
-    this.emel = this.regUserForm.get('email').value;
-    this.closeModal();
-    loading.present();
-    const modal = await this.modalCtrl.create({
-      component: SuccessPage,
-      componentProps: {
-        title: 'Pengesahan Email',
-        message: `Sila semak emel anda di ${this.emel} untuk pengesahan dan meneruskan proses.`,
-      },
-    });
+    if (this.regUserForm.valid) {
+      const loading = await this.loadingCtrl.create({ message: 'Loading ...' });
+      this.emel = this.regUserForm.get('email').value;
+      loading.present();
 
-    let response: Observable<User>;
-    console.log('Daftar User :', this.regUserForm.value);
-    const formData = new FormData();
-    if (this.images[0] && this.images[0].data.length > 0) {
-      formData.append('img', this.images[0].data);
-      formData.append('filename', this.images[0].name);
-    } else {
-      formData.append('img', this.url);
-      formData.append('filename', 'default_pic.jpeg');
-    }
+      let response: Observable<User>;
+      const formData = new FormData();
+      if (this.images[0] && this.images[0].data.length > 0) {
+        formData.append('img', this.images[0].data);
+        formData.append('filename', this.images[0].name);
+      } else {
+        formData.append('img', this.url);
+        formData.append('filename', 'default_pic.jpeg');
+      }
 
-    const url = `${this.apiUrl}/upload_image`;
-    const header = new HttpHeaders({
-      'Content-Type': 'application/form-data; charset=UTF-8, application/json',
-    });
+      const url = `${this.apiUrl}/upload_image`;
+      const header = new HttpHeaders({
+        'Content-Type':
+          'application/form-data; charset=UTF-8, application/json',
+      });
 
-    this.http
-      .post(url, formData)
-      .pipe(
-        finalize(() => {
-          loading.dismiss();
-        })
-      )
-      .subscribe(
+      this.http.post(url, formData).subscribe(
         (res) => {
           console.log('test2', res);
           if (res['success']) {
-            this.presentToast('File upload complete.');
+            // this.presentToast('File upload complete.');
             const img_id = res['gambar_id'];
             this.regUserForm.patchValue({ gambar_id: img_id });
             response = this.userService.registerUser(this.regUserForm.value);
-            this.url = '../../assets/img/default_icon.jpeg';
           } else {
-            this.presentToast('File upload failed.');
+            this.presentToast('Muat naik gambar gagal');
           }
-          response.pipe(take(1)).subscribe(
-            async (user) => {
-              console.error('test1', user);
-              if (user.message == 'success') {
-                this.regUserForm.reset();
-                this.modalCtrl.dismiss();
-                modal.present();
+          response
+            .pipe(
+              finalize(() => {
                 loading.dismiss();
-              } else {
-                if (user.message == 'failemail') {
-                  var messview = 'Emel tersebut telah wujud dan didaftarkan';
+              })
+            )
+            .subscribe(
+              async (user) => {
+                console.log('test1', user);
+                if (user.message == 'success') {
+                  this.url = '../../assets/img/default_icon.jpeg';
+                  this.closeModal();
+                  const modal = await this.modalCtrl.create({
+                    component: SuccessPage,
+                    componentProps: {
+                      title: 'Pengesahan Email',
+                      message: `Kata laluan sementara telah dihantar ke e-mel <i>${this.emel}</i>. Sila semak e-mel anda dan bagi tujuan keselamatan, sila kemas kini kepada kata laluan yang baharu `,
+                    },
+                  });
+                  console.log('Daftar User :', this.regUserForm.value);
+                  this.regUserForm.reset();
+                  modal.present();
+                } else {
+                  if (
+                    user.message == 'failemail' ||
+                    user.message == 'faildoc'
+                  ) {
+                    var messview = `Akaun pengguna menggunakan e-mel <i>${this.emel}</i> GAGAL dicipta. E-mel / No. Kad Pengenalan / No. Passport telah didaftarkan sebelum ini`;
+                  }
+                  const alert = await this.alertCtrl.create({
+                    header: 'PENDAFTARAN AKAUN TIDAK BERJAYA',
+                    message: messview,
+                    buttons: ['Okay'],
+                  });
+                  await alert.present();
                 }
-                if (user.message == 'faildoc') {
-                  var messview =
-                    'No Pengenalan tersebut telah wujud dan didaftarkan';
-                }
-                const alert = await this.alertCtrl.create({
-                  header: 'Log Masuk Gagal',
-                  message: messview,
-                  buttons: ['Okay'],
-                });
-                await alert.present();
+              },
+              (err) => {
+                console.error('test1', err);
               }
-            },
-            (err) => {
-              console.error('test1', err);
-            }
-          );
+            );
         },
         (err) => {
           console.error('test2', err);
         }
       );
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Makluman',
+        message: 'Sila lengkapkan medan yang diperlukan',
+        buttons: ['Okay'],
+      });
+      alert.present();
+      this.validateAllFormFields(this.regUserForm);
+    }
+  }
+
+  validateAllFormFields(formGroup: FormGroup) {
+    //{1}
+    Object.keys(formGroup.controls).forEach((field) => {
+      //{2}
+      const control = formGroup.get(field); //{3}
+      if (control instanceof FormControl) {
+        //{4}
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        //{5}
+        this.validateAllFormFields(control); //{6}
+      }
+    });
   }
 
   get name() {
@@ -268,6 +291,7 @@ export class RegisterUserPage implements OnInit {
   }
 
   closeModal() {
+    console.log('tutup');
     this.modalCtrl.dismiss();
   }
 
@@ -338,17 +362,21 @@ export class RegisterUserPage implements OnInit {
       alert('IC Number not enought character');
     }
   }
-
   checkpss() {
-    var matches = this.passwordModel.match('.*[A-Za-z].*');
-    var matches2 = this.passwordModel.match('.*\\d.*');
-    //console.log(matches2 == null);
-    if (matches == null) {
-      this.passwordModel = '';
-      alert('Kata Laluan Tidak Mengandungi Huruf');
-    } else if (matches2 == null) {
-      this.passwordModel = '';
-      alert('Kata Laluan Tidak Mengandungi Nombor');
+    this.passwordModel = this.regUserForm.get('password').value;
+    if (this.passwordModel) {
+      var matches = this.passwordModel.match('.*[A-Za-z].*');
+      var matches2 = this.passwordModel.match('.*\\d.*');
+
+      if (matches == null) {
+        this.passwordModel = '';
+        alert('Kata Laluan Tidak Mengandungi Huruf');
+      } else {
+        if (matches2 == null) {
+          this.passwordModel = '';
+          alert('Kata Laluan Tidak Mengandungi Nombor');
+        }
+      }
     }
   }
 
