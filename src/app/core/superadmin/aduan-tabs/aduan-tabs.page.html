@@ -1,0 +1,28 @@
+<ion-tabs>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="backRoute()">
+          <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-tab-bar color="primary" slot="bottom">
+    <ion-tab-button  tab="selesai">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <ion-label>Selesai</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="perhatian">
+      <ion-icon name="glasses"></ion-icon>
+      <ion-label>Dalam Perhatian</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="ditolak">
+      <ion-icon name="close-circle"></ion-icon>
+      <ion-label>Ditolak</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+</ion-tabs>

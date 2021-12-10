@@ -333,6 +333,12 @@ export class ProfilePage implements OnInit {
     this.showPass = !this.showPass;
   }
 
+  numericOnly(event): boolean {
+    let pattern = /^([0-9])$/;
+    let result = pattern.test(event.key);
+    return result;
+  }
+
   checkpss() {
     this.passwordModel = this.profileForm.get('password').value;
     if (this.passwordModel) {
@@ -340,11 +346,11 @@ export class ProfilePage implements OnInit {
       var matches2 = this.passwordModel.match('.*\\d.*');
 
       if (matches == null) {
-        this.passwordModel = '';
+        this.profileForm.patchValue({ password: '' });
         alert('Kata Laluan Tidak Mengandungi Huruf');
       } else {
         if (matches2 == null) {
-          this.passwordModel = '';
+          this.profileForm.patchValue({ password: '' });
           alert('Kata Laluan Tidak Mengandungi Nombor');
         }
       }

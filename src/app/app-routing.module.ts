@@ -120,6 +120,13 @@ const routes: Routes = [
             (m) => m.StatisticPageModule
           ),
       },
+      {
+        path: 'aduan-tabs',
+        loadChildren: () =>
+          import('./core/superadmin/aduan-tabs/aduan-tabs.module').then(
+            (m) => m.AduanTabsPageModule
+          ),
+      },
     ],
   },
   {
@@ -197,6 +204,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./core/admin/statistic/statistic.module').then(
             (m) => m.StatisticPageModule
+          ),
+      },
+      {
+        path: 'aduan-tabs',
+        loadChildren: () =>
+          import('./core/superadmin/aduan-tabs/aduan-tabs.module').then(
+            (m) => m.AduanTabsPageModule
           ),
       },
     ],
@@ -278,6 +292,27 @@ const routes: Routes = [
       import('./modal/user-detail/user-detail.module').then(
         (m) => m.UserDetailPageModule
       ),
+  },
+  {
+    path: 'aduan-selesai-list',
+    loadChildren: () =>
+      import(
+        './core/superadmin/list/aduan-selesai-list/aduan-selesai-list.module'
+      ).then((m) => m.AduanSelesaiListPageModule),
+  },
+  {
+    path: 'aduan-ditolak-list',
+    loadChildren: () =>
+      import(
+        './core/superadmin/list/aduan-ditolak-list/aduan-ditolak-list.module'
+      ).then((m) => m.AduanDitolakListPageModule),
+  },
+  {
+    path: 'aduan-perhatian-list',
+    loadChildren: () =>
+      import(
+        './core/superadmin/list/aduan-perhatian-list/aduan-perhatian-list.module'
+      ).then((m) => m.AduanPerhatianListPageModule),
   },
 ];
 

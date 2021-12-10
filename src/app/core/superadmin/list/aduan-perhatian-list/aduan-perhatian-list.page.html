@@ -1,0 +1,45 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <!-- <ion-buttons slot="start" *ngIf="!isModal">
+      <ion-button href="/superadmin/dashboard">
+        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+    <ion-title mode="ios">Aduan Dalam Perhatian</ion-title>
+
+    <ion-buttons slot="end" *ngIf="isModal">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" fixed>
+  <div id="container" class="background">
+    <ion-content class="transparent">
+
+      <ion-list>
+        <p *ngIf="!haveInfo" class="ion-text-center" style="color:rgb(206, 206, 206)">Tiada maklumat status aduan</p>
+        <div *ngFor="let aduan of aduans$|async" (click)="openDetailModal(aduan)">
+          <ion-badge *ngIf="aduan.status_code === null || aduan.status_code === 'P'" color="secondary" mode="ios">
+            {{aduan.status_desc === null ? 'Dalam Perhatian': aduan.status_desc}}
+          </ion-badge>
+          <ion-badge *ngIf=" aduan.status_code === 'S'" color="success" mode="ios">{{aduan.status_desc}}
+          </ion-badge>
+          <ion-badge *ngIf=" aduan.status_code === 'R'" color="danger" mode="ios">{{aduan.status_desc}}
+          </ion-badge>
+          <ion-card>
+            <ion-card-content>
+              <ion-card-title>{{aduan.title}}</ion-card-title>
+              <span class="text-limit">{{aduan.detail}}</span>
+            </ion-card-content>
+            <span style="font-size: 10px; float: right; color: black;">Lihat Butiran ></span>
+          </ion-card>
+        </div>
+      </ion-list>
+
+    </ion-content>
+  </div>
+</ion-content>

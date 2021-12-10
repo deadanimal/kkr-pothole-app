@@ -208,8 +208,8 @@ export class RegisterUserPage implements OnInit {
                   const modal = await this.modalCtrl.create({
                     component: SuccessPage,
                     componentProps: {
-                      title: 'Pengesahan Email',
-                      message: `Kata laluan sementara telah dihantar ke e-mel <i>${this.emel}</i>. Sila semak e-mel anda dan bagi tujuan keselamatan, sila kemas kini kepada kata laluan yang baharu `,
+                      title: 'Pengesahan Emel',
+                      message: `Akaun pengguna menggunakan e-mel <i>${this.emel}</i> telah berjaya dicipta. Mohon semak e-mel untuk pengaktifan. `,
                     },
                   });
                   console.log('Daftar User :', this.regUserForm.value);
@@ -369,11 +369,11 @@ export class RegisterUserPage implements OnInit {
       var matches2 = this.passwordModel.match('.*\\d.*');
 
       if (matches == null) {
-        this.passwordModel = '';
+        this.regUserForm.patchValue({ password: '' });
         alert('Kata Laluan Tidak Mengandungi Huruf');
       } else {
         if (matches2 == null) {
-          this.passwordModel = '';
+          this.regUserForm.patchValue({ password: '' });
           alert('Kata Laluan Tidak Mengandungi Nombor');
         }
       }

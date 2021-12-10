@@ -22,6 +22,7 @@ import am4themes_material from '@amcharts/amcharts4/themes/material';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { AduanListPage } from '../../superadmin/list/aduan-list/aduan-list.page';
+import { AduanTabsPage } from '../../superadmin/aduan-tabs/aduan-tabs.page';
 
 @Component({
   selector: 'app-statistic',
@@ -203,12 +204,11 @@ export class StatisticPage implements OnInit, OnDestroy {
   }
 
   async openAduanList() {
-    const modal = await this.modalCtrl.create({
-      component: AduanListPage,
-      componentProps: { isModal: true },
-    });
-
-    modal.present();
+    if (this.isAdmin) {
+      this.router.navigate(['/admin/aduan-tabs/selesai']);
+    } else if (this.isSuperAdmin) {
+      this.router.navigate(['/superadmin/aduan-tabs/selesai']);
+    }
   }
 
   selectAduan($event) {

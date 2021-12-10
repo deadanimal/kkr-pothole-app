@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable no-var */
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { JalanService } from './../../../shared/services/jalan.service';
@@ -35,13 +37,12 @@ export class JalanListPage implements OnInit {
       this.isAdmin = true;
     }
     this.platform.backButton.subscribeWithPriority(10, () => {
-      if(role === 'super_admin'){
-        this.router.navigate(['/superadmin/dashboard'])
-      }else if (role === 'admin') {
-        this.router.navigate(['/admin/dashboard'])
+      if (role === 'super_admin') {
+        this.router.navigate(['/superadmin/dashboard']);
+      } else if (role === 'admin') {
+        this.router.navigate(['/admin/dashboard']);
       }
     });
-    
   }
 
   async ngOnInit() {
@@ -58,7 +59,7 @@ export class JalanListPage implements OnInit {
             var today = new Date();
             var enddate = new Date(item.end_date);
             var index = jalans.indexOf(item);
-            if(today.getTime() > enddate.getTime()){
+            if (today.getTime() > enddate.getTime()) {
               jalans.splice(index, 1);
             }
           }

@@ -164,7 +164,7 @@ export class ProfilePage implements OnInit {
         image: new FormControl(null),
         gambar_id: new FormControl(null),
         password: new FormControl(null, [
-          // Validators.pattern('[a-zA-Z0-9_.+-]*'),
+          Validators.pattern('[a-zA-Z0-9_+-@$!%*?&:]*'),
           Validators.minLength(8),
           // Validators.required
         ]),
@@ -375,11 +375,11 @@ export class ProfilePage implements OnInit {
       var matches2 = this.passwordModel.match('.*\\d.*');
 
       if (matches == null) {
-        this.passwordModel = '';
+        this.profileForm.patchValue({ password: '' });
         alert('Kata Laluan Tidak Mengandungi Huruf');
       } else {
         if (matches2 == null) {
-          this.passwordModel = '';
+          this.profileForm.patchValue({ password: '' });
           alert('Kata Laluan Tidak Mengandungi Nombor');
         }
       }

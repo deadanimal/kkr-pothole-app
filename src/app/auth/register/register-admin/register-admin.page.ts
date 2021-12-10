@@ -314,7 +314,7 @@ export class RegisterAdminPage implements OnInit {
                 console.log('test1', user);
                 if (user.message == 'success') {
                   var title = 'Berjaya!';
-                  var messview = `Kata laluan sementara telah dihantar ke e-mel <i>${this.emel}</i>. Sila semak e-mel anda dan bagi tujuan keselamatan, sila kemas kini kepada kata laluan yang baharu `;
+                  var messview = `Akaun pengguna menggunakan e-mel <i>${this.emel}</i> telah berjaya dicipta. Mohon semak e-mel untuk pengaktifan. `;
                   this.regAdminForm.reset();
                   this.closeModal();
                   console.log('Daftar User :', this.regAdminForm.value);
