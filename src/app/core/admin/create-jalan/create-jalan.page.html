@@ -59,7 +59,7 @@
               <ion-item color="light">
                 <ion-select formControlName="negeri" placeholder="Pilih Negeri" interface="action-sheet"
                   (ionChange)="selectDaerah($event)">
-                  <ion-select-option *ngFor="let negeri of negeris|async; let i = index" [value]="negeri.id" selected="negeri.id === isEditMode ? 'this.jalan.negeri':''">
+                  <ion-select-option *ngFor="let negeri of negeris|async; let i = index" [value]="negeri.kod_negeri">
                     {{negeri.nama_negeri}}
                   </ion-select-option>
                 </ion-select>

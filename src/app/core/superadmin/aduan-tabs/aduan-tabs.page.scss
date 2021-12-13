@@ -4,3 +4,15 @@ ion-toolbar {
   position: absolute;
   top: 5px;
 }
+
+ion-tab-bar {
+  ion-tab-button.selesai:focus {
+    color: var(--ion-color-success);
+  }
+  ion-tab-button.perhatian:focus {
+    color: var(--ion-color-secondary);
+  }
+  ion-tab-button.ditolak:focus {
+    color: var(--ion-color-danger);
+  }
+}

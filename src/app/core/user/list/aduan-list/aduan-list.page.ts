@@ -45,12 +45,16 @@ export class AduanListPage implements OnInit {
   ) {
     this.user_id = this.authService.userId;
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/user/dashboard']);
+      this.backRoute();
     });
   }
 
   async ngOnInit() {
     await this.loadUser();
+  }
+
+  backRoute() {
+    this.router.navigate(['/user/dashboard']);
   }
 
   async loadUser() {

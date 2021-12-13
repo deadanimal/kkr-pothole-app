@@ -22,7 +22,7 @@ ion-card {
 ion-list {
   background-color: transparent;
   margin: 10px 40px 10px;
-  margin-bottom: 130px;
+  padding-bottom: 130px;
 }
 
 .text-limit {
@@ -43,7 +43,7 @@ ion-toolbar {
 
 ion-content.transparent {
   --background: transparent;
-  top: 60px;
+  margin-top: 20%;
 }
 
 ion-badge {
@@ -53,4 +53,15 @@ ion-badge {
   margin-left: 170px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+ion-item{
+  margin-top: 13%;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 13px;
+  background-color: azure;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+  padding-bottom: 0;
 }

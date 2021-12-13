@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AduanService } from '../../../../shared/services/aduan.service';
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnInit, Input } from '@angular/core';
@@ -116,5 +116,30 @@ export class AduanDitolakListPage implements OnInit {
 
   closeModal() {
     this.modalCtrl.dismiss();
+  }
+
+  selectBulanTahun(e) {
+    this.haveInfo = false;
+    const date = e.target.value;
+    const month = new Date(date).getMonth() + 1;
+    const year = new Date(date).getFullYear();
+    console.log(month, year);
+
+    const body = {
+      bulan: month,
+      tahun: year,
+    };
+
+    this.aduans$ = this.aduanService.getAduansByMonthYear(body).pipe(
+      map((aduans) => {
+        const adu = aduans.filter((res) => res.status_code === 'R');
+          if (adu.length > 0) {
+            this.haveInfo = true;
+          }
+          console.log(aduans);
+          return adu;
+
+      })
+    );
   }
 }

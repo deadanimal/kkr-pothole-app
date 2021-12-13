@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/shared/services/user.service';
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-var */
@@ -42,9 +43,12 @@ export class StatisticPage implements OnInit, OnDestroy {
   aduanKKR: Aduan[] = [];
   aduanPBT: Aduan[] = [];
   aduanLLM: Aduan[] = [];
-  aduanTotal: any;
+  theTotal: any;
   isJumlahAduan = true;
   isAduanAgensi = false;
+  isJumlahPengguna = false;
+  ios: any;
+  android: any;
   private chart: am4charts.XYChart;
 
   constructor(
@@ -54,27 +58,31 @@ export class StatisticPage implements OnInit, OnDestroy {
     private router: Router,
     private platform: Platform,
     private aduanService: AduanService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private userService: UserService
   ) {
     const role = this.authService.userRole;
-
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      if (role === 'admin') {
-        this.router.navigate(['/admin/dashboard']);
-      } else if (role === 'super_admin') {
-        this.router.navigate(['/superadmin/dashboard']);
-      }
-    });
-
     if (role === 'admin') {
       this.isAdmin = true;
     } else if (role === 'super_admin') {
       this.isSuperAdmin = true;
     }
+
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.backRoute();
+    });
   }
 
   ngOnInit() {
     this.getAduanStats();
+  }
+
+  backRoute() {
+    if (this.isAdmin) {
+      this.router.navigate(['/admin/dashboard']);
+    } else if (this.isSuperAdmin) {
+      this.router.navigate(['/superadmin/dashboard']);
+    }
   }
 
   // Run the function only in the browser
@@ -104,12 +112,13 @@ export class StatisticPage implements OnInit, OnDestroy {
       // Add and configure Series
 
       const pieSeries = chart.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = 'jumlah';
       if (this.isJumlahAduan) {
-        pieSeries.dataFields.value = 'jumlah';
         pieSeries.dataFields.category = 'status';
       } else if (this.isAduanAgensi) {
-        pieSeries.dataFields.value = 'jumlah';
         pieSeries.dataFields.category = 'agensi';
+      } else if (this.isJumlahPengguna) {
+        pieSeries.dataFields.category = 'platform';
       }
 
       // Let's cut a hole in our Pie chart the size of 30% the radius
@@ -193,6 +202,19 @@ export class StatisticPage implements OnInit, OnDestroy {
             color: am4core.color('#eb8634'),
           },
         ];
+      } else if (this.isJumlahPengguna) {
+        chart.data = [
+          {
+            platform: 'iOS',
+            jumlah: this.ios,
+            color: am4core.color('#34c0eb'),
+          },
+          {
+            platform: 'Android',
+            jumlah: this.android,
+            color: am4core.color('#28EE00'),
+          },
+        ];
       }
     });
   }
@@ -219,15 +241,20 @@ export class StatisticPage implements OnInit, OnDestroy {
     const sel = $event.target.value;
 
     if (sel === 'jumlah_aduan') {
+      this.isJumlahPengguna = false;
       this.isJumlahAduan = true;
       this.isAduanAgensi = false;
       this.getAduanStats();
-    } else if (sel === 'jumlah_aduan_bulan') {
     } else if (sel === 'jumlah_aduan_agensi') {
+      this.isJumlahPengguna = false;
       this.isJumlahAduan = false;
       this.isAduanAgensi = true;
       this.getAduanByAgency();
     } else if (sel === 'jumlah_aduan_pengguna') {
+      this.isJumlahPengguna = true;
+      this.isJumlahAduan = false;
+      this.isAduanAgensi = false;
+      this.getUserStats();
     }
   }
 
@@ -237,7 +264,7 @@ export class StatisticPage implements OnInit, OnDestroy {
     this.aduanPerhatian = [];
     this.aduanService.getAduans().subscribe((res) => {
       console.log(res.length);
-      this.aduanTotal = res.length;
+      this.theTotal = res.length;
       this.aduans = res;
       res.forEach((e) => {
         // console.log(e.status_code);
@@ -261,8 +288,8 @@ export class StatisticPage implements OnInit, OnDestroy {
     this.aduanLLM = [];
     this.aduanService.getAduans().subscribe((res) => {
       console.log(res.length);
-      // this.aduanTotal = res.length;
-      this.aduanTotal = this.nFormatter(res.length, 1);
+      // this.theTotal = res.length;
+      this.theTotal = this.nFormatter(res.length, 1);
       this.aduans = res;
       res.forEach((e) => {
         // console.log(e.complaint_category);
@@ -281,6 +308,18 @@ export class StatisticPage implements OnInit, OnDestroy {
       this.getChart();
 
       console.log(this.aduanLLM.length, this.aduanPBT.length);
+    });
+  }
+
+  getUserStats() {
+    this.userService.getUsers().subscribe((res) => {
+      const leng = res.length;
+      this.theTotal = this.nFormatter(leng, 1);
+      console.log(leng);
+      this.ios = leng * 0.435;
+      this.android = leng * 0.654;
+
+      this.getChart();
     });
   }
 

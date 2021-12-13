@@ -50,6 +50,7 @@ export class CreateJalanPage implements OnInit {
   image: any;
   fileimg: any;
   url: any;
+  negeri: any = 1;
 
   map2: any;
   address: string;
@@ -98,21 +99,18 @@ export class CreateJalanPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
     loading.present();
 
-    this.negeris = await this.jalanService.getNegeris().pipe(
+    const state = (this.negeris = await this.jalanService.getNegeris().pipe(
       tap((negeri) => {
+        if (this.jalan) {
+          this.isEditMode = true;
+          this.setFormValues();
+          console.log('SET JALAN DAH');
+        }
         loading.dismiss();
         console.log('Negeri:', negeri);
         return negeri;
       })
-    );
-    if (this.jalan) {
-      this.isEditMode = true;
-      setTimeout(() => {
-        this.setFormValues();
-      }, 500);
-      console.log('SET JALAN DAH');
-    }
-    loading.dismiss();
+    ));
   }
 
   backRoute() {
@@ -185,7 +183,6 @@ export class CreateJalanPage implements OnInit {
       start_date: this.jalan.start_date,
       end_date: this.jalan.end_date,
       negeri: this.jalan.negeri,
-      daerah: this.jalan.daerah,
       response_party: this.jalan.response_party,
       admin_id: this.jalan.admin_id,
       gambar_id: this.jalan.gambar_id,
@@ -328,13 +325,15 @@ export class CreateJalanPage implements OnInit {
     });
     console.log('NEGERI ID: ', $event.target.value);
     const negeriId = $event.target.value;
-    this.selectNegeri = negeriId;
-    // this.jalanForm.patchValue({
-    //   negeri: negeriId,
-    // });
+
     this.daerahs = this.jalanService.getDaerahs(negeriId).pipe(
       tap((res) => {
         console.log('Daerah:', res);
+        if (this.isEditMode) {
+          this.jalanForm.patchValue({
+            daerah: this.jalan.daerah,
+          });
+        }
         return res;
       })
     );

@@ -14,6 +14,10 @@ export class AduanService {
     return this.http.get<Aduan[]>(`${this.apiUrl}/aduan`);
   }
 
+  getAduansByMonthYear(body): Observable<Aduan[]> {
+    return this.http.post<Aduan[]>(`${this.apiUrl}/get_aduan_by_month_year`, body);
+  }
+
   getAduansByUser(userId: number): Observable<Aduan[]> {
     return this.http.get<Aduan[]>(`${this.apiUrl}/get_aduan_by_user/${userId}`);
   }

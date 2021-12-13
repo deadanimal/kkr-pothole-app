@@ -7,7 +7,7 @@ export interface Jalan {
   end_date: string;
   alamat: string;
   daerah: string;
-  negeri: string;
+  negeri: number;
   poskod: string;
   status: string;
   response_party: string;

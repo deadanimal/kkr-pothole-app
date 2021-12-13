@@ -1,10 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button *ngIf="isSuperAdmin" href="/superadmin/dashboard">
-        <ion-icon color="light" slot="icon-only" name="chevron-back-circle"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="isAdmin" href="/admin/dashboard">
+    <ion-buttons slot="start" *ngIf="!isEditMode">
+      <ion-button (click)="backRoute()">
         <ion-icon color="light" slot="icon-only" name="chevron-back-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -17,13 +14,13 @@
 <ion-content [fullscreen]="true">
   <div class="bg-primary">
     <ion-text class="ion-text-center" (click)="openAduanList()">
-      <h1 class="aduantotal">{{aduanTotal}}</h1>
+      <h1 class="aduantotal">{{theTotal}}</h1>
     </ion-text>
   </div>
   <div class="center-box">
     <ion-item>
       <ion-select value="jumlah_aduan" interface="action-sheet" placeholder="Pilih" (ionChange)="selectAduan($event)">
-        <ion-select-option value="jumlah_aduan" >JUMLAH ADUAN</ion-select-option>
+        <ion-select-option value="jumlah_aduan">JUMLAH ADUAN</ion-select-option>
         <!-- <ion-select-option value="jumlah_aduan_bulan">JUMLAH ADUAN (BULANAN)</ion-select-option> -->
         <ion-select-option value="jumlah_aduan_agensi">JUMLAH ADUAN SETIAP AGENSI</ion-select-option>
         <ion-select-option value="jumlah_aduan_pengguna">JUMLAH BILANGAN PENGGUNA</ion-select-option>
