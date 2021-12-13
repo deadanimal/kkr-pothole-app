@@ -47,7 +47,7 @@ export class RegisterAdminPage implements OnInit {
   isEditMode = false;
   regAdminForm: FormGroup;
   url: any;
-  images: LocalFile[];
+  images: LocalFile[] = [];
   apiUrl = environment.baseUrl;
   emel: any;
 
@@ -105,7 +105,6 @@ export class RegisterAdminPage implements OnInit {
   }
 
   ngOnInit() {
-    this.images = [];
     this.initAddUserForm();
     this.checkLoadImage();
   }
@@ -199,6 +198,7 @@ export class RegisterAdminPage implements OnInit {
   // Convert the base64 to blob data
   // and create  formData with it
   async fileEvent(event) {
+    this.images = [];
     const files = event.target.files;
     const file = files[0];
     const filePath = files[0].size;
@@ -366,11 +366,14 @@ export class RegisterAdminPage implements OnInit {
     });
   }
 
-  async onDeleteUser() {
+  async onDeactiveAdmin() {
+    const body = {
+      id: this.user.id,
+    };
     const loading = await this.loadingCtrl.create({ message: 'Deleting...' });
     loading.present();
     this.userService
-      .deleteUser(this.user.id)
+      .deactivateUser(body)
       .pipe(take(1))
       .subscribe(() => {
         loading.dismiss();
@@ -386,7 +389,7 @@ export class RegisterAdminPage implements OnInit {
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Pengesahan',
-      message: 'Anda pasti untuk buang pengguna?',
+      message: 'Anda pasti untuk hapus admin ini?',
       buttons: [
         {
           text: 'Batal',
@@ -400,7 +403,7 @@ export class RegisterAdminPage implements OnInit {
           text: 'Pasti',
           handler: () => {
             console.log('Confirm Okay');
-            this.onDeleteUser();
+            this.onDeactiveAdmin();
           },
         },
       ],

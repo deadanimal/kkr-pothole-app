@@ -69,6 +69,14 @@ export class DashboardPage implements OnInit {
     modal.present();
   }
 
+  openHebahan() {
+    this.router.navigate(['/user/hebahan']);
+  }
+
+  openAduanList() {
+    this.router.navigate(['/user/aduan-tabs/selesai']);
+  }
+
   closeModal() {
     this.modalCtrl.dismiss();
   }

@@ -44,6 +44,10 @@ export class SuperadminListPage implements OnInit {
     );
   }
 
+  backRoute(){
+    this.router.navigate(['superadmin/admin-management']);
+  }
+
   async openDetailModal(user) {
     const modal = await this.modalCtrl.create({
       component: RegisterAdminPage,

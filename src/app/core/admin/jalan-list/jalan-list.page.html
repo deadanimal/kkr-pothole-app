@@ -1,15 +1,12 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button *ngIf="isSuperAdmin" href="/superadmin/dashboard">
-        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="isAdmin" href="/admin/dashboard">
+      <ion-button (click)="backRoute()">
         <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
 
-    <ion-title mode="ios">Hebahan Jalan</ion-title>
+    <ion-title mode="ios">Status Jalan</ion-title>
 
   </ion-toolbar>
 </ion-header>
@@ -22,16 +19,21 @@
         <p *ngIf="!haveInfo" class="ion-text-center" style="color:rgb(206, 206, 206)">Tiada maklumat hebahan</p>
         <ion-card *ngFor="let jalan of jalans$|async" (click)="openDetailModal(jalan)" color="light">
           <ion-grid fixed>
+            <ion-badge class="badge" color="danger" mode="ios">Ditutup</ion-badge>
             <ion-row>
-              <div class="badge"></div>
-              <ion-col size="12">
+              <ion-col>
                 <ion-label>
                   <ion-card-title>{{jalan.name}}</ion-card-title>
-                  <p>Status: {{jalan.status}}</p>
                 </ion-label>
+                <br>
+                <p style="font-size: 10px;">Mula : {{jalan.start_date | date : 'dd MMM yyyy'}}</p>
+                <p style="font-size: 10px;">Tamat : {{jalan.end_date | date : 'dd MMM
+                  yyyy'}}</p>
               </ion-col>
             </ion-row>
-
+            <ion-row>
+              <ion-col size="4"><p>Status: {{jalan.status}}</p></ion-col>
+            </ion-row>
             <span style="font-size: 10px; float: right;">Lihat Butiran ></span>
           </ion-grid>
         </ion-card>

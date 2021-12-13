@@ -54,12 +54,13 @@ export class CreateAduanPage implements OnInit {
   @Input() aduan: Aduan;
   isEditMode = false;
   aduanForm: FormGroup;
+  url: any = 'assets/img/no_image.png';
 
   nama_jalan: string;
   map2: any;
   address: string;
   /* Variabe to store file data */
-  images: LocalFile[];
+  images: LocalFile[] = [];
   imgfile: any;
   load: any;
   resp: any;
@@ -105,7 +106,6 @@ export class CreateAduanPage implements OnInit {
       this.isEditMode = true;
       this.setFormValues();
     }
-    this.images = [];
   }
 
   async loadUserId() {
@@ -171,8 +171,8 @@ export class CreateAduanPage implements OnInit {
 
   // Convert the base64 to blob data
   // and create  formData with it
-  url: any = 'assets/img/no_image.png';
   async fileEvent(event) {
+    this.images = [];
     const files = event.target.files;
     const file = files[0];
     this.imgfile = file;

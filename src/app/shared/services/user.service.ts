@@ -42,6 +42,10 @@ export class UserService {
     return this.http.put<User>(`${this.apiUrl}/user/${userId}`, user);
   }
 
+  deactivateUser(userId) {
+    return this.http.post(`${this.apiUrl}/deactive_admin`, userId);
+  }
+
   deleteUser(userId: number): Observable<User> {
     return this.http.delete<User>(`${this.apiUrl}/user/${userId}`);
   }
@@ -50,10 +54,10 @@ export class UserService {
     return this.http.get(`${this.apiUrl}/gambar/${gambarId}`);
   }
 
-  ForgotUsers(user:User): Observable<User> {
+  forgotUsers(user: User): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/user/forgot`, user);
   }
-  
+
   updateGambarUser(gambarId: number, body) {
     return this.http.put(`${this.apiUrl}/gambar/${gambarId}`, body);
   }

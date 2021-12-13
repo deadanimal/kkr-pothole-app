@@ -74,6 +74,13 @@ const routes: Routes = [
             (m) => m.JalanListPageModule
           ),
       },
+      {
+        path: 'aduan-tabs',
+        loadChildren: () =>
+          import('./core/superadmin/aduan-tabs/aduan-tabs.module').then(
+            (m) => m.AduanTabsPageModule
+          ),
+      },
     ],
   },
   {

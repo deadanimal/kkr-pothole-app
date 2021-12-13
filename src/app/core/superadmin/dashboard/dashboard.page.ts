@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 /* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { LoadingController, AlertController } from '@ionic/angular';
@@ -40,7 +41,8 @@ export class DashboardPage implements OnInit {
     private loadingCtrl: LoadingController,
     public zone: NgZone,
     private alertCtrl: AlertController,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
@@ -48,6 +50,21 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {}
+
+  openProfile() {
+    this.router.navigate(['/superadmin/profile']);
+  }
+
+  openUtama() {
+    this.router.navigate(['/superadmin/admin-management']);
+  }
+
+  openStatistik() {
+    this.router.navigate(['/superadmin/statistic']);
+  }
+  openHebahan() {
+    this.router.navigate(['/superadmin/jalan-list']);
+  }
 
   async ionViewWillEnter() {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });

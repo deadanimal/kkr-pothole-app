@@ -16,13 +16,26 @@ export class AdminManagementPage implements OnInit {
     private router: Router,
     private platform: Platform
   ) {
-
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/superadmin/dashboard'])
+      this.backRoute();
     });
   }
 
   ngOnInit() {}
+
+  backRoute() {
+    this.router.navigate(['/superadmin/dashboard']);
+  }
+
+  openAdminList() {
+    this.router.navigate(['/superadmin/admin-list']);
+  }
+  openSuperAdminList() {
+    this.router.navigate(['/superadmin/superadmin-list']);
+  }
+  createJalan() {
+    this.router.navigate(['/superadmin/create-jalan']);
+  }
 
   async registerAdmin() {
     const modal = await this.modalCtrl.create({

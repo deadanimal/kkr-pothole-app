@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 export class AduanTabsPage implements OnInit {
   isSuperAdmin = false;
   isAdmin = false;
+  isUser= false;
 
   constructor(
     private authService: AuthService,
@@ -22,6 +23,8 @@ export class AduanTabsPage implements OnInit {
       this.isSuperAdmin = true;
     } else if (role === 'admin') {
       this.isAdmin = true;
+    } else if (role === 'pengadu') {
+      this.isUser = true;
     }
 
     this.platform.backButton.subscribeWithPriority(10, () => {
@@ -34,6 +37,8 @@ export class AduanTabsPage implements OnInit {
       this.router.navigate(['/admin/statistic']);
     } else if (this.isSuperAdmin) {
       this.router.navigate(['/superadmin/statistic']);
+    } else if (this.isUser) {
+      this.router.navigate(['/user/dashboard']);
     }
   }
 

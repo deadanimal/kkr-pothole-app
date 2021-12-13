@@ -67,7 +67,8 @@ ion-item {
   --highlight-height: 0px;
   --inner-border-width: 8px;
   --inner-box-shadow: 4px 4px;
-  margin: 50px 80px;
+  margin: 50px auto;
+  width: fit-content;
   --ripple-color: #1e1e1e;
   --transition: background-color 15ms linear;
 
@@ -81,6 +82,6 @@ h1.aduantotal {
   margin-top: 140px;
   font-weight: bold;
   font-size: 60px;
-  text-shadow:2px 3px 3px black;
-  // text-shadow: 2px 3px #FF0000;
+  text-shadow: 2px 3px 3px black;
+  text-overflow: ellipsis;
 }

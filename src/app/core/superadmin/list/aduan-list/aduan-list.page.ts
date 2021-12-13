@@ -45,6 +45,10 @@ export class AduanListPage implements OnInit {
     );
   }
 
+  backRoute() {
+    this.router.navigate(['/superadmin/dashboard']);
+  }
+
   async openDetailModal(aduan: Aduan) {
     const modal = await this.modalCtrl.create({
       component: AduanDetailPage,

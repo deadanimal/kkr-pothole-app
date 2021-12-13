@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable no-var */
 import { Observable } from 'rxjs';
 import { JalanService } from './../../../../shared/services/jalan.service';
 /* eslint-disable @typescript-eslint/no-shadow */
@@ -26,9 +28,8 @@ export class JalanListPage implements OnInit {
     private router: Router,
     private platform: Platform
   ) {
-
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/user/dashboard'])
+      this.backRoute();
     });
   }
 
@@ -46,7 +47,7 @@ export class JalanListPage implements OnInit {
             var today = new Date();
             var enddate = new Date(item.end_date);
             var index = jalans.indexOf(item);
-            if(today.getTime() > enddate.getTime()){
+            if (today.getTime() > enddate.getTime()) {
               jalans.splice(index, 1);
             }
           }
@@ -54,6 +55,10 @@ export class JalanListPage implements OnInit {
         return jalans;
       })
     );
+  }
+
+  backRoute() {
+    this.router.navigate(['/user/dashboard']);
   }
 
   async openDetailModal(jalan: Jalan) {

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-var */
 import { AduanService } from './../../../shared/services/aduan.service';
 import { Aduan } from './../../../shared/model/aduan.model';
 /* eslint-disable @typescript-eslint/quotes */
@@ -258,7 +261,8 @@ export class StatisticPage implements OnInit, OnDestroy {
     this.aduanLLM = [];
     this.aduanService.getAduans().subscribe((res) => {
       console.log(res.length);
-      this.aduanTotal = res.length;
+      // this.aduanTotal = res.length;
+      this.aduanTotal = this.nFormatter(res.length, 1);
       this.aduans = res;
       res.forEach((e) => {
         // console.log(e.complaint_category);
@@ -278,5 +282,27 @@ export class StatisticPage implements OnInit, OnDestroy {
 
       console.log(this.aduanLLM.length, this.aduanPBT.length);
     });
+  }
+
+  nFormatter(num, digits) {
+    const lookup = [
+      { value: 1, symbol: '' },
+      { value: 1e3, symbol: 'k' },
+      { value: 1e6, symbol: 'M' },
+      { value: 1e9, symbol: 'G' },
+      { value: 1e12, symbol: 'T' },
+      { value: 1e15, symbol: 'P' },
+      { value: 1e18, symbol: 'E' },
+    ];
+    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    var item = lookup
+      .slice()
+      .reverse()
+      .find((item) => {
+        return num >= item.value;
+      });
+    return item
+      ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol
+      : '0';
   }
 }

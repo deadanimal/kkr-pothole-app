@@ -44,7 +44,7 @@ export class ForgotPage implements OnInit {
     loading.present();
     // console.log(this.forgot.value);
 
-    this.userService.ForgotUsers(this.forgot.value).subscribe(
+    this.userService.forgotUsers(this.forgot.value).subscribe(
       async (res) => {
         await loading.dismiss();
         const alert = await this.alertCtrl.create({

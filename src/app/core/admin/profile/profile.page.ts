@@ -49,7 +49,7 @@ export class ProfilePage implements OnInit {
   user: User;
   passwordModel: string;
   url: any = '../../assets/img/default_icon.jpeg';
-  images: LocalFile[];
+  images: LocalFile[] = [];
   apiUrl = environment.baseUrl;
 
   token = '';
@@ -79,14 +79,17 @@ export class ProfilePage implements OnInit {
     private toastCtrl: ToastController
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/superadmin/dashboard']);
+      this.backRoute();
     });
   }
 
   async ngOnInit() {
-    this.images = [];
     this.initAddUserForm();
     this.loadToken();
+  }
+
+  backRoute() {
+    this.router.navigate(['/superadmin/dashboard']);
   }
 
   async loadToken() {
@@ -197,6 +200,7 @@ export class ProfilePage implements OnInit {
   // Convert the base64 to blob data
   // and create  formData with it
   async fileEvent(event) {
+    this.images = [];
     const files = event.target.files;
     const file = files[0];
     const filePath = files[0].size;

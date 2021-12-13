@@ -44,8 +44,6 @@ export class UploadPicturePage implements OnInit {
   }
 
   async loadFiles() {
-    this.images = [];
-
     const loading = await this.loadingCtrl.create({
       message: 'Loading data...',
     });

@@ -1,4 +1,3 @@
-
 <ion-content [fullscreen]="true">
 
   <ion-tabs>
@@ -21,22 +20,22 @@
     <div #map id="map"></div>
 
     <ion-tab-bar slot="bottom" color-primary>
-      <ion-tab-button href="/superadmin/profile">
+      <ion-tab-button (click)="openProfile()">
         <ion-icon name="person-outline"></ion-icon>
         <ion-label>Profil</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button href="/superadmin/admin-management">
+      <ion-tab-button (click)="openUtama()">
         <ion-icon name="receipt-outline"></ion-icon>
         <ion-label>Utama</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button href="superadmin/statistic">
+      <ion-tab-button (click)="openStatistik()">
         <ion-icon name="analytics-outline"></ion-icon>
         <ion-label>Statistik</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button href="/superadmin/jalan-list">
+      <ion-tab-button (click)="openHebahan()">
         <ion-icon name="megaphone-outline"></ion-icon>
         <ion-label>Hebahan</ion-label>
       </ion-tab-button>
@@ -50,3 +49,4 @@
   </ion-tabs>
 
 </ion-content>
+0xFEa40429D8E7e6Ec2671C67877f353a6c5166043

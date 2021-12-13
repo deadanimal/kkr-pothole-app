@@ -27,9 +27,8 @@ export class AdminListPage implements OnInit {
     private router: Router,
     private platform: Platform
   ) {
-
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['superadmin/admin-management'])
+      this.router.navigate(['superadmin/admin-management']);
     });
   }
 
@@ -44,6 +43,10 @@ export class AdminListPage implements OnInit {
         return users;
       })
     );
+  }
+
+  backRoute() {
+    this.router.navigate(['superadmin/admin-management']);
   }
 
   async openDetailModal(user) {

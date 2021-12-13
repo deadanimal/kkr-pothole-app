@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { Observable } from 'rxjs';
@@ -17,7 +18,11 @@ import { Router } from '@angular/router';
 })
 export class AduanDitolakListPage implements OnInit {
   aduans$: Observable<Aduan[]>;
-  @Input() isModal = false;
+  user_id: any;
+  haveInfo = false;
+  isSuperAdmin = false;
+  isAdmin = false;
+  isUser = false;
 
   constructor(
     private authService: AuthService,
@@ -27,6 +32,16 @@ export class AduanDitolakListPage implements OnInit {
     private router: Router,
     private platform: Platform
   ) {
+    const role = this.authService.userRole;
+    this.user_id = this.authService.userId;
+    if (role === 'super_admin') {
+      this.isSuperAdmin = true;
+    } else if (role === 'admin') {
+      this.isAdmin = true;
+    } else if (role === 'pengadu') {
+      this.isUser = true;
+    }
+
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['/superadmin/dashboard']);
     });
@@ -36,13 +51,31 @@ export class AduanDitolakListPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
     loading.present();
 
-    this.aduans$ = this.aduanService.getAduans().pipe(
-      map((aduans) => {
-        loading.dismiss();
-        console.log('Aduans:', aduans);
-        return aduans.filter((res) => res.status_code === 'R');
-      })
-    );
+    if (this.isAdmin || this.isSuperAdmin) {
+      this.aduans$ = this.aduanService.getAduans().pipe(
+        map((aduans) => {
+          loading.dismiss();
+          const adu = aduans.filter((res) => res.status_code === 'R');
+          if (adu.length > 0) {
+            this.haveInfo = true;
+          }
+          console.log('Aduans:', aduans);
+          return adu;
+        })
+      );
+    } else if (this.isUser) {
+      this.aduans$ = this.aduanService.getAduansByUser(this.user_id).pipe(
+        map((aduans) => {
+          loading.dismiss();
+          const adu = aduans.filter((res) => res.status_code === 'R');
+          if (adu.length > 0) {
+            this.haveInfo = true;
+          }
+          console.log(aduans);
+          return adu;
+        })
+      );
+    }
   }
 
   async openDetailModal(aduan: Aduan) {

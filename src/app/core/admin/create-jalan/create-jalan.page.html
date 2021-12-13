@@ -1,14 +1,11 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="md">
     <ion-buttons slot="start" *ngIf="!isEditMode">
-      <ion-button *ngIf="isSuperAdmin" href="/superadmin/dashboard">
-        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="isAdmin" href="/admin/dashboard">
+      <ion-button (click)="backRoute()">
         <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title mode="ios">{{isEditMode ? 'Kemas Kini':'Daftar'}} Jalan</ion-title>
+    <ion-title mode="ios">{{isEditMode ? 'Kemas Kini':'Daftar'}} Status Jalan</ion-title>
     <ion-buttons slot="end" *ngIf="isEditMode">
       <ion-button (click)="closeModal()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -51,7 +48,7 @@
                   </ion-item>
                 </ion-col>
                 <ion-col size="6">
-                  <ion-label position="floating">Tarikh Akhir</ion-label>
+          j        <ion-label position="floating">Tarikh Akhir</ion-label>
                   <ion-item color="light">
                     <ion-datetime formControlName="end_date" min="2020" max="2099-10-31" placeholder="Pilih">
                     </ion-datetime>

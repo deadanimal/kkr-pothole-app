@@ -37,11 +37,7 @@ export class JalanListPage implements OnInit {
       this.isAdmin = true;
     }
     this.platform.backButton.subscribeWithPriority(10, () => {
-      if (role === 'super_admin') {
-        this.router.navigate(['/superadmin/dashboard']);
-      } else if (role === 'admin') {
-        this.router.navigate(['/admin/dashboard']);
-      }
+      this.backRoute();
     });
   }
 
@@ -67,6 +63,14 @@ export class JalanListPage implements OnInit {
         return jalans;
       })
     );
+  }
+
+  backRoute() {
+    if (this.isAdmin) {
+      this.router.navigate(['/admin/dashboard']);
+    } else if (this.isSuperAdmin) {
+      this.router.navigate(['/superadmin/dashboard']);
+    }
   }
 
   async openDetailModal(jalan: Jalan) {

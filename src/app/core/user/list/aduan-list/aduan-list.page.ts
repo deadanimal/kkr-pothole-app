@@ -43,44 +43,27 @@ export class AduanListPage implements OnInit {
     private router: Router,
     private platform: Platform
   ) {
+    this.user_id = this.authService.userId;
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['/user/dashboard']);
     });
   }
 
   async ngOnInit() {
-    await this.loadToken();
+    await this.loadUser();
   }
 
-  async loadToken() {
+  async loadUser() {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
     loading.present();
+    console.log('USER ID', this.user_id);
 
-    const token = await Storage.get({ key: TOKEN_KEY });
-    console.log('Token:', token.value);
-
-    let body = {
-      bearer_token: token.value,
-    };
-
-    this.userService.getAuthUser(body).subscribe(
-      (res) => {
-        console.log(res);
+    this.aduans$ = this.aduanService.getAduansByUser(this.user_id).pipe(
+      tap((aduans) => {
         loading.dismiss();
-        this.user_id = res['id'];
-        console.log('this user', this.user_id);
-        this.aduans$ = this.aduanService.getAduansByUser(this.user_id).pipe(
-          tap((aduans) => {
-            loading.dismiss();
-            console.log(aduans);
-            return aduans;
-          })
-        );
-        console.log(this.aduans$);
-      },
-      (err) => {
-        console.log(err);
-      }
+        console.log(aduans);
+        return aduans;
+      })
     );
   }
 

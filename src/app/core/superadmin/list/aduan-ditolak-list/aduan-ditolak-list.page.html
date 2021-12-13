@@ -1,10 +1,5 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <!-- <ion-buttons slot="start" *ngIf="!isModal">
-      <ion-button href="/superadmin/dashboard">
-        <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
-      </ion-button>
-    </ion-buttons> -->
     <ion-title mode="ios">Aduan Ditolak</ion-title>
 
     <ion-buttons slot="end" *ngIf="isModal">
@@ -21,6 +16,7 @@
     <ion-content class="transparent">
 
       <ion-list>
+        <p *ngIf="!haveInfo" class="ion-text-center" style="color:rgb(206, 206, 206)">Tiada maklumat status aduan</p>
         <div *ngFor="let aduan of aduans$|async" (click)="openDetailModal(aduan)">
           <ion-badge *ngIf="aduan.status_code === null || aduan.status_code === 'P'" color="secondary" mode="ios">
             {{aduan.status_desc === null ? 'Dalam Perhatian': aduan.status_desc}}

@@ -23,6 +23,7 @@ export class AuthService {
   );
   token = '';
   public userRole: string;
+  userId: any;
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadToken();
@@ -62,6 +63,7 @@ export class AuthService {
     return this.http.post<User>(`${this.apiUrl}/auth/user`, body).pipe(
       tap((res) => {
         this.userRole = res.role;
+        this.userId = res.id;
         console.log('response user role: ', this.userRole);
       })
     );

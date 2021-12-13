@@ -30,12 +30,12 @@
         <ion-label>Aduan</ion-label>
       </ion-tab-button> -->
 
-      <ion-tab-button href="/user/aduan-list">
+      <ion-tab-button (click)="openAduanList()">
         <ion-icon name="desktop-outline"></ion-icon>
         <ion-label>Status</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button href="/user/hebahan">
+      <ion-tab-button (click)="openHebahan()">
         <ion-icon name="megaphone-outline"></ion-icon>
         <ion-label>Hebahan</ion-label>
       </ion-tab-button>
@@ -53,10 +53,11 @@
   </ion-tabs>
 
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-    <ion-button color="warning" size="small" shape="round" expand="block" class="buttondaftar" (click)="routeToAduan()" mode="md">Daftar<br>Aduan
+    <ion-button color="warning" size="small" shape="round" expand="block" class="buttondaftar" (click)="routeToAduan()"
+      mode="md">Daftar<br>Aduan
       <ion-icon name="receipt-outline" slot="start" style="font-size: 25px;padding-left: 5px;">Daftar Aduan</ion-icon>
     </ion-button>
-      <!-- <ion-fab-button class="custom-fab" color="warning" (click)="routeToAduan()">
+    <!-- <ion-fab-button class="custom-fab" color="warning" (click)="routeToAduan()">
         <ion-icon name="receipt-outline">Daftar Aduan</ion-icon>
       </ion-fab-button> -->
   </ion-fab>

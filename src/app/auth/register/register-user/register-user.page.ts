@@ -50,7 +50,7 @@ export class RegisterUserPage implements OnInit {
   emel: string;
   passwordModel: string;
   url: any = '../../assets/img/default_icon.jpeg';
-  images: LocalFile[];
+  images: LocalFile[] = [];
   apiUrl = environment.baseUrl;
 
   error_messages = {
@@ -84,7 +84,6 @@ export class RegisterUserPage implements OnInit {
   }
 
   ngOnInit() {
-    this.images = [];
     this.initAddUserForm();
   }
 
@@ -114,6 +113,7 @@ export class RegisterUserPage implements OnInit {
   // Convert the base64 to blob data
   // and create  formData with it
   async fileEvent(event) {
+    this.images = [];
     const files = event.target.files;
     const file = files[0];
     const filePath = files[0].size;

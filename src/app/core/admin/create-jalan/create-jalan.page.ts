@@ -46,7 +46,7 @@ export class CreateJalanPage implements OnInit {
   negeris: Observable<Negeri[]>;
   isEditMode = false;
   jalanForm: FormGroup;
-  images: LocalFile[];
+  images: LocalFile[] = [];
   image: any;
   fileimg: any;
   url: any;
@@ -86,12 +86,11 @@ export class CreateJalanPage implements OnInit {
     }
 
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/admin/dashboard']);
+      this.backRoute();
     });
   }
 
   async ngOnInit() {
-    this.images = [];
     this.initAddJalanForm();
     this.loadUserId();
     console.log('jalan data', this.jalanForm.value);
@@ -114,6 +113,14 @@ export class CreateJalanPage implements OnInit {
       console.log('SET JALAN DAH');
     }
     loading.dismiss();
+  }
+
+  backRoute() {
+    if (this.isAdmin) {
+      this.router.navigate(['/admin/dashboard']);
+    } else if (this.isSuperAdmin) {
+      this.router.navigate(['/superadmin/admin-management']);
+    }
   }
 
   async loadUserId() {
@@ -189,6 +196,7 @@ export class CreateJalanPage implements OnInit {
   // Convert the base64 to blob data
   // and create  formData with it
   async fileEvent(event) {
+    this.images = [];
     const files = event.target.files;
     const file = files[0];
     const filePath = files[0].size;
@@ -213,7 +221,7 @@ export class CreateJalanPage implements OnInit {
       data: `${base64Data}`,
     });
 
-    console.log(this.images);
+    console.log('ini gambar', this.images);
   }
 
   // https://ionicframework.com/docs/angular/your-first-app/3-saving-photos
@@ -268,7 +276,6 @@ export class CreateJalanPage implements OnInit {
             }
           });
       }
-
       loading.dismiss();
     } else {
       const formData = new FormData();
@@ -328,7 +335,6 @@ export class CreateJalanPage implements OnInit {
     this.daerahs = this.jalanService.getDaerahs(negeriId).pipe(
       tap((res) => {
         console.log('Daerah:', res);
-
         return res;
       })
     );
