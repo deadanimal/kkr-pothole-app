@@ -12,21 +12,19 @@ import { Platform } from '@ionic/angular';
 })
 export class UploadGambarPage implements OnInit {
   constructor(
-    private photoService: PhotoService, 
+    private photoService: PhotoService,
     private authService: AuthService,
     private router: Router,
     private platform: Platform
   ) {
-
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/dashboard'])
+      this.router.navigate(['/dashboard']);
     });
   }
 
   ngOnInit() {}
 
-  logout(){
+  logout() {
     this.authService.logout();
   }
-
 }

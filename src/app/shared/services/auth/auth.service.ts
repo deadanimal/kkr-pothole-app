@@ -72,6 +72,6 @@ export class AuthService {
   async logout(): Promise<void> {
     this.isAuthenticated.next(false);
     Storage.remove({ key: TOKEN_KEY });
-    this.router.navigateByUrl('/login', { replaceUrl: true });
+    this.router.navigate(['/login']);
   }
 }

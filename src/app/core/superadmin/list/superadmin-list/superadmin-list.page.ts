@@ -27,7 +27,7 @@ export class SuperadminListPage implements OnInit {
     private platform: Platform
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['superadmin/admin-management']);
+      this.backRoute();
     });
   }
 

@@ -42,7 +42,7 @@ export class AduanSelesaiListPage implements OnInit {
       this.isUser = true;
     }
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/superadmin/dashboard']);
+      this.backRoute();
     });
   }
 
