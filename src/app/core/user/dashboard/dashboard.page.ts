@@ -69,6 +69,10 @@ export class DashboardPage implements OnInit {
     modal.present();
   }
 
+  openProfile() {
+    this.router.navigate(['/user/profile']);
+  }
+
   openHebahan() {
     this.router.navigate(['/user/hebahan']);
   }

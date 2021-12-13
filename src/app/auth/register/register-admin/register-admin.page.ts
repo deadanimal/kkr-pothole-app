@@ -377,6 +377,7 @@ export class RegisterAdminPage implements OnInit {
       .pipe(take(1))
       .subscribe(() => {
         loading.dismiss();
+        this.presentToast('Pengguna tersebut berjaya dihapuskan');
         this.closeModal('delete');
       });
   }

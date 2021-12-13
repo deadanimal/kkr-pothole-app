@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button href="/login">
+      <ion-button (click)="backRoute()">
         <ion-icon slot="icon-only" name="chevron-back-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -24,7 +24,7 @@
               <div padding>
                 <ion-label>Alamat E-mel</ion-label>
                 <ion-item>
-                  <ion-input name="email" type="email" placeholder="your@email.com" formControlName="email"></ion-input>
+                  <ion-input name="email" type="email" placeholder="emel@anda.com" formControlName="email"></ion-input>
                 </ion-item>
               </div>
               <br>

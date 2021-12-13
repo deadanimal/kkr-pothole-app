@@ -53,7 +53,8 @@ export class ForgotPage implements OnInit {
           buttons: ['Okay'],
         });
         if (
-          res.message === 'Sila periksa email anda untuk mendapatkan kata laluan'
+          res.message ===
+          'Sila periksa email anda untuk mendapatkan kata laluan'
         ) {
           this.router.navigate(['/login']);
         }
@@ -63,5 +64,9 @@ export class ForgotPage implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  backRoute() {
+    this.router.navigate(['/login']);
   }
 }

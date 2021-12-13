@@ -74,6 +74,10 @@ export class LoginPage implements OnInit {
     );
   }
 
+  openForgotPass() {
+    this.router.navigate(['/forgot']);
+  }
+
   async openRegister() {
     const modal = await this.modalCtrl.create({
       component: RegisterUserPage,
