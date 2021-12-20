@@ -107,6 +107,11 @@ $app-theme: mat.define-light-theme((color: (primary: $app-primary,
   --ion-color-light-tint: #f5f6f9;
 }
 
+body {
+  margin-top: constant(safe-area-inset-top);
+  margin-top: env(safe-area-inset-top);
+}
+
 // @media (prefers-color-scheme: dark) {
 //   /*
 //    * Dark Colors
@@ -299,4 +304,3 @@ ion-select::part(placeholder),
 ion-select::part(text) {
   flex: 0 0 auto;
 }
-

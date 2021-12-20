@@ -37,24 +37,27 @@ export class JalanListPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Loading...' });
     loading.present();
 
-    this.jalans$ = this.jalanService.getJalans().pipe(
-      tap((jalans) => {
-        loading.dismiss();
-        console.log('jalans:', jalans);
-        if (jalans) {
-          for (let item of jalans) {
-            this.haveInfo = true;
-            var today = new Date();
-            var enddate = new Date(item.end_date);
-            var index = jalans.indexOf(item);
-            if (today.getTime() > enddate.getTime()) {
-              jalans.splice(index, 1);
+    setTimeout(() => {
+      this.jalans$ = this.jalanService.getJalans().pipe(
+        map((jalans) => {
+          loading.dismiss();
+          if (jalans) {
+            for (let item of jalans) {
+              this.haveInfo = true;
+              var today = new Date();
+              var enddate = new Date(item.end_date);
+              var index = jalans.indexOf(item);
+              if (today.getTime() > enddate.getTime()) {
+                jalans.splice(index, 1);
+                console.log(jalans.splice(index, 1));
+              }
             }
+
+            return jalans;
           }
-        }
-        return jalans;
-      })
-    );
+        })
+      );
+    }, 2000);
   }
 
   backRoute() {

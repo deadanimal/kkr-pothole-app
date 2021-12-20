@@ -52,6 +52,42 @@ export class ProfilePage implements OnInit {
   images: LocalFile[] = [];
   apiUrl = environment.baseUrl;
 
+  position = [
+    { jawatan: 'Menteri' },
+    { jawatan: 'Timbalan Menteri' },
+    { jawatan: 'Ketua Setiausaha' },
+    { jawatan: 'Timbalan Ketua Setiausaha' },
+    { jawatan: 'Setiausaha Bahagian' },
+    { jawatan: 'Timbalan Setiausaha Bahagian' },
+    { jawatan: 'Ketua Penolong Setiausaha Kanan' },
+    { jawatan: 'Ketua Penolong Setiausaha' },
+    { jawatan: 'Penolong Setiausaha' },
+    { jawatan: 'Ketua Pengarah' },
+    { jawatan: 'Timbalan Ketua Pengarah' },
+    { jawatan: 'Pengarah Kanan' },
+    { jawatan: 'Pengarah' },
+    { jawatan: 'Jurutera Awam Penguasa Kanan' },
+    { jawatan: 'Jurutera Awam Penguasa' },
+    { jawatan: 'Jurutera Awam' },
+    { jawatan: 'Jurutera Elektrik Penguasa Kanan' },
+    { jawatan: 'Jurutera Elektrik Penguasa' },
+    { jawatan: 'Jurutera Elektrik' },
+    { jawatan: 'Jurutera Mekanikal Penguasa Kanan' },
+    { jawatan: 'Jurutera Mekanikal Penguasa' },
+    { jawatan: 'Jurutera Mekanikal' },
+    { jawatan: 'Arkitek Penguasa Kanan' },
+    { jawatan: 'Arkitek Penguasa' },
+    { jawatan: 'Arkitek' },
+    { jawatan: 'Juruukur Bahan Penguasa Kanan' },
+    { jawatan: 'Juruukur Bahan Penguasa' },
+    { jawatan: 'Juruukur Bahan' },
+    { jawatan: 'Penolong Jurutera Awam' },
+    { jawatan: 'Penolong Jurutera Elektrik' },
+    { jawatan: 'Penolong Jurutera Mekanikal' },
+    { jawatan: 'Penolong Jurutera Senibina' },
+    { jawatan: 'Penolong Juruukur Bahan' },
+  ];
+
   token = '';
 
   error_messages = {

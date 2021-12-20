@@ -13,7 +13,10 @@
 
 <ion-content [fullscreen]="true">
   <div class="bg-primary">
-    <ion-text class="ion-text-center" (click)="openAduanList()">
+    <ion-text class="ion-text-center" *ngIf="isJumlahAduan" (click)="openAduanList()">
+      <h1 class="aduantotal">{{theTotal}}</h1>
+    </ion-text>
+    <ion-text class="ion-text-center" *ngIf="isJumlahPengguna || isAduanAgensi">
       <h1 class="aduantotal">{{theTotal}}</h1>
     </ion-text>
   </div>

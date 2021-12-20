@@ -186,6 +186,7 @@ export class RegisterUserPage implements OnInit {
         (res) => {
           console.log('test2', res);
           if (res['success']) {
+            console.log(formData);
             // this.presentToast('File upload complete.');
             const img_id = res['gambar_id'];
             this.regUserForm.patchValue({ gambar_id: img_id });
@@ -333,11 +334,11 @@ export class RegisterUserPage implements OnInit {
     if (evt.key != 'Backspace') {
       if (inputValue.length == 6 || inputValue.length == 9) {
         (<HTMLInputElement>document.getElementById('ICReg')).value =
-          inputValue + '-';
+          inputValue + '~';
       }
       if (
-        (inputValue.length > 6 && inputValue.substring(6, 7) != '-') ||
-        (inputValue.length > 9 && inputValue.substring(9, 10) != '-') ||
+        (inputValue.length > 6 && inputValue.substring(6, 7) != '~') ||
+        (inputValue.length > 9 && inputValue.substring(9, 10) != '~') ||
         inputValue.length > 14
       ) {
         (<HTMLInputElement>document.getElementById('ICReg')).value = '';
@@ -346,11 +347,11 @@ export class RegisterUserPage implements OnInit {
     }
     if (evt.key == 'Backspace') {
       if (
-        (inputValue.length == 6 && inputValue.substring(5, 6) != '-') ||
-        (inputValue.length == 9 && inputValue.substring(9, 10) != '-')
+        (inputValue.length == 6 && inputValue.substring(5, 6) != '~') ||
+        (inputValue.length == 9 && inputValue.substring(9, 10) != '~')
       ) {
         (<HTMLInputElement>document.getElementById('ICReg')).value =
-          inputValue + '-';
+          inputValue + '~';
       }
     }
   }

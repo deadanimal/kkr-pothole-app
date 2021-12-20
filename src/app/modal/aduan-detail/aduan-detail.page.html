@@ -25,15 +25,15 @@
         </ion-badge>
         <ion-badge *ngIf=" aduan.status_code === 'R'" color="danger" mode="ios">{{aduan.status_desc}}
         </ion-badge>
+        <br><br><ion-label>ID Tiket: </ion-label><span style="color: white">{{aduan.sispaa_id}}</span>
         <br><br>
         <ion-label>Tarikh Aduan: </ion-label><span style="color: white">{{aduan.created_at | date : 'dd MMM
-          yyyy'}}</span>
+          yyyy, h:mm a'}}</span>
         <br><br>
-        <ion-label>Tarikh Tindakan Semasa: </ion-label><span style="color: white">{{aduan.updated_at | date :
-          'dd MMM
-          yyyy'}}</span>
+        <ion-label>Tarikh Tindakan Semasa: </ion-label><span style="color: white">{{aduan.updated_at | date : 'dd MMM
+          yyyy, h:mm a'}}</span>
         <br><br>
-        <ion-label>Catatan: </ion-label><span style="color: white" align="justify" innerHtml="{{ aduan.nota === '' ? '-':
+        <ion-label>Catatan: </ion-label><span style="color: white" align="justify" innerHtml="{{ aduan.nota === '' ? '~':
         aduan.nota }}"></span>
         <br>
         <br>

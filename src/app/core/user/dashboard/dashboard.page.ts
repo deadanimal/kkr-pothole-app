@@ -41,6 +41,7 @@ export class DashboardPage implements OnInit {
   infoWindow: any;
   geocoder: any;
   routeAduan: any = '/user/create-aduan/';
+  latLng: any;
 
   constructor(
     private geolocation: Geolocation,
@@ -121,12 +122,12 @@ export class DashboardPage implements OnInit {
         this.latitude = resp.coords.latitude;
         this.longitude = resp.coords.longitude;
 
-        const latLng = new google.maps.LatLng(
+        this.latLng = new google.maps.LatLng(
           resp.coords.latitude,
           resp.coords.longitude
         );
         const mapOptions = {
-          center: latLng,
+          center: this.latLng,
           zoom: 15,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           mapTypeControl: false,
@@ -160,11 +161,11 @@ export class DashboardPage implements OnInit {
           this.getAddressFromCoords(
             this.map.center.lat(),
             this.map.center.lng(),
-            latLng
+            this.latLng
           );
           this.routeAduan = '/user/create-aduan/';
           this.routeAduan =
-            this.routeAduan + this.latitude + '-' + this.longitude;
+            this.routeAduan + this.latitude + '~' + this.longitude;
         });
       })
       .catch((error) => {
@@ -174,7 +175,7 @@ export class DashboardPage implements OnInit {
 
   getAddressFromCoords(lattitude, longitude, lastvalid) {
     this.routeAduan = '/user/create-aduan/';
-    this.routeAduan = this.routeAduan + lattitude + '-' + longitude;
+    this.routeAduan = this.routeAduan + lattitude + '~' + longitude;
     console.log('getAddressFromCoords :' + lattitude + ',' + longitude);
     const latlng = new google.maps.LatLng(lattitude, longitude);
     // This is making the Geocode request
@@ -202,6 +203,7 @@ export class DashboardPage implements OnInit {
       .create({
         header: 'Caution',
         subHeader: 'Non Malaysia Address Detected',
+        backdropDismiss: false,
         message: 'Are you sure?',
         buttons: [
           {
@@ -209,14 +211,16 @@ export class DashboardPage implements OnInit {
             handler: () => {
               this.map.panTo(para);
               this.myMarker.setPosition(para);
+              this.routeAduan = '/user/create-aduan/';
+              this.routeAduan = this.routeAduan + para.lat() + '~' + para.lng();
             },
           },
-          {
-            text: 'Continue',
-            handler: () => {
-              console.log('Let me think');
-            },
-          },
+          // {
+          //   text: 'Continue',
+          //   handler: () => {
+          //     console.log('Let me think');
+          //   },
+          // },
         ],
       })
       .then((res) => {
@@ -283,12 +287,16 @@ export class DashboardPage implements OnInit {
           lat: results[0].geometry.location.lat,
           lng: results[0].geometry.location.lng,
         };
+        this.latitude = results[0].geometry.location.lat();
+        this.longitude = results[0].geometry.location.lng();
+        console.log(position);
+
         this.myMarker.setPosition(results[0].geometry.location);
-        // const marker = new google.maps.Marker({
-        //   position: results[0].geometry.location,
-        //   map: this.map,
-        // });
+        this.getAddressFromCoords(this.latitude, this.longitude, this.latLng);
         this.map.setCenter(results[0].geometry.location);
+        this.routeAduan = '/user/create-aduan/';
+        this.routeAduan =
+          this.routeAduan + this.latitude + '~' + this.longitude;
       }
     });
     // alert(JSON.stringify(item));

@@ -184,6 +184,7 @@ export class DashboardPage implements OnInit {
       .create({
         header: 'Caution',
         subHeader: 'Non Malaysia Address Detected',
+        backdropDismiss: false,
         message: 'Are you sure?',
         buttons: [
           {
@@ -193,12 +194,12 @@ export class DashboardPage implements OnInit {
               this.myMarker.setPosition(para);
             },
           },
-          {
-            text: 'Continue',
-            handler: () => {
-              console.log('Let me think');
-            },
-          },
+          // {
+          //   text: 'Continue',
+          //   handler: () => {
+          //     console.log('Let me think');
+          //   },
+          // },
         ],
       })
       .then((res) => {

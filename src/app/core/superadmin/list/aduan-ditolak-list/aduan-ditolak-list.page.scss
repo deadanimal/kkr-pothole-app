@@ -11,7 +11,7 @@ ion-card {
   border-radius: 20px;
   background: linear-gradient(var(--ion-color-primary), #cad3dcfc);
   margin-top: 0;
-  padding: 10px;
+  padding: 0px 10px 10px 5px;
 
   ion-card-title {
     color: white;
@@ -31,7 +31,8 @@ ion-list {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: whitesmoke
+  color: whitesmoke;
+  font-size: 12px;
 }
 
 ion-toolbar {
@@ -55,7 +56,7 @@ ion-badge {
   border-bottom-left-radius: 0;
 }
 
-ion-item{
+ion-item {
   margin-top: 13%;
   width: fit-content;
   margin-left: auto;

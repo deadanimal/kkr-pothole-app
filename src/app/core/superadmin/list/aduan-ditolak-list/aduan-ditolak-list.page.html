@@ -21,6 +21,8 @@
     <br>
     <ion-content class="transparent">
       <ion-list>
+        <br *ngIf="isUser">
+        <br *ngIf="isUser">
         <p *ngIf="!haveInfo" class="ion-text-center" style="color:rgb(206, 206, 206)">Tiada maklumat status aduan</p>
         <div *ngFor="let aduan of aduans$|async" (click)="openDetailModal(aduan)">
           <ion-badge *ngIf="aduan.status_code === null || aduan.status_code === 'P'" color="secondary" mode="ios">
@@ -32,8 +34,9 @@
           </ion-badge>
           <ion-card>
             <ion-card-content>
+              <span style="color:white; font-size: 13px;">{{aduan.sispaa_id}}</span>
               <ion-card-title>{{aduan.title}}</ion-card-title>
-              <span class="text-limit">{{aduan.detail}}</span>
+              <i class="text-limit">{{aduan.detail}}</i>
             </ion-card-content>
             <span style="font-size: 10px; float: right; color: black;">Lihat Butiran ></span>
           </ion-card>

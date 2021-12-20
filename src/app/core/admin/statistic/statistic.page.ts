@@ -316,8 +316,8 @@ export class StatisticPage implements OnInit, OnDestroy {
       const leng = res.length;
       this.theTotal = this.nFormatter(leng, 1);
       console.log(leng);
-      this.ios = leng * 0.435;
-      this.android = leng * 0.654;
+      this.ios = 18;
+      this.android = leng - this.ios;
 
       this.getChart();
     });

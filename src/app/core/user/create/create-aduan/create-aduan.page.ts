@@ -64,6 +64,7 @@ export class CreateAduanPage implements OnInit {
   imgfile: any;
   load: any;
   resp: any;
+  latLng: any;
 
   latitude: number;
   longitude: number;
@@ -91,12 +92,12 @@ export class CreateAduanPage implements OnInit {
     public alertController: AlertController
   ) {
     this.plt.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/user/dashboard']);
+      this.backRoute();
     });
   }
 
   async ngOnInit() {
-    this.location = this.route.snapshot.params['location'].split('-');
+    this.location = this.route.snapshot.params['location'].split('~');
     console.log('aik', this.location);
     this.initAddAduanForm();
 
@@ -106,6 +107,10 @@ export class CreateAduanPage implements OnInit {
       this.isEditMode = true;
       this.setFormValues();
     }
+  }
+
+  backRoute() {
+    this.router.navigate(['/user/dashboard']);
   }
 
   async loadUserId() {
@@ -272,16 +277,16 @@ export class CreateAduanPage implements OnInit {
 
             response.pipe(take(1)).subscribe((aduan) => {
               if (aduan['success']) {
-                console.log('ADUAN SAVED',aduan);
+                console.log('ADUAN SAVED', aduan);
                 this.aduanForm.reset();
-                this.router.navigateByUrl('/user/aduan-list', {
+                this.router.navigateByUrl('/user/aduan-tabs/selesai', {
                   replaceUrl: true,
                 });
                 modal.present();
                 if (this.imgfile !== null) {
                   const header = new HttpHeaders({
                     // 'Content-Type': 'multipart/form-data',
-                    Authorization: 'BPA-KKR-API-TEST',
+                    Authorization: 'KKRMYPOTHOLES28309',
                   });
                   const formData = new FormData();
                   formData.append('sispaa_id', aduan[0]['sispaa_id']);
@@ -358,12 +363,12 @@ export class CreateAduanPage implements OnInit {
         this.latitude = resp.coords.latitude;
         this.longitude = resp.coords.longitude;
 
-        const latLng = new google.maps.LatLng(
+        this.latLng = new google.maps.LatLng(
           this.location[0],
           this.location[1]
         );
         const mapOptions = {
-          center: latLng,
+          center: this.latLng,
           zoom: 15,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           mapTypeControl: false,
@@ -374,9 +379,9 @@ export class CreateAduanPage implements OnInit {
         };
 
         this.getAddressFromCoords(
-          resp.coords.latitude,
-          resp.coords.longitude,
-          ''
+          this.location[0],
+          this.location[1],
+          this.latLng
         );
 
         this.map2 = new google.maps.Map(
@@ -396,7 +401,7 @@ export class CreateAduanPage implements OnInit {
           this.getAddressFromCoords(
             this.map2.center.lat(),
             this.map2.center.lng(),
-            latLng
+            this.latLng
           );
         });
       })
@@ -652,6 +657,7 @@ export class CreateAduanPage implements OnInit {
       .create({
         header: 'Caution',
         subHeader: 'Non Malaysia Address Detected',
+        backdropDismiss: false,
         message: 'Are you sure?',
         buttons: [
           {
@@ -661,15 +667,15 @@ export class CreateAduanPage implements OnInit {
               this.myMarker.setPosition(para);
             },
           },
-          {
-            text: 'Continue',
-            handler: () => {
-              this.aduanForm.patchValue({
-                address: this.address,
-              });
-              this.getOverlayImage(this.map2.getBounds());
-            },
-          },
+          // {
+          //   text: 'Continue',
+          //   handler: () => {
+          //     this.aduanForm.patchValue({
+          //       address: this.address,
+          //     });
+          //     this.getOverlayImage(this.map2.getBounds());
+          //   },
+          // },
         ],
       })
       .then((res) => {
