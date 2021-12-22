@@ -63,6 +63,7 @@ export class LoginPage implements OnInit {
         }
       },
       async (err) => {
+        console.log(err.error);
         await loading.dismiss();
         const alert = await this.alertCtrl.create({
           header: 'Log Masuk Gagal',

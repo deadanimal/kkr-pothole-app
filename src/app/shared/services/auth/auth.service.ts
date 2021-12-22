@@ -44,7 +44,6 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       map((data: any) => data),
       switchMap((token) => {
-        //console.log(token);
         console.log('Access token: ', this.token);
         this.token = token.access_token;
         this.userRole = token.data.role;

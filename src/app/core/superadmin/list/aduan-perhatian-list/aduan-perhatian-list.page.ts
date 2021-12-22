@@ -55,7 +55,7 @@ export class AduanPerhatianListPage implements OnInit {
       this.aduans$ = this.aduanService.getAduans().pipe(
         map((aduans) => {
           loading.dismiss();
-          const adu = aduans.filter((res) => res.status_code === 'P');
+          const adu = aduans.filter((res) => res.status_code === 'P' || res.status_code === 'A');
           if (adu.length > 0) {
             this.haveInfo = true;
           }
@@ -67,7 +67,7 @@ export class AduanPerhatianListPage implements OnInit {
       this.aduans$ = this.aduanService.getAduansByUser(this.user_id).pipe(
         map((aduans) => {
           loading.dismiss();
-          const adu = aduans.filter((res) => res.status_code === 'P');
+          const adu = aduans.filter((res) => res.status_code === 'P' || res.status_code === 'A');
           if (adu.length > 0) {
             this.haveInfo = true;
           }
@@ -131,7 +131,7 @@ export class AduanPerhatianListPage implements OnInit {
 
     this.aduans$ = this.aduanService.getAduansByMonthYear(body).pipe(
       map((aduans) => {
-        const adu = aduans.filter((res) => res.status_code === 'P');
+        const adu = aduans.filter((res) => res.status_code === 'P' || res.status_code === 'A');
           if (adu.length > 0) {
             this.haveInfo = true;
           }

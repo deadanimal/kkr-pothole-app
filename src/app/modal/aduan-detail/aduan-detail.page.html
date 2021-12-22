@@ -18,8 +18,8 @@
     <ion-content class="content">
       <br>
       <div style="margin: 10px 30px;">
-        <ion-badge *ngIf="aduan.status_code === null || aduan.status_code === 'P'" color="secondary" mode="ios">
-          {{aduan.status_desc === null ? 'Dalam Perhatian': aduan.status_desc}}
+        <ion-badge *ngIf="aduan.status_code === null || aduan.status_code === 'P' || aduan.status_code === 'A'" color="secondary" mode="ios">
+          Dalam Perhatian
         </ion-badge>
         <ion-badge *ngIf=" aduan.status_code === 'S'" color="success" mode="ios">{{aduan.status_desc}}
         </ion-badge>

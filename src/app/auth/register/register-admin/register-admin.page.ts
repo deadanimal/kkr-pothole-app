@@ -423,11 +423,11 @@ export class RegisterAdminPage implements OnInit {
         if (evt.key != 'Backspace') {
           if (inputValue.length == 6 || inputValue.length == 9) {
             (<HTMLInputElement>document.getElementById('ICReg')).value =
-              inputValue + '~';
+              inputValue + '-';
           }
           if (
-            (inputValue.length > 6 && inputValue.substring(6, 7) != '~') ||
-            (inputValue.length > 9 && inputValue.substring(9, 10) != '~') ||
+            (inputValue.length > 6 && inputValue.substring(6, 7) != '-') ||
+            (inputValue.length > 9 && inputValue.substring(9, 10) != '-') ||
             inputValue.length > 14
           ) {
             (<HTMLInputElement>document.getElementById('ICReg')).value = '';
@@ -436,11 +436,11 @@ export class RegisterAdminPage implements OnInit {
         }
         if (evt.key == 'Backspace') {
           if (
-            (inputValue.length == 6 && inputValue.substring(5, 6) != '~') ||
-            (inputValue.length == 9 && inputValue.substring(9, 10) != '~')
+            (inputValue.length == 6 && inputValue.substring(5, 6) != '-') ||
+            (inputValue.length == 9 && inputValue.substring(9, 10) != '-')
           ) {
             (<HTMLInputElement>document.getElementById('ICReg')).value =
-              inputValue + '~';
+              inputValue + '-';
           }
         }
         // console.log(inputValue.substring(6,7));
