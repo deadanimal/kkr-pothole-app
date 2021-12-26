@@ -411,7 +411,6 @@ export class CreateAduanPage implements OnInit {
   }
 
   async getOverlayImage(bounds) {
-    // this.clearMyGosData();
     this.load = await this.loadingCtrl.create({ message: 'Loading ...' });
     this.load.present();
 
@@ -574,55 +573,60 @@ export class CreateAduanPage implements OnInit {
       const roadcat = val['RDC'] === null ? '' : val['RDC'];
 
       if (roadcat === 1) {
-        this.road_type = 'Lebuhraya';
+        // this.road_type = 'Lebuhraya';
+        this.aduanForm.patchValue({
+          complaint_category: roadcat,
+          nama_jalan: roadname,
+          response_party: 'Lembaga Lebuhraya',
+          pbt_code: 'LLM',
+        });
       } else if (roadcat === 2) {
-        this.road_type = 'Jalan Persekutuan';
+        // this.road_type = 'Jalan Persekutuan';
+        this.aduanForm.patchValue({
+          complaint_category: roadcat,
+          nama_jalan: roadname,
+          response_party: authority,
+          pbt_code: 'JKR',
+        });
       } else if (roadcat === 3) {
-        this.road_type = 'Jalan Negeri';
+        // this.road_type = 'Jalan Negeri';
+        this.aduanForm.patchValue({
+          complaint_category: roadcat,
+          nama_jalan: roadname,
+          response_party: authority,
+          pbt_code: 'JKR',
+        });
       } else if (roadcat === 4) {
-        this.road_type = 'Jalan Pihak Berkuasa Tempatan (PBT)';
-      } else if (roadcat === 99) {
-        this.road_type = 'Lain-lain';
-      }
+        // this.road_type = 'Jalan Pihak Berkuasa Tempatan (PBT)';
+        const body = { pbt_nama: authority };
+        console.log(body);
 
-      const body = { pbt_nama: authority };
-      console.log(body);
-
-      this.aduanService.getPBTCode(body).subscribe((res) => {
-        console.log('KOD res: ', res);
-        const kod = res['kod'];
-        if (kod === 'LLM') {
-          this.aduanForm.patchValue({
-            complaint_category: roadcat,
-            nama_jalan: roadname,
-            response_party: 'Lembaga Lebuhraya',
-            pbt_code: kod,
-          });
-        } else {
+        this.aduanService.getPBTCode(body).subscribe((res) => {
+          console.log('KOD res: ', res);
+          const kod = res['kod'];
           this.aduanForm.patchValue({
             complaint_category: roadcat,
             nama_jalan: roadname,
             response_party: authority,
             pbt_code: kod,
           });
-        }
-        this.load.dismiss();
-        console.log(this.aduanForm.value);
-        return res;
-      });
+          return res;
+        });
+      } else if (roadcat === 99) {
+        // this.road_type = 'Lain-lain';
+        this.aduanForm.patchValue({
+          complaint_category: roadcat,
+          nama_jalan: roadname,
+          response_party: authority,
+          pbt_code: 'KKR',
+        });
+      }
     }
+    setTimeout(() => {
+      console.log(this.aduanForm.value);
+    }, 800);
 
     this.load.dismiss();
-  }
-
-  clearMyGosData() {
-    this.aduanForm.patchValue({
-      complaint_category: '',
-      nama_jalan: '',
-      response_party: '',
-      pbt_code: '',
-    });
-    console.log('clear data');
   }
 
   getAddressFromCoords(lattitude, longitude, lastvalid) {

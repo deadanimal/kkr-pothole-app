@@ -223,11 +223,6 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'chart',
-    loadChildren: () =>
-      import('./core/user/chart/chart.module').then((m) => m.ChartPageModule),
-  },
-  {
     path: 'upload-picture',
     loadChildren: () =>
       import('./core/global/upload-picture/upload-picture.module').then(
@@ -239,13 +234,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./core/user/profile-edit/profile-edit.module').then(
         (m) => m.ProfileEditPageModule
-      ),
-  },
-  {
-    path: 'amchart',
-    loadChildren: () =>
-      import('./core/user/amchart/amchart.module').then(
-        (m) => m.AmchartPageModule
       ),
   },
   {
