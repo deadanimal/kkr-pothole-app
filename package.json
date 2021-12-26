@@ -25,6 +25,8 @@
     "@angular/platform-browser-dynamic": "~12.1.1",
     "@angular/router": "~12.1.1",
     "@asymmetrik/ngx-leaflet": "^8.1.0",
+    "@awesome-cordova-plugins/android-permissions": "^5.37.3",
+    "@awesome-cordova-plugins/splash-screen": "^5.37.3",
     "@capacitor/android": "^3.2.5",
     "@capacitor/app": "1.0.3",
     "@capacitor/camera": "^1.1.2",
@@ -38,6 +40,7 @@
     "@ionic-native/android-permissions": "^5.36.0",
     "@ionic-native/core": "^5.36.0",
     "@ionic-native/geolocation": "^5.36.0",
+    "@ionic-native/google-maps": "^5.5.0",
     "@ionic-native/location-accuracy": "^5.36.0",
     "@ionic-native/native-geocoder": "^5.36.0",
     "@ionic-native/splash-screen": "^5.36.0",
@@ -81,7 +84,6 @@
     "cordova-ios": "^6.2.0",
     "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-android-permissions": "^1.1.2",
-    "cordova-plugin-cleartext": "^1.0.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-geolocation": "^4.1.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
@@ -122,14 +124,15 @@
       "cordova-plugin-nativegeocoder": {},
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-request-location-accuracy": {},
+      "cordova-plugin-ionic-webview": {},
       "cordova-plugin-geolocation": {
         "GPS_REQUIRED": "true"
-      },
-      "cordova-plugin-ionic-webview": {}
+      }
     },
     "platforms": [
       "browser",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
