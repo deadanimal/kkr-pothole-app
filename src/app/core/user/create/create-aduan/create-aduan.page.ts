@@ -624,7 +624,7 @@ export class CreateAduanPage implements OnInit {
     }
     setTimeout(() => {
       console.log(this.aduanForm.value);
-    }, 800);
+    }, 2000);
 
     this.load.dismiss();
   }

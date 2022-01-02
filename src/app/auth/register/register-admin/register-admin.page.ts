@@ -336,7 +336,7 @@ export class RegisterAdminPage implements OnInit {
               });
             this.url = '../../assets/img/default_icon.jpeg';
           } else {
-            console.log('Gambar profil gagal dimuatnaik.');
+            console.log('Gambar profil gagal dimuat naik.');
           }
         });
       }
