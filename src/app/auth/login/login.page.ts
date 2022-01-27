@@ -53,13 +53,11 @@ export class LoginPage implements OnInit {
         const role = await this.authService.userRole;
         await console.log('login role', role);
         if (role === 'super_admin') {
-          this.router.navigateByUrl('superadmin/dashboard', {
-            replaceUrl: true,
-          });
+          this.router.navigate(['superadmin/dashboard']);
         } else if (role === 'admin') {
-          this.router.navigateByUrl('admin/dashboard', { replaceUrl: true });
+          this.router.navigate(['admin/dashboard']);
         } else if (role === 'pengadu') {
-          this.router.navigateByUrl('user/dashboard', { replaceUrl: true });
+          this.router.navigate(['user/dashboard']);
         }
       },
       async (err) => {

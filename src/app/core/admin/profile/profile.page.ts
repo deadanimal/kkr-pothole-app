@@ -125,7 +125,7 @@ export class ProfilePage implements OnInit {
   }
 
   backRoute() {
-    this.router.navigate(['/superadmin/dashboard']);
+    this.router.navigate(['/admin/dashboard']);
   }
 
   async loadToken() {
