@@ -19,7 +19,7 @@
               <label>
                 <img [src]="url" alt="">
                 <ion-input style="display:none" formControlName="image" id="image" type="file"
-                  (change)="fileEvent($event)" accept="image/*"></ion-input>
+                  (change)="fileEvent($event)" accept="image/*" capture></ion-input>
               </label>
             </div>
           </ion-col>

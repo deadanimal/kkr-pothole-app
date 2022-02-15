@@ -11,7 +11,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<!-- <ion-content [fullscreen]="true"> -->
   <div id="container" class="background">
 
     <ion-list-header>
@@ -20,7 +20,7 @@
 
     <ion-content class="transparent">
 
-      <ion-list>
+      <ion-list class="transparent">
         <ion-card *ngFor="let user of users$|async" (click)="openDetailModal(user)">
           <ion-grid>
             <ion-row>
@@ -41,4 +41,4 @@
     </ion-content>
   </div>
 
-</ion-content>
+<!-- </ion-content> -->

@@ -46,6 +46,15 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+            <string>A message that tells the user why the app is requesting access to the device’s camera.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
+            <string>A message that tells the user why the app is requesting access to the user’s photo library.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
+            <string>A message that tells the user why the app is requesting write-only access to the user’s photo library.</string>
+        </edit-config>
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />

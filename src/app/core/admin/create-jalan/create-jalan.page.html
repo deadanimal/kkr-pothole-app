@@ -13,8 +13,8 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
+  <div style="padding-top: 20px;"></div>
   <div id="container" class="card-body">
     <form [formGroup]="jalanForm">
       <ion-grid>
@@ -25,7 +25,7 @@
               <label>
                 <img [src]="url" alt="">
                 <ion-input style="display:none" formControlName="image" id="image" type="file"
-                  (change)="fileEvent($event)" accept="image/*"></ion-input>
+                  (change)="fileEvent($event)" accept="image/*" capture></ion-input>
               </label>
               <ion-label position="floating">Nama Jalan</ion-label>
               <ion-item color="light">
