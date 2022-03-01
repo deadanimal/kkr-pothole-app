@@ -46,6 +46,11 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
+        <preference name="WKWebViewOnly" value="true" />
+        <feature name="CDVWKWebViewEngine">
+            <param name="ios-package" value="CDVWKWebViewEngine" />
+        </feature>
+        <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
             <string>A message that tells the user why the app is requesting access to the device’s camera.</string>
         </edit-config>
