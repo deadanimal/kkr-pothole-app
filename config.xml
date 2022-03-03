@@ -52,13 +52,19 @@
         </feature>
         <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
-            <string>A message that tells the user why the app is requesting access to the device’s camera.</string>
+            <string>MyPotholes uses your camera to allow you to take and submit pictures of potholes for us to analyze the criticality of potholes.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
-            <string>A message that tells the user why the app is requesting access to the user’s photo library.</string>
+            <string>MyPotholes uses your photo library to allow you to upload and submit pictures of potholes for us to analyze the criticality of potholes</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
-            <string>A message that tells the user why the app is requesting write-only access to the user’s photo library.</string>
+            <string> MyPotholes uses your photo library to allow you to upload and submit pictures of potholes for us to analyze the criticality of potholes</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string> MyPotholes uses your location to detect potholes nearby, and if it's not allowed, you will be unable to share the pothole location</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
+            <string> MyPotholes uses your location to detect potholes nearby, and if it's not allowed, you will be unable to share the pothole location</string>
         </edit-config>
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
