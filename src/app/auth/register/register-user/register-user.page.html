@@ -49,7 +49,7 @@
               <ion-item>
                 <ion-select formControlName="doc_type" placeholder="Jenis Pengenalan" interface="action-sheet" (ionChange)="docselect($event)">
                   <ion-select-option value="NRIC">NRIC No</ion-select-option>
-                  <ion-select-option value="PASS">Paspot No</ion-select-option>
+                  <ion-select-option value="PASS">Pasport No</ion-select-option>
                   <!-- <ion-select-option value="COMP">No Syarikat</ion-select-option> -->
                   <ion-select-option value="OTH">Lain-lain</ion-select-option>
                 </ion-select>
@@ -60,11 +60,11 @@
             </div>
             <div class="input2">
               <ion-item>
-                <ion-input formControlName="doc_no" placeholder="No Pengenalan" type="text" id="ICReg"></ion-input>
+                <ion-input formControlName="doc_no" placeholder="{{doc_no_placeholder}}" type="text" id="ICReg"></ion-input>
               </ion-item>
             </div>
             <div *ngIf="(doc_no.dirty || doc_no.touched) && doc_no.errors" class="error">
-              <span *ngIf="doc_no.errors?.required">No pengenalan diperlukan</span>
+              <span *ngIf="doc_no.errors?.required">{{doc_no_placeholder}} diperlukan</span>
             </div>
             <div class="input2">
               <ion-item>
@@ -73,7 +73,7 @@
               </ion-item>
             </div>
             <div *ngIf="(telefon.dirty || telefon.touched) && telefon.errors" class="error">
-              <span *ngIf="telefon.errors?.required">Telefon diperlukan</span>
+              <span *ngIf="telefon.errors?.required">No Telefon diperlukan</span>
             </div>
             <div class="input">
               <ion-item>

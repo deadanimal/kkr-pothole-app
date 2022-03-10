@@ -41,6 +41,7 @@ export class StatisticPage implements OnInit, OnDestroy {
   aduanDitolak: Aduan[] = [];
   aduanPerhatian: Aduan[] = [];
   aduanKKR: Aduan[] = [];
+  aduanJKR: Aduan[] = [];
   aduanPBT: Aduan[] = [];
   aduanLLM: Aduan[] = [];
   theTotal: any;
@@ -192,14 +193,19 @@ export class StatisticPage implements OnInit, OnDestroy {
             color: am4core.color('#34c0eb'),
           },
           {
-            agensi: 'KKR/JKR',
+            agensi: 'KKR',
             jumlah: this.aduanKKR.length,
             color: am4core.color('#28EE00'),
           },
           {
+            agensi: 'JKR',
+            jumlah: this.aduanJKR.length,
+            color: am4core.color('#eb8634'),
+          },
+          {
             agensi: 'PBT',
             jumlah: this.aduanPBT.length,
-            color: am4core.color('#eb8634'),
+            color: am4core.color('#FFCAD4'),
           },
         ];
       } else if (this.isJumlahPengguna) {
@@ -284,6 +290,7 @@ export class StatisticPage implements OnInit, OnDestroy {
 
   getAduanByAgency() {
     this.aduanKKR = [];
+    this.aduanJKR = [];
     this.aduanPBT = [];
     this.aduanLLM = [];
     this.aduanService.getAduans().subscribe((res) => {
@@ -295,13 +302,16 @@ export class StatisticPage implements OnInit, OnDestroy {
         // console.log(e.complaint_category);
         if (e.complaint_category === '1') {
           this.aduanLLM.push(e);
+
         } else if (
-          e.complaint_category === '2' ||
-          e.complaint_category === '3' ||
-          e.complaint_category === '99'
+          e.complaint_category === '2'
         ) {
+          this.aduanJKR.push(e);
+
+        }else if (e.complaint_category === '3' ||
+        e.complaint_category === '99') {
           this.aduanKKR.push(e);
-        } else if (e.complaint_category === '4') {
+        }else if (e.complaint_category === '4') {
           this.aduanPBT.push(e);
         }
       });

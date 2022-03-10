@@ -32,6 +32,7 @@ import { PhotoService } from 'src/app/shared/services/photo/photo.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { any } from '@amcharts/amcharts4/.internal/core/utils/Array';
 
 interface LocalFile {
   name: string;
@@ -52,6 +53,7 @@ export class RegisterUserPage implements OnInit {
   url: any = '../../assets/img/default_icon.jpeg';
   images: LocalFile[] = [];
   apiUrl = environment.baseUrl;
+  doc_no_placeholder: string = 'No Dokumen';
 
   error_messages = {
     password: [
@@ -312,19 +314,19 @@ export class RegisterUserPage implements OnInit {
     var doctype = val.detail.value;
     console.log(doctype);
     if (doctype == 'NRIC') {
-      document
-        .getElementById('ICReg')
-        .addEventListener('keyup', this.ICRegkeyup, false);
-      document
-        .getElementById('ICReg')
-        .addEventListener('focusout', this.ICRegfocout, false);
-    } else {
-      document
-        .getElementById('ICReg')
-        .removeEventListener('keyup', this.ICRegkeyup, false);
-      document
-        .getElementById('ICReg')
-        .removeEventListener('focusout', this.ICRegfocout, false);
+      document.getElementById('ICReg').addEventListener('keyup', this.ICRegkeyup, false);
+      document.getElementById('ICReg').addEventListener('focusout', this.ICRegfocout, false);
+      this.doc_no_placeholder = 'No Kad Pengenalan';
+    }
+    else if(doctype == 'PASS'){
+      document.getElementById('ICReg').removeEventListener('keyup', this.ICRegkeyup, false);
+      document.getElementById('ICReg').removeEventListener('focusout', this.ICRegfocout, false);
+      this.doc_no_placeholder = 'No Pasport';
+    } 
+    else {
+      document.getElementById('ICReg').removeEventListener('keyup', this.ICRegkeyup, false);
+      document.getElementById('ICReg').removeEventListener('focusout', this.ICRegfocout, false);
+      this.doc_no_placeholder = 'No Dokumen';
     }
   }
 

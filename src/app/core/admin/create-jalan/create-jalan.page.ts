@@ -245,6 +245,11 @@ export class CreateJalanPage implements OnInit {
     loading.present();
 
     let response: Observable<Jalan>;
+    var date1 = this.jalanForm.value.start_date ;
+    var date2 = this.jalanForm.value.end_date ;
+    date1 = date1.split('T')[0]; 
+    date2 = date2.split('T')[0]; 
+    this.jalanForm.patchValue({start_date: date1, end_date: date2 });
     console.log('JALAN :', this.jalanForm.value);
     if (this.isEditMode) {
       response = this.jalanService.updateJalan(
@@ -309,7 +314,8 @@ export class CreateJalanPage implements OnInit {
               this.jalanForm.reset();
               this.url = 'assets/img/no_image.png';
               loading.dismiss();
-              this.closeModal();
+              // this.closeModal(jalan);
+              this.backRoute();
             });
           } else {
             console.log('File upload failed.');
